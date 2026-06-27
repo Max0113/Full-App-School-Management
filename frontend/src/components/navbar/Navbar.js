@@ -17,6 +17,8 @@ import { BiSupport } from "react-icons/bi";
 import { IoMdCloudOutline } from "react-icons/io";
 import { TbLogout } from "react-icons/tb";
 import { MdOutlineLightMode } from "react-icons/md";
+import { LuGraduationCap } from "react-icons/lu";
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -58,7 +60,12 @@ function Navbar() {
   return (
     <main className='flex justify-between items-center py-5 px-20 bg-white'>
       <div className='flex items-center gap-10'>
-      <h1 className='text-3xl font-extrabold'>School<span className='text-blue-500'>.</span></h1>
+      <div className='flex items-center gap-3'>
+        <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                        <LuGraduationCap className="size-4" />
+        </div>
+        <h1 className='text-2xl font-extrabold'>School<span className='text-blue-500'>.</span></h1>
+      </div>
 
       <nav className="flex gap-5 *:border-black *:hover:border-b-1">
         <Link href="/">Home</Link>

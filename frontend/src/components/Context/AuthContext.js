@@ -2,12 +2,15 @@
 
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { Connect } from '../Api/Connect';
+import { useRouter } from 'next/navigation';
+
 
 export const StateContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const route = useRouter();
 
     const login = async (value) => {
         await Connect.getToken();
@@ -20,6 +23,7 @@ export function AuthProvider({ children }) {
         const response = await Connect.postLogout();
         setUser(null);
         setIsAuthenticated(false);
+        route.push('/login');
         return response;
     };
 
