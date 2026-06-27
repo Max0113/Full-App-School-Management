@@ -12,6 +12,9 @@ export const Connect = {
     postLogout: async () => {
         return await Clientaxios.post('/logout');
     },
+    postRegister : async (value) => {
+        return await Clientaxios.post('/register' , value)
+    },
     getUser: async () => {
         return await Clientaxios.get('api/user');
     }

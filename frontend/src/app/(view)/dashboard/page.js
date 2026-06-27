@@ -1,56 +1,64 @@
-'use client'
-
-import React, { useEffect, useState } from "react";
+"use client"
 import { useAuth } from '@/components/Context/AuthContext';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 
-function Page() {
-    const { user, checkAuth } = useAuth();
-    const [isLoading, setIsLoading] = useState(true);
+function page() {
+    const [isLoading , setIsLoading] = useState(false);
+    const { user , checkAuth , isAuthenticated , SetIsAuthenticated } = useAuth();
     const route = useRouter();
 
     useEffect(() => {
+        setIsLoading(true);
+
         checkAuth()
+            .then(() => {})
             .catch((err) => {
-                console.log(err.response?.data);
-                route.push('/login');
+            console.error(err);
+            route.push("/login")
+
             })
             .finally(() => {
-                setIsLoading(false);
+            setIsLoading(false);
             });
-    }, [checkAuth, route]);
 
-    if (isLoading) {
-        return (
-            <div className="p-10 h-[80vh] flex justify-center items-center ">
-                <div className="w-10 h-10 border-4 border-gray-200 border-b-black rounded-full animate-spin"></div>
-            </div>
-        ); 
-    }else {
-        return (
-            <div className="p-10">
-                <h1>Welcome to the dashboard</h1>
-                {isLoading && <p>Loading...</p>}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>name</th>
-                            <th>email</th>
-                        </tr>
-                    </thead>
+    },[isAuthenticated])
 
-                    <tbody>
-                        <tr>
-                            <td>{user?.id}</td>
-                            <td>{user?.name}</td>
-                            <td>{user?.email}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        ); 
+    if(isLoading) {
+        return (
+            <main className='flex justify-center items-center h-full min-h-[90vh]'>
+               <div className='w-10 h-10 rounded-full border-4 border-gray-300 border-t-blue-500 animate-spin'></div>
+            </main>
+        )
+
+    }else{
+        return (
+            <main className='px-10'>
+            <h1 className='text-3xl font-bold py-10'>Welcome to dashboard</h1>
+            
+        <div className="w-full max-w-4xl overflow-x-auto">
+            <table className="min-w-full bg-white shadow-lg overflow-hidden">
+            <thead className="bg-indigo-600 text-white">
+                <tr>
+                <th className="px-6 py-4 text-left font-semibold">ID</th>
+                <th className="px-6 py-4 text-left font-semibold">Name</th>
+                <th className="px-6 py-4 text-left font-semibold">Email</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr className="border-b hover:bg-gray-50 transition">
+                <td className="px-6 py-4">{user?.id}</td>
+                <td className="px-6 py-4">{user?.name}</td>
+                <td className="px-6 py-4">{user?.email}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </main>
+        )
     }
+  
 }
 
-export default Page;
+export default page

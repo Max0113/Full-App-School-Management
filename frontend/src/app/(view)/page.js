@@ -1,9 +1,13 @@
-import React from 'react'
+"use client"
+import Link from "next/link"
+import React from "react"
 
-export default function page() {
+function Page() {
   return (
-    <main>
-        sfasafsaf
-    </main>
+    <div>wfdsfsdfsd</div>
   )
 }
+
+
+
+export default Page;

@@ -23,6 +23,13 @@ export function AuthProvider({ children }) {
         return response;
     };
 
+    const Register = async (value) => {
+        await Connect.getToken();
+        const response = await Connect.postRegister(value);
+        setIsAuthenticated(true);
+        return response;
+    }
+
     const checkAuth = useCallback(async () => {
         try {
             const response = await Connect.getUser();
@@ -43,6 +50,7 @@ export function AuthProvider({ children }) {
                 setUser,
                 login,
                 logout,
+                Register,
                 checkAuth,
                 isAuthenticated,
                 setIsAuthenticated

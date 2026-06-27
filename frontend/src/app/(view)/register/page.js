@@ -6,20 +6,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FcGoogle } from "react-icons/fc";
 import { BsGithub } from "react-icons/bs";
+import { useAuth } from "@/components/Context/AuthContext";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Zod Schema
 const schema = z
   .object({
+    name: z.string(),
     email: z.string().email("Email invalid"),
     password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
+    password_confirmation: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
 export default function Page() {
+
+  const [error, setError] = useState("");  
+  const [isLoading, setIsLoading] = useState(false);
+  const route = useRouter();
+  const { Register } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -28,9 +38,22 @@ export default function Page() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Valid data:", data);
+  const onSubmit = async (value) => {
+    setError("");
+    setIsLoading(true);
+    await Register(value).then((res) => {
+       if(res.status == 204){
+         console.log("Valid data:", res.data);
+         route.push('/dashboard')
+       }
+    }).catch((err) => {
+      console.error("Valid data:", err);
+      setError(err.response?.data?.message);
+    })
+    setIsLoading(false);
   };
+
+  
 
   return (
     <div className="text-gray-900 flex justify-center">
@@ -43,6 +66,14 @@ export default function Page() {
 
             <div className="w-full flex-1 mt-8">
               <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg">
+
+                <input
+                  {...register("name")}
+                  type="text"
+                  placeholder="Name"
+                  className="w-full px-8 py-4 rounded-lg bg-gray-100 mt-3"
+                />
+                <p className="text-red-500">{errors.name?.message}</p>
 
                 <input
                   {...register("email")}
@@ -61,22 +92,36 @@ export default function Page() {
                 <p className="text-red-500">{errors.password?.message}</p>
 
                 <input
-                  {...register("confirmPassword")}
+                  {...register("password_confirmation")}
                   type="password"
                   placeholder="Check Password"
                   className="w-full px-8 py-4 rounded-lg bg-gray-100 mt-5"
                 />
                 <p className="text-red-500">
-                  {errors.confirmPassword?.message}
+                  {errors.password_confirmation?.message}
                 </p>
 
                 <button
-                  type="submit"
-                  className="mt-5 w-full bg-indigo-500 text-white py-4 rounded-lg"
-                >
-                  Sign Up
+                    type='submit'
+                    disabled={isLoading}
+                    className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none disabled:opacity-50">
+                    <span className="ml-3">
+                        {isLoading ? "Logging in..." : "Sign in"}
+                    </span>
                 </button>
               </form>
+
+              {error && (
+                            <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center max-w-lg mx-auto">
+                                {error}
+                            </div>
+                        )}
+
+              <div className="my-10 border-b text-center">
+                            <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
+                                Or login with e-mail
+                            </div>
+                        </div>
 
               {/* Social buttons (unchanged) */}
               <div className="mt-10 flex flex-col items-center">
