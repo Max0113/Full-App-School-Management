@@ -37,7 +37,7 @@ function page() {
             <h1 className='text-3xl font-bold py-10'>Welcome to dashboard</h1>
             
         <div className="w-full max-w-4xl overflow-x-auto">
-            <table className="min-w-full bg-white shadow-lg overflow-hidden">
+            <table className="min-w-full  shadow-lg overflow-hidden">
             <thead className="bg-indigo-600 text-white">
                 <tr>
                 <th className="px-6 py-4 text-left font-semibold">ID</th>
@@ -47,7 +47,7 @@ function page() {
             </thead>
 
             <tbody>
-                <tr className="border-b hover:bg-gray-50 transition">
+                <tr className="border-b transition">
                 <td className="px-6 py-4">{user?.id}</td>
                 <td className="px-6 py-4">{user?.name}</td>
                 <td className="px-6 py-4">{user?.email}</td>

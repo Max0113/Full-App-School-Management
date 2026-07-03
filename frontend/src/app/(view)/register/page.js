@@ -9,6 +9,8 @@ import { BsGithub } from "react-icons/bs";
 import { useAuth } from "@/components/Context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from 'next-themes';
+
 
 // Zod Schema
 const schema = z
@@ -29,6 +31,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
   const { Register } = useAuth();
+  const { resolvedTheme } = useTheme()
 
   const {
     register,
@@ -57,7 +60,9 @@ export default function Page() {
 
   return (
     <div className="text-gray-900 flex justify-center">
-      <div className="max-w-200 m-10 bg-white shadow sm:rounded-2xl flex justify-center flex-1">
+      <div className={`max-w-200 m-10 ${
+    resolvedTheme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+  } shadow sm:rounded-2xl flex justify-center flex-1`}>
         <div className="w-100 p-2">
           <div className="mt-12 mb-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">
@@ -71,7 +76,7 @@ export default function Page() {
                   {...register("name")}
                   type="text"
                   placeholder="Name"
-                  className="w-full px-8 py-4 rounded-lg bg-gray-100 mt-3"
+                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                 />
                 <p className="text-red-500">{errors.name?.message}</p>
 
@@ -79,7 +84,7 @@ export default function Page() {
                   {...register("email")}
                   type="email"
                   placeholder="Email"
-                  className="w-full px-8 py-4 rounded-lg bg-gray-100 mt-3"
+                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                 />
                 <p className="text-red-500">{errors.email?.message}</p>
 
@@ -87,7 +92,7 @@ export default function Page() {
                   {...register("password")}
                   type="password"
                   placeholder="Password"
-                  className="w-full px-8 py-4 rounded-lg bg-gray-100 mt-5"
+                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                 />
                 <p className="text-red-500">{errors.password?.message}</p>
 
@@ -95,7 +100,7 @@ export default function Page() {
                   {...register("password_confirmation")}
                   type="password"
                   placeholder="Check Password"
-                  className="w-full px-8 py-4 rounded-lg bg-gray-100 mt-5"
+                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                 />
                 <p className="text-red-500">
                   {errors.password_confirmation?.message}
@@ -118,22 +123,36 @@ export default function Page() {
                         )}
 
               <div className="my-10 border-b text-center">
-                            <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
+                            <div className={`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium ${
+    resolvedTheme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+  } transform translate-y-1/2`}>
                                 Or login with e-mail
                             </div>
                         </div>
 
               {/* Social buttons (unchanged) */}
               <div className="mt-10 flex flex-col items-center">
-                <button className="w-full max-w-lg bg-indigo-100 py-3 rounded-lg flex items-center justify-center">
-                  <FcGoogle />
-                  <span className="ml-4">Sign Up with Google</span>
-                </button>
-
-                <button className="w-full max-w-lg bg-indigo-100 py-3 rounded-lg flex items-center justify-center mt-5">
-                  <BsGithub />
-                  <span className="ml-4">Sign Up with GitHub</span>
-                </button>
+                <button
+                                                type="button"
+                                                className="w-full max-w-lg font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
+                                                <div className="bg-white p-2 rounded-full">
+                                                    <FcGoogle />
+                                                </div>
+                                                <span className="ml-4">
+                                                    Login with Google
+                                                </span>
+                                            </button>
+                
+                                            <button
+                                                type="button"
+                                                className="w-full max-w-lg font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
+                                                <div className="bg-white p-2 rounded-full">
+                                                     <BsGithub />
+                                                </div>
+                                                <span className="ml-4">
+                                                    Login with GitHub
+                                                </span>
+                                            </button>
               </div>
 
             </div>

@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Clientaxios } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/Context/AuthContext';
+import { useTheme } from 'next-themes';
 
 
 const schema = z.object({
@@ -22,6 +23,8 @@ export default function Page() {
       const route = useRouter();
 
       const { isAuthenticated , login } = useAuth();
+      const { resolvedTheme } = useTheme()
+      
 
       useEffect(() => {
             if (isAuthenticated) {
@@ -55,7 +58,11 @@ export default function Page() {
 
   return (
     <div className="text-gray-900 flex justify-center">
-        <div className="max-w-200 m-10 bg-white shadow sm:rounded-2xl flex justify-center flex-1">
+            <div
+  className={`max-w-200 m-10 ${
+    resolvedTheme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+  } shadow sm:rounded-2xl flex justify-center flex-1`}
+>
             <div className="w-100 p-2">
                 <div className="mt-12 mb-12 flex flex-col items-center">
                     <h1 className="text-2xl xl:text-3xl font-extrabold">
@@ -94,7 +101,9 @@ export default function Page() {
                         )}
 
                         <div className="my-10 border-b text-center">
-                            <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
+                            <div className={`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium ${
+    resolvedTheme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+  } transform translate-y-1/2`}>
                                 Or login with e-mail
                             </div>
                         </div>

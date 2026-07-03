@@ -36,10 +36,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+
 
 function Navbar() {
   const { isAuthenticated, logout, checkAuth , user } = useAuth()
   const router = useRouter()
+  const { setTheme , theme } = useTheme()
+
 
   const [isChecking, setIsChecking] = useState(true)
 
@@ -58,7 +63,11 @@ function Navbar() {
   }
 
   return (
-    <main className='flex justify-between items-center py-5 px-20 bg-white'>
+    <main
+  className={`flex justify-between items-center py-5 px-20 ${
+    theme === "dark" ? "bg-black" : "bg-white"
+  }`}
+>
       <div className='flex items-center gap-10'>
       <div className='flex items-center gap-3'>
         <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
@@ -72,12 +81,31 @@ function Navbar() {
         <Link href="/">About</Link>
         <Link href="/">Contact</Link>
       </nav>
-      </div>
+      </div> 
+
+    
 
       <diV className="flex items-center gap-5">   
+        <Button
+                      onClick={() =>
+                        setTheme(theme === "dark" ? "light" : "dark")
+                      }
+                      variant="outline"
+                      size="icon"
+                    >
+                      {theme === "dark" ? (
+                        <Sun className="h-[1.2rem] w-[1.2rem]" />
+                      ) : (
+                        <Moon className="h-[1.2rem] w-[1.2rem]" />
+                      )}
+          
+                      <span className="sr-only">Toggle theme</span>
+                    </Button>
+      
       {isChecking ? ( <div className='h-13 w-34 rounded-md bg-gray-200 animate-pulse'></div> ) : isAuthenticated ? (
         <div className='flex gap-5 items-center'>
-          <MdOutlineLightMode className='text-xl' />  
+        
+      
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className='flex gap-2 items-center text-xl font-bold border-1 p-4 rounded-full cursor-pointer hover:bg-gray-100 transition-colors duration-300'>
@@ -93,35 +121,10 @@ function Navbar() {
                   Profile
                   <DropdownMenuShortcut >⇧⌘P</DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/dashboard")} >
                   <IoCardOutline />
-                  Billing
+                  Dashbord
                   <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <IoSettingsOutline />
-                  Settings
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                
-                <DropdownMenuItem> <IoPeopleOutline />Team</DropdownMenuItem>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger> <FiUserPlus />Invite users</DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem>Email</DropdownMenuItem>
-                      <DropdownMenuItem>Message</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>More...</DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-                <DropdownMenuItem>
-                  <FiPlus/>New Team
-                  <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
