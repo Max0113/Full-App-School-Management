@@ -31,20 +31,27 @@ export function AppSidebar({
       const route = useRouter();
   
       useEffect(() => {
-          setIsLoading(true);
-  
-          checkAuth()
-              .then(() => {})
-              .catch((err) => {
-              console.error(err);
-              route.push("/login")
-  
-              })
-              .finally(() => {
+          const verifyAuth = async () => {
+            const authenticated = localStorage.getItem("AUTHENTICATED") === "true";
+      
+            if (!authenticated) {
+              route.replace("/login");
               setIsLoading(false);
-              });
-  
-      },[isAuthenticated])
+              return;
+            }
+      
+            try {
+              await checkAuth();
+            } catch (error) {
+              console.error(error);
+              route.replace("/login");
+            } finally {
+              setIsLoading(false);
+            }
+          };
+      
+          verifyAuth();
+        }, [isAuthenticated]);
 
   const data = {
   user: {

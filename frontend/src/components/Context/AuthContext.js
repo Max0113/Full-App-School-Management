@@ -1,68 +1,78 @@
-'use client'
+"use client";
 
-import React, { createContext, useCallback, useContext, useState } from 'react';
-import { Connect } from '../Api/Connect';
-import { useRouter } from 'next/navigation';
-
+import React, { createContext, useCallback, useContext, useState } from "react";
+import { Connect } from "../Api/Connect";
+import { useRouter } from "next/navigation";
 
 export const StateContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const route = useRouter();
+  const route = useRouter();
 
-    const login = async (value) => {
-        await Connect.getToken();
-        const response = await Connect.postLogin(value);
-        setIsAuthenticated(true);
-        return response;
-    };
+  const [user, setUser] = useState(null);
 
-    const logout = async () => {
-        const response = await Connect.postLogout();
-        setUser(null);
-        setIsAuthenticated(false);
-        route.push('/login');
-        return response;
-    };
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("AUTHENTICATED") === "true";
+  });
 
-    const Register = async (value) => {
-        await Connect.getToken();
-        const response = await Connect.postRegister(value);
-        setIsAuthenticated(true);
-        return response;
+  const StorAuth = (value) => {
+    setIsAuthenticated(value);
+    localStorage.setItem("AUTHENTICATED", value ? "true" : "false");
+  };
+
+  const login = async (value) => {
+    await Connect.getToken();
+    const response = await Connect.postLogin(value);
+    StorAuth(true);
+    return response;
+  };
+
+  const logout = async () => {
+    const response = await Connect.postLogout();
+    setUser(null);
+    StorAuth(false);
+    route.push("/login");
+    return response;
+  };
+
+  const Register = async (value) => {
+    await Connect.getToken();
+    const response = await Connect.postRegister(value);
+    StorAuth(true);
+    return response;
+  };
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const response = await Connect.getUser();
+      setUser(response.data);
+      StorAuth(true);
+      return response.data;
+    } catch (error) {
+      setUser(null);
+      StorAuth(false);
+      throw error;
     }
+  }, []);
 
-    const checkAuth = useCallback(async () => {
-        try {
-            const response = await Connect.getUser();
-            setUser(response.data);
-            setIsAuthenticated(true);
-            return response.data;
-        } catch (error) {
-            setUser(null);
-            setIsAuthenticated(false);
-            throw error;
-        }
-    }, []);
-
-    return (
-        <StateContext.Provider
-            value={{
-                user,
-                setUser,
-                login,
-                logout,
-                Register,
-                checkAuth,
-                isAuthenticated,
-                setIsAuthenticated
-            }}
-        >
-            {children}
-        </StateContext.Provider>
-    );
+  return (
+    <StateContext.Provider
+      value={{
+        user,
+        setUser,
+        login,
+        logout,
+        Register,
+        checkAuth,
+        isAuthenticated,
+        setIsAuthenticated,
+        StorAuth,
+      }}
+    >
+      {children}
+    </StateContext.Provider>
+  );
 }
 
 export const useAuth = () => useContext(StateContext);

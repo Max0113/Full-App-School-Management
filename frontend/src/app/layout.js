@@ -1,9 +1,7 @@
 import "./globals.css";
 import { Manrope } from "next/font/google";
-import { AuthProvider } from '@/components/Context/AuthContext';
-import { ThemeProvider } from "@/components/Context/theme-provider"
-
-
+import { AuthProvider } from "@/components/Context/AuthContext";
+import { ThemeProvider } from "@/components/Context/theme-provider";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -20,16 +18,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={manrope.className}>
       <body className="overflow-x-hidden bg-black/2" suppressHydrationWarning>
-          <AuthProvider>
-            <ThemeProvider
+        <AuthProvider>
+          <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
-                    {children}
-            </ThemeProvider>
-          </AuthProvider>
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
