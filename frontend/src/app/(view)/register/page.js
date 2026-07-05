@@ -74,15 +74,13 @@ export default function Page() {
   return (
     <div className="text-gray-900 flex justify-center">
       <div
-        className={`max-w-200 m-10 ${
-          resolvedTheme === "dark"
-            ? "bg-gray-900 text-white"
-            : "bg-white text-black"
-        } shadow sm:rounded-2xl flex justify-center flex-1`}
+        className={`max-w-200 m-10  bg-white dark:bg-gray-900 text-black shadow sm:rounded-2xl flex justify-center flex-1`}
       >
         <div className="w-100 p-2">
           <div className="mt-12 mb-12 flex flex-col items-center">
-            <h1 className="text-2xl xl:text-3xl font-extrabold">Sign up</h1>
+            <h1 className="text-2xl dark:text-white xl:text-3xl font-extrabold">
+              Sign up
+            </h1>
 
             <div className="w-full flex-1 mt-8">
               <form
@@ -142,11 +140,7 @@ export default function Page() {
 
               <div className="my-10 border-b text-center">
                 <div
-                  className={`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium ${
-                    resolvedTheme === "dark"
-                      ? "bg-gray-900 text-white"
-                      : "bg-white text-black"
-                  } transform translate-y-1/2`}
+                  className={`leading-none px-2 inline-block text-sm tracking-wide font-medium text-gray-600 bg-white dark:bg-gray-900 dark:text-white transform translate-y-1/2`}
                 >
                   Or login with e-mail
                 </div>

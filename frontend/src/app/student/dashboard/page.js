@@ -10,6 +10,7 @@ function page() {
 
   useEffect(() => {
     const verifyAuth = async () => {
+      setIsLoading(true);
       const authenticated = localStorage.getItem("AUTHENTICATED") === "true";
 
       if (!authenticated) {
@@ -29,7 +30,7 @@ function page() {
     };
 
     verifyAuth();
-  }, [isAuthenticated]);
+  }, []);
 
   if (isLoading) {
     return (

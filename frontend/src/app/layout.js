@@ -16,8 +16,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={manrope.className}>
-      <body className="overflow-x-hidden bg-black/2" suppressHydrationWarning>
+    <html lang="en" className={manrope.className} suppressHydrationWarning>
+      <body className="overflow-x-hidden bg-black/2">
         <AuthProvider>
           <ThemeProvider
             attribute="class"

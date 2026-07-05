@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Clientaxios } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/Context/AuthContext";
-import { useTheme } from "next-themes";
 
 const schema = z.object({
   email: z.string().email("Invalid email"),
@@ -22,14 +21,13 @@ export default function Page() {
   const route = useRouter();
 
   const { isAuthenticated, login } = useAuth();
-  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     const verifyAuth = async () => {
       const authenticated = localStorage.getItem("AUTHENTICATED") === "true";
 
       if (authenticated) {
-        route.replace("/dashboard");
+        // route.replace(process.env.NEXT_PUBLIC_DASHBOARD_STUDENT_URL);
         setIsLoading(false);
         return;
       }
@@ -52,9 +50,22 @@ export default function Page() {
     await login(value)
       .then((res) => {
         if (res.status != 404) {
-          route.refresh();
-          route.push("/dashboard");
-          console.log(res);
+          switch (res.data.user.role) {
+            case "student":
+              route.refresh();
+              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_STUDENT_URL);
+              break;
+            case "admin":
+              route.refresh();
+              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_Admin_URL);
+              break;
+            case "teacher":
+              route.refresh();
+              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_TEACHER_URL);
+              break;
+          }
+
+          console.log(res.data);
         }
       })
       .catch((err) => {
@@ -67,15 +78,13 @@ export default function Page() {
   return (
     <div className="text-gray-900 flex justify-center">
       <div
-        className={`max-w-200 m-10 ${
-          resolvedTheme === "dark"
-            ? "bg-gray-900 text-white"
-            : "bg-white text-black"
-        } shadow sm:rounded-2xl flex justify-center flex-1`}
+        className={`max-w-200 m-10  bg-white dark:bg-gray-900 text-black shadow sm:rounded-2xl flex justify-center flex-1`}
       >
         <div className="w-100 p-2">
           <div className="mt-12 mb-12 flex flex-col items-center">
-            <h1 className="text-2xl xl:text-3xl font-extrabold">Login</h1>
+            <h1 className="text-2xl dark:text-white xl:text-3xl font-extrabold">
+              Login
+            </h1>
             <div className="w-full flex-1 mt-8">
               <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -120,11 +129,7 @@ export default function Page() {
 
               <div className="my-10 border-b text-center">
                 <div
-                  className={`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium ${
-                    resolvedTheme === "dark"
-                      ? "bg-gray-900 text-white"
-                      : "bg-white text-black"
-                  } transform translate-y-1/2`}
+                  className={`leading-none px-2 inline-block text-sm tracking-wide font-medium text-gray-600 bg-white dark:bg-gray-900 dark:text-white transform translate-y-1/2`}
                 >
                   Or login with e-mail
                 </div>

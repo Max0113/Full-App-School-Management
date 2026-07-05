@@ -14,12 +14,11 @@ import { Separator } from "@/components/ui/separator"
 import { useSidebar } from "@/components/ui/sidebar"
 import { PanelLeftIcon } from "lucide-react"
 
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import ThemeToggle from "./ui/SunMoon"
+
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar()
-  const { setTheme , theme } = useTheme()
 
   return (
     <header
@@ -43,21 +42,7 @@ export function SiteHeader() {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="flex gap-3 w-full sm:ml-auto sm:w-auto">
-          <Button
-                      onClick={() =>
-                        setTheme(theme === "dark" ? "light" : "dark")
-                      }
-                      variant="outline"
-                      size="icon"
-                    >
-                      {theme === "dark" ? (
-                        <Sun className="h-[1.2rem] w-[1.2rem]" />
-                      ) : (
-                        <Moon className="h-[1.2rem] w-[1.2rem]" />
-                      )}
-          
-                      <span className="sr-only">Toggle theme</span>
-                    </Button>
+          <ThemeToggle></ThemeToggle>
           <SearchForm  />
         </div>
         
