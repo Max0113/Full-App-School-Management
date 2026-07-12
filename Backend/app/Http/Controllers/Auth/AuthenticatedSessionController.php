@@ -23,7 +23,8 @@ class AuthenticatedSessionController extends Controller
         foreach ($guards as $guard) {
         $currentGuard = Auth::guard($guard);
         if ($currentGuard->check()) {
-            $user = $currentGuard->user();break;
+            $user = $currentGuard->user();
+            break;
         }
         };
         $request->session()->regenerate();

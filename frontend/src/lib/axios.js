@@ -1,15 +1,5 @@
 import axios from "axios";
 
-const getBaseURL = () => {
-  if (typeof window !== "undefined") {
-    const hostname = window.location.hostname;
-    if (hostname === "127.0.0.1") {
-      return "http://127.0.0.1:8000";
-    }
-  }
-  return "http://localhost:8000";
-};
-
 export const Clientaxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   withCredentials: true,
@@ -18,4 +8,12 @@ export const Clientaxios = axios.create({
     "X-Requested-With": "XMLHttpRequest",
     Accept: "application/json",
   },
+});
+
+Clientaxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+  if (token) {
+    config.headers.set("Authorization", `Bearer ${token}`);
+  }
+  return config;
 });

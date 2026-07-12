@@ -20,7 +20,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
 
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated, login, SetToken } = useAuth();
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -49,6 +49,7 @@ export default function Page() {
     setIsLoading(true);
     await login(value)
       .then((res) => {
+        SetToken(res.data.token);
         if (res.status != 404) {
           switch (res.data.user.role) {
             case "student":

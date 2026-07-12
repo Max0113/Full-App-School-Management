@@ -15,9 +15,9 @@ class Admin extends Authenticatable
 
     protected $appends = ['role'];
 
-    public function getRoleAttribute()
-    {
-        return 'admin';
-    }
+  public function getRoleAttribute()
+  {
+    return 'admin';
+  }
 
 }

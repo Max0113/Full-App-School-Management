@@ -18,7 +18,16 @@ return new class extends Migration
             $table->dateTime('date_of_birth');
             $table->dateTime('last_login_date');
             $table->enum('gender', ['m', 'f']);
-            $table->string('blood_type');
+            $table->enum('blood_type',[
+                'O-',
+                'O+',
+                'A+',
+                'A-',
+                'B+',
+                'B-',
+                'AB+',
+                'AB-'
+            ]);
             $table->string('address');
             $table->string('phone', 10)->unique();
             $table->string('email',60)->unique();

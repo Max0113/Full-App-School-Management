@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (value) => {
-    await Connect.getToken();
+    // await Connect.getToken();
     const response = await Connect.postLogin(value);
     StorAuth(true);
     return response;
@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
   };
 
   const Register = async (value) => {
-    await Connect.getToken();
+    // await Connect.getToken();
     const response = await Connect.postRegister(value);
     StorAuth(true);
     return response;
@@ -56,6 +56,10 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const SetToken = (token) => {
+    localStorage.setItem("access_token", token);
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -68,6 +72,7 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         setIsAuthenticated,
         StorAuth,
+        SetToken,
       }}
     >
       {children}

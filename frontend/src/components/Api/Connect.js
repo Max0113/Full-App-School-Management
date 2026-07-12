@@ -7,15 +7,18 @@ export const Connect = {
     return await Clientaxios.get("/sanctum/csrf-cookie");
   },
   postLogin: async (value) => {
-    return await Clientaxios.post("/login", value);
+    return await Clientaxios.post("api/login", value);
   },
   postLogout: async () => {
-    return await Clientaxios.post("/logout");
+    return await Clientaxios.post("api/logout");
   },
   postRegister: async (value) => {
-    return await Clientaxios.post("/register", value);
+    return await Clientaxios.post("api/register", value);
   },
   getUser: async () => {
     return await Clientaxios.get("api/user");
+  },
+  getUsers: async () => {
+    return await Clientaxios.get("api/getusers");
   },
 };
