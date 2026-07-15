@@ -18,7 +18,6 @@ class StudentParent extends Model
         'blood_type',
         'address',
         'phone',
-        'email',
-        'email_verified_at'
+        'email'
     ];
 }

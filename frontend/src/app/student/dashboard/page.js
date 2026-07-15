@@ -20,7 +20,11 @@ function page() {
       }
 
       try {
-        await checkAuth();
+        const res = await checkAuth();
+        if (res.role !== "student") {
+          route.replace("/" + res.role + "/dashboard");
+          return;
+        }
       } catch (error) {
         console.error(error);
         route.replace("/login");

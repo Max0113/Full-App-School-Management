@@ -10,6 +10,19 @@ import { Clientaxios } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/Context/AuthContext";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
 const schema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -25,14 +38,11 @@ export default function Page() {
   useEffect(() => {
     const verifyAuth = async () => {
       const authenticated = localStorage.getItem("AUTHENTICATED") === "true";
-
       if (authenticated) {
-        // route.replace(process.env.NEXT_PUBLIC_DASHBOARD_STUDENT_URL);
         setIsLoading(false);
         return;
       }
     };
-
     verifyAuth();
   }, [isAuthenticated]);
 
@@ -65,119 +75,112 @@ export default function Page() {
               route.replace(process.env.NEXT_PUBLIC_DASHBOARD_TEACHER_URL);
               break;
           }
-
-          console.log(res.data);
         }
       })
       .catch((err) => {
-        console.log(err);
         setError(err.response?.data?.message);
       });
     setIsLoading(false);
   };
 
   return (
-    <div className="text-gray-900 flex justify-center">
-      <div
-        className={`max-w-200 m-10  bg-white dark:bg-gray-900 text-black shadow sm:rounded-2xl flex justify-center flex-1`}
-      >
-        <div className="w-100 p-2">
-          <div className="mt-12 mb-12 flex flex-col items-center">
-            <h1 className="text-2xl dark:text-white xl:text-3xl font-extrabold">
-              Login
-            </h1>
-            <div className="w-full flex-1 mt-8">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="mx-auto max-w-lg"
-              >
-                <input
-                  {...register("email")}
-                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm text-black focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="email"
-                  placeholder="Email"
-                />
+    <div className="flex min-h-[89vh] items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
+      <Card className="w-full max-w-xl dark:bg-black px-12 py-13">
+        <CardHeader className="text-center mb-2">
+          <CardTitle className="text-2xl font-extrabold">Login</CardTitle>
+          <CardDescription>
+            Sign in to continue to your dashboard
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                className={"py-6 px-5"}
+                {...register("email")}
+              />
+              {errors.email && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.email?.message}
+                  {errors.email.message}
                 </p>
-
-                <input
-                  {...register("password")}
-                  className={`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm text-black focus:outline-none focus:border-gray-400 focus:bg-white mt-5`}
-                  type="password"
-                  placeholder="Password"
-                />
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.password?.message}
-                </p>
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none disabled:opacity-50"
-                >
-                  <span className="ml-3">
-                    {isLoading ? "Logging in..." : "Login"}
-                  </span>
-                </button>
-              </form>
-
-              {error && (
-                <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center max-w-lg mx-auto">
-                  {error}
-                </div>
               )}
-
-              <div className="my-10 border-b text-center">
-                <div
-                  className={`leading-none px-2 inline-block text-sm tracking-wide font-medium text-gray-600 bg-white dark:bg-gray-900 dark:text-white transform translate-y-1/2`}
-                >
-                  Or login with e-mail
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <button
-                  type="button"
-                  className="w-full max-w-lg font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
-                >
-                  <div className="bg-white p-2 rounded-full">
-                    <FcGoogle />
-                  </div>
-                  <span className="ml-4">Login with Google</span>
-                </button>
-
-                <button
-                  type="button"
-                  className="w-full max-w-lg font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
-                >
-                  <div className="bg-white p-2 rounded-full">
-                    <BsGithub />
-                  </div>
-                  <span className="ml-4">Login with GitHub</span>
-                </button>
-
-                <p className="mt-6 text-xs text-gray-600 text-center">
-                  I agree to abide by templatana's
-                  <a
-                    href="#"
-                    className="border-b border-gray-500 border-dotted mx-1"
-                  >
-                    Terms of Service
-                  </a>
-                  and its
-                  <a
-                    href="#"
-                    className="border-b border-gray-500 border-dotted mx-1"
-                  >
-                    Privacy Policy
-                  </a>
-                </p>
-              </div>
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                className={"py-6 px-5"}
+                {...register("password")}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-6 px-5 text-[1rem] font-blod dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white"
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+
+          <div className="my-6 flex items-center gap-3">
+            <Separator className="flex-1" />
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Or login with
+            </span>
+            <Separator className="flex-1" />
           </div>
-        </div>
-      </div>
+
+          <div className="flex flex-col gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 px-5"
+            >
+              <FcGoogle className="mr-2 h-5 w-5" />
+              Login with Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full py-6 px-5"
+            >
+              <BsGithub className="mr-2 h-5 w-5" />
+              Login with GitHub
+            </Button>
+          </div>
+        </CardContent>
+
+        <p className="text-xs text-gray-500 text-center w-full">
+          I agree to abide by templatana's{" "}
+          <a href="#" className="underline">
+            Terms of Service
+          </a>{" "}
+          and its{" "}
+          <a href="#" className="underline">
+            Privacy Policy
+          </a>
+        </p>
+      </Card>
     </div>
   );
 }

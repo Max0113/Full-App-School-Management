@@ -1,6 +1,5 @@
 "use client";
 
-import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -27,51 +26,11 @@ import {
   Cast,
 } from "lucide-react";
 import { LuGraduationCap } from "react-icons/lu";
-import { useAuth } from "./Context/AuthContext";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
-import { dataSidebar } from "./data-sidebar";
 
 export function AppSidebar({ ...props }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const { checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
-  const [user, SetUser] = useState([]);
-  const [role, Setrole] = useState("");
-  const route = useRouter();
-
-  useEffect(() => {
-    const verifyAuth = async () => {
-      const authenticated = localStorage.getItem("AUTHENTICATED") === "true";
-
-      if (!authenticated) {
-        route.replace("/login");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const data = await checkAuth();
-        SetUser(data);
-        Setrole(data.role);
-        console.log(dataSidebar);
-      } catch (error) {
-        console.error(error);
-        route.replace("/login");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    verifyAuth();
-  }, []);
-
-  const nav =
-    role === "student"
-      ? dataSidebar.dataStudent
-      : role === "admin"
-        ? dataSidebar.dataAdmin
-        : dataSidebar.dataTeacher;
+  const { user, checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
 
   const data = {
     user: {
@@ -79,7 +38,35 @@ export function AppSidebar({ ...props }) {
       email: user?.email,
       avatar: "/avatars/shadcn.jpg",
     },
-    ...nav,
+    pageGeneral: [
+      {
+        name: "Dahbord",
+        url: "/student/dashboard",
+        icon: <GoHomeFill />,
+      },
+      {
+        name: "Learing",
+        url: "",
+        icon: <PieChartIcon />,
+      },
+      {
+        name: "Exams&Notes",
+        url: "#",
+        icon: <MapIcon />,
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Setting Avenc",
+        url: "#",
+        icon: <LifeBuoyIcon />,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: <SendIcon />,
+      },
+    ],
   };
 
   return (
@@ -101,14 +88,8 @@ export function AppSidebar({ ...props }) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {!isLoading ? (
-          <>
-            <NavProjects projects={data.pageGeneral} title="Genaral" />
-            <NavSecondary items={data.navSecondary} className="mt-auto" />
-          </>
-        ) : (
-          <div className="animate-pulse w-full h-full bg-gray-500"></div>
-        )}
+        <NavProjects projects={data.pageGeneral} title="Genaral" />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

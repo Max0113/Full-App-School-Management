@@ -7,9 +7,10 @@ import { router } from "@/components/Router/router";
 
 function page() {
   const [isLoading, setIsLoading] = useState(false);
-  const { user, checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
+  const { checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
   const route = useRouter();
   const [data, Setdata] = useState([]);
+  const [user, SetUser] = useState([]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -23,10 +24,15 @@ function page() {
       }
 
       try {
-        await checkAuth();
+        const res_ = await checkAuth();
+        if (res_.role !== "admin") {
+          route.replace("/login");
+          return; 
+        }
         const res = await Clientaxios.get("api/getusers");
+        if(res_.role != "admin") route.replace("/login");
         Setdata(res.data);
-        console.log(res.data);
+        SetUser(res_);
       } catch (error) {
         console.error(error);
         route.replace("/login");
