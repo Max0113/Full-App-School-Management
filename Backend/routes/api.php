@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StudentParentController;
+use App\Models\StudentParent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,11 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     Route::get('/getusers',function (Request $request) {
        return User::all();
     });
+
+    Route::get('/getparents',function (Request $request) {
+       return StudentParent::all();
+    });
+
 
     Route::apiResources([
         'parents' => StudentParentController::class,

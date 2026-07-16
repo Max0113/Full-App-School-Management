@@ -28,14 +28,29 @@ import {
 import { LuGraduationCap } from "react-icons/lu";
 import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
+import { useEffect, useState } from "react";
 
 export function AppSidebar({ ...props }) {
-  const { user, checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
+  const { user, checkAuth, isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const runCheckAuth = async () => {
+      try {
+        await checkAuth(); // updates `user` and `isAuthenticated` inside the context itself
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    runCheckAuth();
+  }, []);
 
   const data = {
     user: {
-      name: user?.name,
-      email: user?.email,
+      name: isLoading ? "Loading…" : (user?.name ?? "Unknown"),
+      email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },
     pageGeneral: [

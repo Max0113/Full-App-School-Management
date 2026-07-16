@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Connect_Parents } from "@/components/Api/Connect";
 
 const schema = z.object({
   firstname: z.string().min(1, "First name is required").max(50),
@@ -21,11 +22,7 @@ const schema = z.object({
     message: "Invalid date of birth",
   }),
 
-  last_login_date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid last login date",
-  }),
-
-  gender: z.enum(["male", "female", "other"], {
+  gender: z.enum(["m", "f"], {
     errorMap: () => ({ message: "Select a valid gender" }),
   }),
 
@@ -51,8 +48,14 @@ function Addparents() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+    try {
+      const res = await Connect_Parents.addparents(data);
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -101,24 +104,8 @@ function Addparents() {
           </p>
         )}
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="last_login_date">Last login date</Label>
-        <Input
-          id="last_login_date"
-          type="date"
-          className="py-6 px-5"
-          {...register("last_login_date")}
-        />
-        {errors.last_login_date && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.last_login_date.message}
-          </p>
-        )}
-      </div>
-
-      <div className="flex gap-3">
-        <div className="space-y-2">
+      <div className="flex gap-3 w-full">
+        <div className="flex-1 space-y-2">
           <Label htmlFor="gender">Gender</Label>
           <Select
             onValueChange={(val) =>
@@ -129,9 +116,8 @@ function Addparents() {
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="m">Male</SelectItem>
+              <SelectItem value="f">Female</SelectItem>
             </SelectContent>
           </Select>
           {errors.gender && (
@@ -139,7 +125,7 @@ function Addparents() {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="flex-1 space-y-2">
           <Label htmlFor="blood_type">Blood type</Label>
           <Select
             onValueChange={(val) =>
@@ -209,7 +195,7 @@ function Addparents() {
 
       <button
         type="submit"
-        className="w-full py-3 rounded-md bg-black text-white font-medium"
+        className="w-full py-3 rounded-md bg-black text-white font-medium hover:bg-white hover:text-black transition-all duration-300"
       >
         Submit
       </button>

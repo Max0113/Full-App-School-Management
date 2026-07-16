@@ -27,7 +27,7 @@ class StoreStudentParentRequest extends FormRequest
             'firstname' => 'required|max:50',
             'lastname' => 'required|max:50',
             'date_of_birth' => 'required|date',
-            'last_login_date' => 'required|date',
+            'last_login_date' => 'date',
             'gender' => ['required', Rule::in(['m','f'])],
             'blood_type' => ['required', Rule::in([
                 'O-',

@@ -30,7 +30,21 @@ import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
 
 export function AppSidebar({ ...props }) {
-  const { user, checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
+  const { user, checkAuth, isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const runCheckAuth = async () => {
+      try {
+        await checkAuth(); // updates `user` and `isAuthenticated` inside the context itself
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    runCheckAuth();
+  }, []);
 
   const data = {
     user: {

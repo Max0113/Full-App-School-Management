@@ -3,9 +3,6 @@
 import { Clientaxios } from "@/lib/axios";
 
 export const Connect = {
-  getToken: async () => {
-    return await Clientaxios.get("/sanctum/csrf-cookie");
-  },
   postLogin: async (value) => {
     return await Clientaxios.post("api/login", value);
   },
@@ -20,5 +17,14 @@ export const Connect = {
   },
   getUsers: async () => {
     return await Clientaxios.get("api/getusers");
+  },
+};
+
+export const Connect_Parents = {
+  getallparents: async () => {
+    return await Clientaxios.get("api/getparents");
+  },
+  addparents: async (value) => {
+    return await Clientaxios.post("api/parents", value);
   },
 };
