@@ -116,8 +116,8 @@ function Addparents() {
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="m">Male</SelectItem>
-              <SelectItem value="f">Female</SelectItem>
+              <SelectItem value="M">Male</SelectItem>
+              <SelectItem value="F">Female</SelectItem>
             </SelectContent>
           </Select>
           {errors.gender && (

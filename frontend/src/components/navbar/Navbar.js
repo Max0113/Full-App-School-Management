@@ -43,6 +43,7 @@ function Navbar() {
   const router = useRouter();
 
   const [isChecking, setIsChecking] = useState(true);
+  const [role, Setrole] = useState("");
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -56,7 +57,8 @@ function Navbar() {
       }
 
       try {
-        await checkAuth();
+        const res = await checkAuth();
+        Setrole(res.role);
       } catch (error) {
         console.error(error);
       } finally {
@@ -115,7 +117,9 @@ function Navbar() {
                     Profile
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+                  <DropdownMenuItem
+                    onClick={() => router.push(role + "/dashboard")}
+                  >
                     <IoCardOutline />
                     Dashbord
                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>

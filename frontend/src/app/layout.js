@@ -2,6 +2,7 @@ import "./globals.css";
 import { Manrope } from "next/font/google";
 import { AuthProvider } from "@/components/Context/AuthContext";
 import { ThemeProvider } from "@/components/Context/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -28,6 +29,14 @@ export default function RootLayout({ children }) {
             {children}
           </ThemeProvider>
         </AuthProvider>
+        <Toaster
+          position="top-center"
+          offset={{
+            top: 24,
+            left: 40,
+            right: 20,
+          }}
+        />
       </body>
     </html>
   );

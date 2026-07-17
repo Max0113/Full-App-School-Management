@@ -8,10 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Addparents from "./(components)/Addparents";
 import { DataTable } from "./(components)/Tableparents";
+import Addparents from "./(components)/Addparents";
+
 function page() {
-  const handleSubmit = async () => {};
   return (
     <main className="px-10 py-5">
       <Tabs defaultValue="overview" className="w-full">
