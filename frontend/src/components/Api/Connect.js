@@ -3,14 +3,14 @@
 import { Clientaxios } from "@/lib/axios";
 
 export const Connect = {
-  postLogin: async (value) => {
-    return await Clientaxios.post("api/login", value);
+  postLogin: async (data) => {
+    return await Clientaxios.post("api/login", data);
   },
   postLogout: async () => {
     return await Clientaxios.post("api/logout");
   },
-  postRegister: async (value) => {
-    return await Clientaxios.post("api/register", value);
+  postRegister: async (data) => {
+    return await Clientaxios.post("api/register", data);
   },
   getUser: async () => {
     return await Clientaxios.get("api/user");
@@ -24,7 +24,13 @@ export const Connect_Parents = {
   getallparents: async () => {
     return await Clientaxios.get("api/getparents");
   },
-  addparents: async (value) => {
-    return await Clientaxios.post("api/parents", value);
+  addparents: async (data) => {
+    return await Clientaxios.post("api/parents", data);
+  },
+  Updateparents: async (data) => {
+    return await Clientaxios.put(`api/parents/${data.id}`, data);
+  },
+  Deleteparents: async (data) => {
+    return await Clientaxios.delete(`api/parents/${data.id}`);
   },
 };

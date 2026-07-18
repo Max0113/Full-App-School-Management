@@ -51,7 +51,7 @@ const schema = z.object({
   email: z.string().email("Invalid email"),
 });
 
-export function AddParentDialog({ open, onOpenChange, refresh }) {
+export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
   const route = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [Error, setError] = useState(false);
@@ -72,13 +72,19 @@ export function AddParentDialog({ open, onOpenChange, refresh }) {
       const res = await Connect_Parents.addparents(data);
       console.log(res.data);
       onOpenChange(false);
+      toast.success("Parent Create", {
+        description: `${data.firstname} ${data.lastname} has been create successfully.`,
+      });
     } catch (error) {
       console.error(error?.response?.data?.message);
       setError(error?.response?.data?.message);
+      toast.error("Error", {
+        description: Error,
+      });
     } finally {
       setIsLoading(false);
       route.refresh();
-      refresh(true);
+      setrefresh(!refresh);
     }
   };
 
@@ -248,19 +254,7 @@ export function AddParentDialog({ open, onOpenChange, refresh }) {
 
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancel</Button>} />
-            <Button
-              type="submit"
-              form="edit-parent-form"
-              variant="outline"
-              onClick={() =>
-                toast("Event has been created", {
-                  description: "Sunday, December 03, 2023 at 9:00 AM",
-                  icon: (
-                    <BsCheckCircleFill className="h-4 w-4 text-green-500" />
-                  ),
-                })
-              }
-            >
+            <Button type="submit" form="edit-parent-form" variant="outline">
               {!isLoading ? "Create parent" : "Loading..."}
             </Button>
           </DialogFooter>

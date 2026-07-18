@@ -128,3 +128,12 @@
     @apply font-sans;
   }
 }
+
+.cn-toast [data-icon] {
+  margin-right: 12px;
+}
+
+/* si le SVG n'a pas de padding suffisant même avec ça */
+.cn-toast [data-icon] svg {
+  margin-right: 12px;
+}

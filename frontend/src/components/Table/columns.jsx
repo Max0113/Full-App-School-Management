@@ -15,7 +15,7 @@ const afficher = (parent) => {
   console.log(parent);
 };
 
-export const getColumns = (handleEditClick) => [
+export const getColumns = (handleEditClick, handleDeleteClick) => [
   { accessorKey: "id", header: "Id" },
   { accessorKey: "firstname", header: "First name" },
   { accessorKey: "lastname", header: "Last name" },
@@ -53,7 +53,7 @@ export const getColumns = (handleEditClick) => [
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-500"
-                onClick={() => console.log("Delete", parent)}
+                onClick={() => handleDeleteClick(parent)}
               >
                 Supprimer
               </DropdownMenuItem>

@@ -20,9 +20,20 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Connect_Parents } from "@/components/Api/Connect";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export function EditParentDialog({ parent, open, onOpenChange, refresh }) {
+export function EditParentDialog({
+  parent,
+  open,
+  onOpenChange,
+  refresh,
+  setrefresh,
+}) {
   const [formData, setFormData] = useState(parent);
+  const route = useRouter();
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     setFormData(parent);
@@ -32,11 +43,27 @@ export function EditParentDialog({ parent, open, onOpenChange, refresh }) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    onOpenChange(false);
-    refresh(true);
+    setSubmitting(true);
+    try {
+      const res = await Connect_Parents.Updateparents(formData);
+      onOpenChange(false);
+      toast.success("Parent updated", {
+        description: `${formData?.firstname} ${formData?.lastname} has been updated successfully.`,
+      });
+    } catch (error) {
+      const message =
+        error?.response?.data?.message || "Failed to update parent info.";
+      console.error(message);
+      toast.error("Error", {
+        description: message,
+      });
+    } finally {
+      setSubmitting(false);
+      route.refresh();
+      setrefresh(!refresh);
+    }
   };
 
   if (!parent) return null;
@@ -53,24 +80,26 @@ export function EditParentDialog({ parent, open, onOpenChange, refresh }) {
 
         <form id="edit-parent-form" onSubmit={handleSubmit}>
           <FieldGroup>
-            <Field>
-              <Label htmlFor="firstName">First name</Label>
-              <Input
-                className={"p-5"}
-                id="firstName"
-                value={formData?.firstname || ""}
-                onChange={(e) => handleChange("firstname", e.target.value)}
-              />
-            </Field>
-            <Field>
-              <Label htmlFor="lastName">Last name</Label>
-              <Input
-                className={"p-5"}
-                id="lastName"
-                value={formData?.lastname || ""}
-                onChange={(e) => handleChange("lastname", e.target.value)}
-              />
-            </Field>
+            <div className="flex gap-3">
+              <Field className={"flex-1"}>
+                <Label htmlFor="firstName">First name</Label>
+                <Input
+                  className={"p-5"}
+                  id="firstName"
+                  value={formData?.firstname || ""}
+                  onChange={(e) => handleChange("firstname", e.target.value)}
+                />
+              </Field>
+              <Field className={"flex-1"}>
+                <Label htmlFor="lastName">Last name</Label>
+                <Input
+                  className={"p-5"}
+                  id="lastName"
+                  value={formData?.lastname || ""}
+                  onChange={(e) => handleChange("lastname", e.target.value)}
+                />
+              </Field>
+            </div>
             <Field>
               <Label htmlFor="email">Email</Label>
               <Input

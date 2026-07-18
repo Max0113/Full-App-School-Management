@@ -42,16 +42,21 @@ class StudentParentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentParentRequest $request, StudentParent $studentParent)
+    public function update(UpdateStudentParentRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+        $studentParent = StudentParent::find($id);
+        $studentParent->update($validated);
+        return new StudentParentResource($studentParent);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StudentParent $studentParent)
+    public function destroy($id)
     {
-        //
+        $studentParent = StudentParent::find($id);
+        $studentParent->delete();
+        return new StudentParentResource($studentParent);
     }
 }

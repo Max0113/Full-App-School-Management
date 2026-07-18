@@ -29,14 +29,7 @@ export default function RootLayout({ children }) {
             {children}
           </ThemeProvider>
         </AuthProvider>
-        <Toaster
-          position="top-center"
-          offset={{
-            top: 24,
-            left: 40,
-            right: 20,
-          }}
-        />
+        <Toaster position="top-center" />
       </body>
     </html>
   );

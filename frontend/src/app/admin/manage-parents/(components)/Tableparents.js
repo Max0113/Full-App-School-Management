@@ -23,6 +23,7 @@ import { Connect_Parents } from "@/components/Api/Connect";
 import { EditParentDialog } from "./(dialog)/EditParentDialog";
 import { AddParentDialog } from "./(dialog)/AddParentDialog";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { DeleteParentDialog } from "./(dialog)/DeleteParentDialog";
 
 export function DataTable() {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -32,6 +33,7 @@ export function DataTable() {
   const [editingParent, setEditingParent] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
   const [dialogOpenAd, setDialogOpenAd] = useState(false);
+  const [dialogOpenDe, setDialogOpenDe] = useState(false);
   const [refresh, setrefresh] = useState(false);
 
   const handleEditClick = (parent) => {
@@ -43,7 +45,12 @@ export function DataTable() {
     setDialogOpenAd(true);
   };
 
-  const columns = getColumns(handleEditClick);
+  const handleDeleteClick = (parent) => {
+    setEditingParent(parent);
+    setDialogOpenDe(true);
+  };
+
+  const columns = getColumns(handleEditClick, handleDeleteClick);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -174,13 +181,23 @@ export function DataTable() {
         parent={editingParent}
         open={dialogOpenEd}
         onOpenChange={setDialogOpenEd}
-        refresh={setrefresh}
+        setrefresh={setrefresh}
+        refresh={refresh}
+      />
+
+      <DeleteParentDialog
+        parent={editingParent}
+        open={dialogOpenDe}
+        onOpenChange={setDialogOpenDe}
+        setrefresh={setrefresh}
+        refresh={refresh}
       />
 
       <AddParentDialog
         open={dialogOpenAd}
         onOpenChange={setDialogOpenAd}
-        refresh={setrefresh}
+        setrefresh={setrefresh}
+        refresh={refresh}
       />
     </div>
   );
