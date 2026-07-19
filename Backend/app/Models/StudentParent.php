@@ -18,7 +18,7 @@ class StudentParent extends Model
         'blood_type',
         'address',
         'phone',
-        'email'
+        'email',
     ];
 
     protected $hidden = [
@@ -27,6 +27,7 @@ class StudentParent extends Model
         'deleted_at',
         'remember_token',
         'email_verified_at',
-        'last_login_date'
+        'last_login_date',
+        'password'
     ];
 }

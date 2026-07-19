@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Connect_Parents } from "@/components/Api/Connect";
 import { toast } from "sonner";
+import { Loader2, AlertCircle } from "lucide-react";
 
 export function DeleteParentDialog({
   parent,
@@ -22,8 +23,10 @@ export function DeleteParentDialog({
   setrefresh,
 }) {
   const route = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     try {
       const res = await Connect_Parents.Deleteparents(parent);
@@ -40,6 +43,7 @@ export function DeleteParentDialog({
     } finally {
       route.refresh();
       setrefresh(!refresh);
+      setIsLoading(false);
     }
   };
 
@@ -59,7 +63,14 @@ export function DeleteParentDialog({
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancel</Button>} />
             <Button type="submit" form="edit-parent-form">
-              Confirm
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Delete...
+                </>
+              ) : (
+                "Delete parent"
+              )}
             </Button>
           </DialogFooter>
         </form>

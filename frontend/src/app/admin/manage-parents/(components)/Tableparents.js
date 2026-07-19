@@ -88,7 +88,7 @@ export function DataTable() {
           placeholder="Rechercher..."
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm bg-transparent border-white/10 text-white placeholder:text-white/50"
+          className="max-w-sm bg-transparent dark:border-white/10 dark:text-white dark:placeholder:text-white/50"
         />
 
         <Button onClick={() => handleAddClick()}>
@@ -97,18 +97,18 @@ export function DataTable() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-md border border-white/10 px-5 py-4">
+      <div className="overflow-hidden rounded-md border dark:border-white/10 px-5 py-4">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-white/10 hover:bg-transparent"
+                className="dark:border-white/10 hover:bg-transparent"
               >
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="text-white/50 font-medium"
+                    className="dark:text-white/50 text-black/40  font-medium"
                   >
                     {header.isPlaceholder
                       ? null
@@ -127,7 +127,7 @@ export function DataTable() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-white/10"
+                  className="dark:border-white/10"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -155,7 +155,7 @@ export function DataTable() {
 
       {/* Pagination */}
       <div className="flex items-center justify-end space-x-2">
-        <div className="flex-1 text-sm text-white/50">
+        <div className="flex-1 text-sm dark:text-white/50 text-black/40">
           Page {table.getState().pagination.pageIndex + 1} sur{" "}
           {table.getPageCount()}
         </div>

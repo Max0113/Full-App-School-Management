@@ -7,6 +7,7 @@ use App\Models\StudentParent;
 use App\Http\Requests\StoreStudentParentRequest;
 use App\Http\Requests\UpdateStudentParentRequest;
 use DateTime;
+use Illuminate\Support\Facades\Hash;
 
 class StudentParentController extends Controller
 {
@@ -24,7 +25,6 @@ class StudentParentController extends Controller
     public function store(StoreStudentParentRequest $request)
     {
         $validated = $request->validated();
-        $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
 
         $parent = StudentParent::create($validated);
 
@@ -45,6 +45,7 @@ class StudentParentController extends Controller
     public function update(UpdateStudentParentRequest $request, $id)
     {
         $validated = $request->validated();
+        $validated['password'] = Hash::make($validated['password']);
         $studentParent = StudentParent::find($id);
         $studentParent->update($validated);
         return new StudentParentResource($studentParent);
