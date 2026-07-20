@@ -5,8 +5,17 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  VisibilityState,
+  SortingState,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -35,6 +44,8 @@ export function DataTable() {
   const [dialogOpenAd, setDialogOpenAd] = useState(false);
   const [dialogOpenDe, setDialogOpenDe] = useState(false);
   const [refresh, setrefresh] = useState(false);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [sorting, setSorting] = useState([]);
 
   const handleEditClick = (parent) => {
     setEditingParent(parent);
@@ -71,12 +82,19 @@ export function DataTable() {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+
     onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
+
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
     state: {
       globalFilter,
+      columnVisibility,
+      sorting,
     },
   });
-
   useEffect(() => {
     handleSubmit();
   }, [refresh]);
@@ -91,10 +109,40 @@ export function DataTable() {
           className="max-w-sm bg-transparent dark:border-white/10 dark:text-white dark:placeholder:text-white/50"
         />
 
-        <Button onClick={() => handleAddClick()}>
-          <IoMdAddCircleOutline className="h-4 w-4" />
-          Add new Parent
-        </Button>
+        <div className="flex gap-4">
+          <DropdownMenu className="flex-1">
+            <DropdownMenuTrigger
+              render={
+                <Button variant="outline" className="ml-auto">
+                  Columns
+                </Button>
+              }
+            ></DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button onClick={() => handleAddClick()} className={"flex-1"}>
+            <IoMdAddCircleOutline className="h-4 w-4" />
+            Add new Parent
+          </Button>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-md border dark:border-white/10 px-5 py-4">

@@ -10,13 +10,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ArrowUpDown } from "lucide-react";
 
 const afficher = (parent) => {
   console.log(parent);
 };
 
 export const getColumns = (handleEditClick, handleDeleteClick) => [
-  { accessorKey: "id", header: "Id" },
+  {
+    accessorKey: "id",
+    header: "Id",
+  },
   { accessorKey: "firstname", header: "First name" },
   { accessorKey: "lastname", header: "Last name" },
   { accessorKey: "email", header: "Email" },

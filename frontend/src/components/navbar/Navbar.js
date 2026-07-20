@@ -37,6 +37,7 @@ import {
 
 import ThemeToggle from "@/components/ui/SunMoon";
 import { useTheme } from "next-themes";
+import { Skeleton } from "../ui/skeleton";
 
 function Navbar() {
   const { isAuthenticated, logout, checkAuth, user } = useAuth();
@@ -99,7 +100,7 @@ function Navbar() {
         <ThemeToggle />
 
         {isChecking ? (
-          <div className="h-13 w-34 rounded-md bg-gray-200 animate-pulse"></div>
+          <Skeleton className="h-13 w-27"></Skeleton>
         ) : isAuthenticated ? (
           <div className="flex gap-5 items-center">
             <DropdownMenu>
@@ -152,18 +153,10 @@ function Navbar() {
           </div>
         ) : (
           <div className="flex gap-3">
-            <div
-              onClick={() => router.push("/login")}
-              className="cursor-pointer"
-            >
-              <ButtonPr text="Login" />
-            </div>
-
-            <div
-              onClick={() => router.push("/register")}
-              className="cursor-pointer"
-            >
-              <ButtonSe text="Sign up" />
+            <div onClick={() => router.push("/login")}>
+              <Button className="text-md dark:text-white font-semibold py-6 px-8 dark:bg-blue-500 dark:hover:bg-blue-400 cursor-pointer">
+                Login
+              </Button>
             </div>
           </div>
         )}
