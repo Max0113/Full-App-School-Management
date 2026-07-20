@@ -19,6 +19,7 @@ class StudentParent extends Model
         'address',
         'phone',
         'email',
+        'password'
     ];
 
     protected $hidden = [

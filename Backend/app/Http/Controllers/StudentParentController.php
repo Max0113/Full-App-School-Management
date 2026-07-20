@@ -25,6 +25,8 @@ class StudentParentController extends Controller
     public function store(StoreStudentParentRequest $request)
     {
         $validated = $request->validated();
+        $validated['password'] = Hash::make($validated['password']);
+        $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
 
         $parent = StudentParent::create($validated);
 

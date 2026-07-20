@@ -44,7 +44,7 @@ class UpdateStudentParentRequest extends FormRequest
             'address' => 'required|max:50',
             'phone' => ['required', 'max:10', Rule::unique('student_parents')->ignore($parentId)],
             'email' => ['required', 'email', Rule::unique('student_parents')->ignore($parentId)],
-            'password' => 'required'
+            'password' => 'required|min:8'
         ];
     }
 }

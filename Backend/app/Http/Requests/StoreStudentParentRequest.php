@@ -42,7 +42,7 @@ class StoreStudentParentRequest extends FormRequest
             'address' => 'required|max:50',
             'phone' => 'required|max:10|unique:student_parents',
             'email' => 'required|email|unique:student_parents',
-            'password' => 'required'
+            'password' => 'required|min:8'
         ];
     }
 }
