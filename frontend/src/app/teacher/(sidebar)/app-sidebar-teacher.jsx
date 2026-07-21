@@ -49,7 +49,9 @@ export function AppSidebar({ ...props }) {
 
   const data = {
     user: {
-      name: isLoading ? "Loading…" : (user?.name ?? "Unknown"),
+      name: isLoading
+        ? "Loading…"
+        : (user?.firstname + " " + user?.lastname ?? "Unknown"),
       email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },

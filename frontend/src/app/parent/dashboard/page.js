@@ -2,15 +2,11 @@
 import { useAuth } from "@/components/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Clientaxios } from "@/lib/axios";
-import { router } from "@/components/Router/router";
 
 function page() {
   const [isLoading, setIsLoading] = useState(false);
-  const { checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
+  const { user, checkAuth, isAuthenticated, SetIsAuthenticated } = useAuth();
   const route = useRouter();
-  const [data, Setdata] = useState([]);
-  const [user, SetUser] = useState([]);
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -24,15 +20,11 @@ function page() {
       }
 
       try {
-        const res_ = await checkAuth();
-        if (res_.role !== "admin") {
-          route.replace("/login");
+        const res = await checkAuth();
+        if (res.role !== "teacher") {
+          route.replace("/" + res.role + "/dashboard");
           return;
         }
-        const res = await Clientaxios.get("api/getusers");
-        if (res_.role != "admin") route.replace("/login");
-        Setdata(res.data);
-        SetUser(res_);
       } catch (error) {
         console.error(error);
         route.replace("/login");
@@ -64,14 +56,15 @@ function page() {
                 <th className="px-6 py-4 text-left font-semibold">Email</th>
               </tr>
             </thead>
+
             <tbody>
-              {data.map((element) => (
-                <tr key={element.id} className="border-b transition">
-                  <td className="px-6 py-4">{element?.id}</td>
-                  <td className="px-6 py-4">{element?.name}</td>
-                  <td className="px-6 py-4">{element?.email}</td>
-                </tr>
-              ))}
+              <tr className="border-b transition">
+                <td className="px-6 py-4">{user?.id}</td>
+                <td className="px-6 py-4">
+                  {user?.firstname + " " + user?.lastname}
+                </td>
+                <td className="px-6 py-4">{user?.email}</td>
+              </tr>
             </tbody>
           </table>
         </div>

@@ -2,12 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StudentParent extends Model
+class StudentParent extends Authenticatable
 {
-    use HasFactory ;
+    use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
+
+    protected $appends = ['role'];
+
+    public function getRoleAttribute()
+    {
+        return 'parent';
+    }
 
     protected $fillable = [
         'firstname',
@@ -19,7 +29,7 @@ class StudentParent extends Model
         'address',
         'phone',
         'email',
-        'password'
+        'password',
     ];
 
     protected $hidden = [
@@ -29,6 +39,6 @@ class StudentParent extends Model
         'remember_token',
         'email_verified_at',
         'last_login_date',
-        'password'
+        'password',
     ];
 }

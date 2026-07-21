@@ -12,12 +12,24 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { LifeBuoyIcon, SendIcon, PieChartIcon, MapIcon } from "lucide-react";
+import {
+  TerminalSquareIcon,
+  BotIcon,
+  BookOpenIcon,
+  Settings2Icon,
+  LifeBuoyIcon,
+  SendIcon,
+  FrameIcon,
+  PieChartIcon,
+  MapIcon,
+  TerminalIcon,
+  Cast,
+} from "lucide-react";
 import { LuGraduationCap } from "react-icons/lu";
 import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
+import { FiPhone } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth, isAuthenticated } = useAuth();
@@ -38,25 +50,45 @@ export function AppSidebar({ ...props }) {
 
   const data = {
     user: {
-      name: isLoading ? (
-        <div className="space-y-2">
-          <Skeleton className="h-3 w-[100px]" />
-          <Skeleton className="h-3 w-[150px]" />
-        </div>
-      ) : (
-        (user?.firstname + " " + user?.lastname ?? "Unknown")
-      ),
+      name: isLoading
+        ? "Loading…"
+        : (user?.firstname + " " + user?.lastname ?? "Unknown"),
       email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },
     pageGeneral: [
-      { name: "Dashboard", url: "/admin/dashboard", icon: <GoHomeFill /> },
-      { name: "Parents", url: "/admin/manage-parents", icon: <PieChartIcon /> },
-      { name: "Support", url: "#", icon: <MapIcon /> },
+      {
+        name: "Dahbord",
+        url: "/teacher/dashboard",
+        icon: <GoHomeFill />,
+      },
+      {
+        name: "Notes Children",
+        url: "#",
+        icon: <PieChartIcon />,
+      },
+      {
+        name: "Absences Children",
+        url: "#",
+        icon: <MapIcon />,
+      },
+      {
+        name: "Contact Teacher",
+        url: "#",
+        icon: <FiPhone />,
+      },
     ],
     navSecondary: [
-      { title: "Settings", url: "#", icon: <LifeBuoyIcon /> },
-      { title: "Feedback", url: "#", icon: <SendIcon /> },
+      {
+        title: "Setting Avenc",
+        url: "#",
+        icon: <LifeBuoyIcon />,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: <SendIcon />,
+      },
     ],
   };
 
@@ -79,7 +111,7 @@ export function AppSidebar({ ...props }) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.pageGeneral} title="General" />
+        <NavProjects projects={data.pageGeneral} title="Genaral" />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

@@ -17,7 +17,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
-        $guards = ['web', 'teacher', 'admin'];
+        $guards = ['web', 'teacher', 'admin' , 'parent'];
 
         $user = null;
         foreach ($guards as $guard) {
@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        $guards = ['web', 'teacher', 'admin'];
+        $guards = ['web', 'teacher', 'admin' , 'parent'];
 
         $user = null;
         foreach ($guards as $guard) {

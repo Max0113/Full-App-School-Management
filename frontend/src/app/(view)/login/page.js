@@ -74,6 +74,10 @@ export default function Page() {
               route.refresh();
               route.replace(process.env.NEXT_PUBLIC_DASHBOARD_TEACHER_URL);
               break;
+            case "parent":
+              route.refresh();
+              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_PARENT_URL);
+              break;
           }
         }
       })
