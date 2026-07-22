@@ -2,19 +2,16 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\StudentParent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<User>
+ * @extends Factory<StudentParent>
  */
-class UserFactory extends Factory
+class StudentParentFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
     /**
@@ -36,8 +33,7 @@ class UserFactory extends Factory
             'address' => fake()->address(),
             'phone' => fake()->unique()->numerify('##########'),
             'gender' => fake()->randomElement(['m', 'f']),
-            'blood_type' => fake()->randomElement(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']),
-            'student_parent_id' => null,
+            'blood_type' => fake()->randomElement(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'])
         ];
     }
 

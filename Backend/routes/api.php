@@ -19,11 +19,11 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function ()
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
-    Route::get('/getusers',function (Request $request) {
+    Route::get('/getstudents',function () {
        return User::all();
     });
 
-    Route::get('/getparents',function (Request $request) {
+    Route::get('/getparents',function () {
        return StudentParent::all();
     });
 

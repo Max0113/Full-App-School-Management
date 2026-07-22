@@ -22,7 +22,7 @@ return new class extends Migration
                 'B-',
                 'AB+',
                 'AB-'
-            ]);
+            ])->after('password');
             $table->foreignIdFor(StudentParent::class)->nullable()->constrained()->cascadeOnDelete();
         });
     }

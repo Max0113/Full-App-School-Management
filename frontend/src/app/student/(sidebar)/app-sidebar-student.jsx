@@ -28,6 +28,7 @@ import {
 import { LuGraduationCap } from "react-icons/lu";
 import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
+import { useState, useEffect } from "react";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth, isAuthenticated } = useAuth();

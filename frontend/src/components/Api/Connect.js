@@ -15,8 +15,8 @@ export const Connect = {
   getUser: async () => {
     return await Clientaxios.get("api/user");
   },
-  getUsers: async () => {
-    return await Clientaxios.get("api/getusers");
+  getStudents: async () => {
+    return await Clientaxios.get("api/getstudents");
   },
 };
 

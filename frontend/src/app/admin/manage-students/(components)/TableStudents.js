@@ -28,11 +28,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getColumns } from "./columns";
 import { useRouter } from "next/navigation";
-import { Connect_Parents } from "@/components/Api/Connect";
-import { EditParentDialog } from "./(dialog)/EditParentDialog";
-import { AddParentDialog } from "./(dialog)/AddParentDialog";
+import { Connect, Connect_Parents } from "@/components/Api/Connect";
+import { EditParentDialog } from "./(dialog)/EditStudentDialog";
+import { AddParentDialog } from "./(dialog)/AddStudentDialog";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { DeleteParentDialog } from "./(dialog)/DeleteParentDialog";
+import { DeleteParentDialog } from "./(dialog)/DeleteStudentDialog";
 
 export function DataTable() {
   const [globalFilter, setGlobalFilter] = useState("");
@@ -66,7 +66,7 @@ export function DataTable() {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await Connect_Parents.getallparents();
+      const res = await Connect.getStudents();
       Setdata(res.data);
     } catch (error) {
       console.error(error);
@@ -140,7 +140,7 @@ export function DataTable() {
           </DropdownMenu>
           <Button onClick={() => handleAddClick()} className={"flex-1"}>
             <IoMdAddCircleOutline className="h-4 w-4" />
-            Add new Parent
+            Add new Student
           </Button>
         </div>
       </div>

@@ -29,7 +29,7 @@ function page() {
           route.replace("/login");
           return;
         }
-        const res = await Clientaxios.get("api/getusers");
+        const res = await Clientaxios.get("api/getstudents");
         if (res_.role != "admin") route.replace("/login");
         Setdata(res.data);
         SetUser(res_);
