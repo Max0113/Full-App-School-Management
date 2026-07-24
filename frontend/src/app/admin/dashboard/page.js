@@ -24,15 +24,12 @@ function page() {
       }
 
       try {
-        const res_ = await checkAuth();
-        if (res_.role !== "admin") {
+        const res = await checkAuth();
+        if (res.role !== "admin") {
           route.replace("/login");
           return;
         }
-        const res = await Clientaxios.get("api/getstudents");
-        if (res_.role != "admin") route.replace("/login");
-        Setdata(res.data);
-        SetUser(res_);
+        SetUser(res);
       } catch (error) {
         console.error(error);
         route.replace("/login");
@@ -54,27 +51,6 @@ function page() {
     return (
       <main className="px-10">
         <h1 className="text-3xl font-bold py-10">Welcome to dashboard</h1>
-
-        <div className="w-full max-w-4xl overflow-x-auto">
-          <table className="min-w-full  shadow-lg overflow-hidden">
-            <thead className="bg-indigo-600 text-white">
-              <tr>
-                <th className="px-6 py-4 text-left font-semibold">ID</th>
-                <th className="px-6 py-4 text-left font-semibold">Name</th>
-                <th className="px-6 py-4 text-left font-semibold">Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((element) => (
-                <tr key={element.id} className="border-b transition">
-                  <td className="px-6 py-4">{element?.id}</td>
-                  <td className="px-6 py-4">{element?.name}</td>
-                  <td className="px-6 py-4">{element?.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </main>
     );
   }

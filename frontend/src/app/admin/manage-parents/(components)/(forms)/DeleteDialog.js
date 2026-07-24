@@ -15,7 +15,7 @@ import { Connect_Parents } from "@/components/Api/Connect";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 
-export function DeleteParentDialog({
+export function DeleteDialog({
   parent,
   open,
   onOpenChange,
@@ -23,27 +23,27 @@ export function DeleteParentDialog({
   setrefresh,
 }) {
   const route = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
-    setIsLoading(true);
+    setSubmitting(true);
     e.preventDefault();
     try {
       const res = await Connect_Parents.Deleteparents(parent);
       console.log(res);
       onOpenChange(false);
-      toast.success("Student Delete", {
+      toast.success("Parent Delete", {
         description: `${parent?.firstname} ${parent?.lastname} has been delete successfully.`,
       });
     } catch (error) {
       console.error(error?.response?.data?.message);
       toast.error("Error", {
-        description: error?.response?.data?.message,
+        description: "",
       });
     } finally {
       route.refresh();
       setrefresh(!refresh);
-      setIsLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -53,23 +53,23 @@ export function DeleteParentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete student</DialogTitle>
+          <DialogTitle>Delete parent</DialogTitle>
           <DialogDescription>
-            If you want Delete student, click "confirm" to confirm.
+            If you want Delete parent, click "confirm" to confirm.
           </DialogDescription>
         </DialogHeader>
 
-        <form id="edit-parent-form" onSubmit={handleSubmit}>
+        <form id="delete-form" onSubmit={handleSubmit}>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">Cancel</Button>} />
-            <Button type="submit" form="edit-parent-form">
-              {isLoading ? (
+            <Button type="submit" form="delete-form">
+              {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Delete...
                 </>
               ) : (
-                "Delete student"
+                "Delete parent"
               )}
             </Button>
           </DialogFooter>

@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IoPersonOutline } from "react-icons/io5";
 import { PiStudentBold } from "react-icons/pi";
+import { BiUser } from "react-icons/bi";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth, isAuthenticated } = useAuth();
@@ -36,7 +37,7 @@ export function AppSidebar({ ...props }) {
       }
     };
     runCheckAuth();
-  }, []);
+  }, [isAuthenticated]);
 
   const data = {
     user: {
@@ -56,7 +57,7 @@ export function AppSidebar({ ...props }) {
       {
         name: "Parents",
         url: "/admin/manage-parents",
-        icon: <IoPersonOutline />,
+        icon: <BiUser />,
       },
       {
         name: "Students",

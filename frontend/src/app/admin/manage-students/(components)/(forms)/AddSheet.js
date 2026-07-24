@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,12 +22,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Parents } from "@/components/Api/Connect";
+import { Connect_Students } from "@/components/Api/Connect";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 
-// Password is optional on edit: only validated if the user actually types one
 const schema = z.object({
   firstname: z.string().min(1, "First name is required").max(50),
   lastname: z.string().min(1, "Last name is required").max(50),
@@ -51,12 +50,7 @@ const schema = z.object({
 
   email: z.string().email("Invalid email"),
 
-  password: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.length >= 8, {
-      message: "Password must be at least 8 characters",
-    }),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 function FieldError({ message }) {
@@ -69,64 +63,34 @@ function FieldError({ message }) {
   );
 }
 
-export function EditParentDialog({
-  parent,
-  open,
-  onOpenChange,
-  refresh,
-  setrefresh,
-}) {
+export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
-
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  // Prefill the form whenever the parent being edited changes.
-  // This replaces the old formData/handleChange state entirely —
-  // react-hook-form is now the single source of truth for these fields.
-  useEffect(() => {
-    if (parent) {
-      reset({
-        firstname: parent.firstname || "",
-        lastname: parent.lastname || "",
-        date_of_birth: parent.date_of_birth || "",
-        gender: parent.gender || "",
-        blood_type: parent.blood_type || "",
-        address: parent.address || "",
-        phone: parent.phone || "",
-        email: parent.email || "",
-        password: "", // never prefill the real password
-      });
-    }
-  }, [parent, reset]);
-
   const onSubmit = async (data) => {
     setSubmitting(true);
     setError(false);
     try {
-      const payload = { ...data, id: parent.id };
-      if (!payload.password) delete payload.password;
-
-      await Connect_Parents.Updateparents(payload);
+      await Connect_Students.addstudents(data);
       onOpenChange(false);
-      toast.success("Parent updated", {
-        description: `${data.firstname} ${data.lastname} has been updated successfully.`,
+      toast.success("Student created", {
+        description: `${data.firstname} ${data.lastname} has been added successfully.`,
       });
     } catch (error) {
       const message =
-        error?.response?.data?.message || "Failed to update parent info.";
+        error?.response?.data?.message ||
+        "Something went wrong. Please try again.";
       setError(message);
-      toast.error("Couldn't update parent", {
+      toast.error("Couldn't create student", {
         description: message,
       });
     } finally {
@@ -136,23 +100,19 @@ export function EditParentDialog({
     }
   };
 
-  if (!parent) return null;
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="right"
-        className="w-full sm:max-w-lg overflow-y-auto p-0"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Edit parent</SheetTitle>
+          <SheetTitle>Add student</SheetTitle>
           <SheetDescription>
-            Update the parent's details, then click "Save changes" to confirm.
+            Fill in the student's details, then click "Create student" to add
+            them to the system.
           </SheetDescription>
         </SheetHeader>
 
         <form
-          id="edit-parent-form"
+          id="add-form"
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
@@ -195,13 +155,12 @@ export function EditParentDialog({
             />
             <FieldError message={errors.email?.message} />
           </Field>
-
           <Field>
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
-              placeholder="Leave blank to keep current password"
+              placeholder="At least 8 characters"
               className="py-5 px-4"
               aria-invalid={!!errors.password}
               {...register("password")}
@@ -213,7 +172,6 @@ export function EditParentDialog({
             <Field className="flex-1">
               <Label htmlFor="gender">Gender</Label>
               <Select
-                value={watch("gender") || ""}
                 onValueChange={(val) =>
                   setValue("gender", val, { shouldValidate: true })
                 }
@@ -228,10 +186,9 @@ export function EditParentDialog({
               </Select>
               <FieldError message={errors.gender?.message} />
             </Field>
-            <Field className={"flex-1"}>
+            <Field className="flex-1">
               <Label htmlFor="blood_type">Blood type</Label>
               <Select
-                value={watch("blood_type") || ""}
                 onValueChange={(val) =>
                   setValue("blood_type", val, { shouldValidate: true })
                 }
@@ -254,7 +211,7 @@ export function EditParentDialog({
           </div>
 
           <div className="flex gap-4">
-            <Field className="flex-1">
+            <Field className={"flex-1"}>
               <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
@@ -310,17 +267,17 @@ export function EditParentDialog({
           />
           <Button
             type="submit"
-            form="edit-parent-form"
+            form="add-form"
             disabled={submitting}
             className="min-w-[140px]"
           >
             {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Saving...
+                Creating...
               </>
             ) : (
-              "Save changes"
+              "Create student"
             )}
           </Button>
         </SheetFooter>

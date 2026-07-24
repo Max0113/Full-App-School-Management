@@ -11,29 +11,29 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { Connect_Parents } from "@/components/Api/Connect";
+import { Connect_Students } from "@/components/Api/Connect";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 
-export function DeleteParentDialog({
-  parent,
+export function DeleteDialog({
+  data,
   open,
   onOpenChange,
   refresh,
   setrefresh,
 }) {
   const route = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
-    setIsLoading(true);
+    setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Parents.Deleteparents(parent);
+      const res = await Connect_Students.Deletestudents(data);
       console.log(res);
       onOpenChange(false);
-      toast.success("Parent Delete", {
-        description: `${parent?.firstname} ${parent?.lastname} has been delete successfully.`,
+      toast.success("Student Delete", {
+        description: `${data?.firstname} ${data?.lastname} has been delete successfully.`,
       });
     } catch (error) {
       console.error(error?.response?.data?.message);
@@ -43,33 +43,39 @@ export function DeleteParentDialog({
     } finally {
       route.refresh();
       setrefresh(!refresh);
-      setIsLoading(false);
+      setSubmitting(false);
     }
   };
 
-  if (!parent) return null;
+  if (!data) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete parent</DialogTitle>
+          <DialogTitle>Delete student</DialogTitle>
           <DialogDescription>
-            If you want Delete parent, click "confirm" to confirm.
+            If you want Delete student, click "confirm" to confirm.
           </DialogDescription>
         </DialogHeader>
 
-        <form id="edit-parent-form" onSubmit={handleSubmit}>
+        <form id="edit-form" onSubmit={handleSubmit}>
           <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancel</Button>} />
-            <Button type="submit" form="edit-parent-form">
-              {isLoading ? (
+            <DialogClose
+              render={
+                <Button variant="outline" disabled={submitting}>
+                  Cancel
+                </Button>
+              }
+            />
+            <Button type="submit" disabled={submitting} form="edit-form">
+              {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Delete...
                 </>
               ) : (
-                "Delete parent"
+                "Delete student"
               )}
             </Button>
           </DialogFooter>

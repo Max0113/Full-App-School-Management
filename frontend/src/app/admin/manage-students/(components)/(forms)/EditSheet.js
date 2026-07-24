@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,9 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Parents } from "@/components/Api/Connect";
+import { Connect_Students } from "@/components/Api/Connect";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 
@@ -50,10 +50,14 @@ const schema = z.object({
 
   email: z.string().email("Invalid email"),
 
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z
+    .string()
+    .optional()
+    .refine((val) => !val || val.length >= 8, {
+      message: "Password must be at least 8 characters",
+    }),
 });
 
-// Small helper so every field renders its error the same way, with an icon
 function FieldError({ message }) {
   if (!message) return null;
   return (
@@ -64,56 +68,81 @@ function FieldError({ message }) {
   );
 }
 
-export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
+export function EditSheet({ data, open, onOpenChange, refresh, setrefresh }) {
   const route = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
+
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data) => {
-    setIsLoading(true);
+  useEffect(() => {
+    if (data) {
+      reset({
+        firstname: data.firstname || "",
+        lastname: data.lastname || "",
+        date_of_birth: data.date_of_birth || "",
+        gender: data.gender || "",
+        blood_type: data.blood_type || "",
+        address: data.address || "",
+        phone: data.phone || "",
+        email: data.email || "",
+        password: "",
+      });
+    }
+  }, [data, reset]);
+
+  const onSubmit = async (newdata) => {
+    setSubmitting(true);
     setError(false);
     try {
-      await Connect_Parents.addparents(data);
+      const payload = { ...newdata, id: data.id };
+      if (!payload.password) delete payload.password;
+
+      await Connect_Students.Updatestudents(payload);
       onOpenChange(false);
-      toast.success("Parent created", {
-        description: `${data.firstname} ${data.lastname} has been added successfully.`,
+      toast.success("Student updated", {
+        description: `${newdata.firstname} ${newdata.lastname} has been updated successfully.`,
       });
     } catch (error) {
       const message =
-        error?.response?.data?.message ||
-        "Something went wrong. Please try again.";
+        error?.response?.data?.message || "Failed to update student info.";
       setError(message);
-      toast.error("Couldn't create parent", {
+      toast.error("Couldn't update student", {
         description: message,
       });
     } finally {
-      setIsLoading(false);
+      setSubmitting(false);
       route.refresh();
       setrefresh(!refresh);
     }
   };
 
+  if (!data) return null;
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-lg overflow-y-auto p-0"
+      >
         <SheetHeader>
-          <SheetTitle>Add parent</SheetTitle>
+          <SheetTitle>Edit student</SheetTitle>
           <SheetDescription>
-            Fill in the parent's details, then click "Create parent" to add them
-            to the system.
+            Update the student's details, then click "Save changes" to confirm.
           </SheetDescription>
         </SheetHeader>
 
         <form
-          id="add-parent-form"
+          id="edit-form"
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
@@ -156,12 +185,13 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
             />
             <FieldError message={errors.email?.message} />
           </Field>
+
           <Field>
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
-              placeholder="At least 8 characters"
+              placeholder="Leave blank to keep current password"
               className="py-5 px-4"
               aria-invalid={!!errors.password}
               {...register("password")}
@@ -173,6 +203,7 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
             <Field className="flex-1">
               <Label htmlFor="gender">Gender</Label>
               <Select
+                value={watch("gender") || ""}
                 onValueChange={(val) =>
                   setValue("gender", val, { shouldValidate: true })
                 }
@@ -187,9 +218,10 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
               </Select>
               <FieldError message={errors.gender?.message} />
             </Field>
-            <Field className="flex-1">
+            <Field className={"flex-1"}>
               <Label htmlFor="blood_type">Blood type</Label>
               <Select
+                value={watch("blood_type") || ""}
                 onValueChange={(val) =>
                   setValue("blood_type", val, { shouldValidate: true })
                 }
@@ -212,7 +244,7 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
           </div>
 
           <div className="flex gap-4">
-            <Field className={"flex-1"}>
+            <Field className="flex-1">
               <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
@@ -261,24 +293,24 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
         <SheetFooter className="flex flex-row justify-end gap-2 px-4">
           <SheetClose
             render={
-              <Button variant="outline" disabled={isLoading}>
+              <Button variant="outline" disabled={submitting}>
                 Cancel
               </Button>
             }
           />
           <Button
             type="submit"
-            form="add-parent-form"
-            disabled={isLoading}
+            form="edit-form"
+            disabled={submitting}
             className="min-w-[140px]"
           >
-            {isLoading ? (
+            {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Creating...
+                Saving...
               </>
             ) : (
-              "Create parent"
+              "Save changes"
             )}
           </Button>
         </SheetFooter>

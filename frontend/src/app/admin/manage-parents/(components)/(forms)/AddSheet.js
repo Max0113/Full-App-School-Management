@@ -64,9 +64,9 @@ function FieldError({ message }) {
   );
 }
 
-export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
+export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
   const route = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
   const {
     register,
@@ -78,12 +78,12 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
   });
 
   const onSubmit = async (data) => {
-    setIsLoading(true);
+    setSubmitting(true);
     setError(false);
     try {
       await Connect_Parents.addparents(data);
       onOpenChange(false);
-      toast.success("Student created", {
+      toast.success("Parent created", {
         description: `${data.firstname} ${data.lastname} has been added successfully.`,
       });
     } catch (error) {
@@ -91,11 +91,11 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
         error?.response?.data?.message ||
         "Something went wrong. Please try again.";
       setError(message);
-      toast.error("Couldn't create student", {
+      toast.error("Couldn't create parent", {
         description: message,
       });
     } finally {
-      setIsLoading(false);
+      setSubmitting(false);
       route.refresh();
       setrefresh(!refresh);
     }
@@ -105,15 +105,15 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Add student</SheetTitle>
+          <SheetTitle>Add parent</SheetTitle>
           <SheetDescription>
-            Fill in the student's details, then click "Create student" to add
-            them to the system.
+            Fill in the parent's details, then click "Create parent" to add them
+            to the system.
           </SheetDescription>
         </SheetHeader>
 
         <form
-          id="add-parent-form"
+          id="add-form"
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
@@ -261,24 +261,24 @@ export function AddParentDialog({ open, onOpenChange, refresh, setrefresh }) {
         <SheetFooter className="flex flex-row justify-end gap-2 px-4">
           <SheetClose
             render={
-              <Button variant="outline" disabled={isLoading}>
+              <Button variant="outline" disabled={submitting}>
                 Cancel
               </Button>
             }
           />
           <Button
             type="submit"
-            form="add-parent-form"
-            disabled={isLoading}
+            form="add-form"
+            disabled={submitting}
             className="min-w-[140px]"
           >
-            {isLoading ? (
+            {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Creating...
               </>
             ) : (
-              "Create student"
+              "Create parent"
             )}
           </Button>
         </SheetFooter>

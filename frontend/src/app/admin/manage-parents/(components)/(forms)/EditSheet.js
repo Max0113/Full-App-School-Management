@@ -69,13 +69,7 @@ function FieldError({ message }) {
   );
 }
 
-export function EditParentDialog({
-  parent,
-  open,
-  onOpenChange,
-  refresh,
-  setrefresh,
-}) {
+export function EditSheet({ parent, open, onOpenChange, refresh, setrefresh }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
@@ -119,14 +113,14 @@ export function EditParentDialog({
 
       await Connect_Parents.Updateparents(payload);
       onOpenChange(false);
-      toast.success("Student updated", {
+      toast.success("Parent updated", {
         description: `${data.firstname} ${data.lastname} has been updated successfully.`,
       });
     } catch (error) {
       const message =
         error?.response?.data?.message || "Failed to update parent info.";
       setError(message);
-      toast.error("Couldn't update student", {
+      toast.error("Couldn't update parent", {
         description: message,
       });
     } finally {
@@ -145,14 +139,14 @@ export function EditParentDialog({
         className="w-full sm:max-w-lg overflow-y-auto p-0"
       >
         <SheetHeader>
-          <SheetTitle>Edit student</SheetTitle>
+          <SheetTitle>Edit parent</SheetTitle>
           <SheetDescription>
-            Update the student's details, then click "Save changes" to confirm.
+            Update the parent's details, then click "Save changes" to confirm.
           </SheetDescription>
         </SheetHeader>
 
         <form
-          id="edit-parent-form"
+          id="edit-form"
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
@@ -310,7 +304,7 @@ export function EditParentDialog({
           />
           <Button
             type="submit"
-            form="edit-parent-form"
+            form="edit-form"
             disabled={submitting}
             className="min-w-[140px]"
           >

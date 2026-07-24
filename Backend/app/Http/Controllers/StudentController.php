@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\StudentParentResource;
-use App\Models\StudentParent;
-use App\Http\Requests\StoreStudentParentRequest;
-use App\Http\Requests\UpdateStudentParentRequest;
+use App\Models\User;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\StudentResource;
 use DateTime;
 use Illuminate\Support\Facades\Hash;
 
-class StudentParentController extends Controller
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,21 +22,21 @@ class StudentParentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentParentRequest $request)
+    public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
         $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
 
-        $parent = StudentParent::create($validated);
+        $student = User::create($validated);
 
-        return new StudentParentResource($parent);
+        return new StudentResource($student);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(StudentParent $studentParent)
+    public function show(User $user)
     {
         //
     }
@@ -44,18 +44,19 @@ class StudentParentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStudentParentRequest $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         $validated = $request->validated();
-        $studentParent = StudentParent::find($id);
+        $student = User::find($id);
+
         if(!isset($validated['password'])){
-            $validated['password'] = $studentParent['password'];
+            $validated['password'] = $student['password'];
         }else {
             $validated['password'] = Hash::make($validated['password']);
         };
 
-        $studentParent->update($validated);
-        return new StudentParentResource($studentParent);
+        $student->update($validated);
+        return new StudentResource($student);
     }
 
     /**
@@ -63,8 +64,8 @@ class StudentParentController extends Controller
      */
     public function destroy($id)
     {
-        $studentParent = StudentParent::find($id);
-        $studentParent->delete();
-        return new StudentParentResource($studentParent);
+        $student = User::find($id);
+        $student->delete();
+        return new StudentResource($student);
     }
 }

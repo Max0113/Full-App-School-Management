@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (value) => {
-    // await Connect.getToken();
     const response = await Connect.postLogin(value);
     StorAuth(true);
     return response;
@@ -37,7 +36,6 @@ export function AuthProvider({ children }) {
   };
 
   const Register = async (value) => {
-    // await Connect.getToken();
     const response = await Connect.postRegister(value);
     StorAuth(true);
     return response;

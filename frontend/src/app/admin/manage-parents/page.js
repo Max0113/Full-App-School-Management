@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "./(components)/TableParents";
+import { TableParents } from "./(components)/TableParents";
 import NewFeature from "./(components)/NewFeature";
 
 function page() {
@@ -20,7 +20,7 @@ function page() {
           <TabsTrigger value="add_parents">New Feature</TabsTrigger>
         </TabsList>
         <TabsContent value="parents" className={"w-full"}>
-          <DataTable />
+          <TableParents />
         </TabsContent>
         <TabsContent value="add_parents" className={"w-full"}>
           <NewFeature />

@@ -1,41 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  VisibilityState,
-  SortingState,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { getColumns } from "./columns";
 import { useRouter } from "next/navigation";
 import { Connect_Parents } from "@/components/Api/Connect";
-import { EditParentDialog } from "./(dialog)/EditParentDialog";
-import { AddParentDialog } from "./(dialog)/AddParentDialog";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { DeleteParentDialog } from "./(dialog)/DeleteParentDialog";
+import { EditSheet } from "./(forms)/EditSheet";
+import { AddSheet } from "./(forms)/AddSheet";
+import { DeleteDialog } from "./(forms)/DeleteDialog";
+import CreateTable from "@/components/Table/CreateTable";
 
-export function DataTable() {
-  const [globalFilter, setGlobalFilter] = useState("");
+export function TableParents() {
   const [data, Setdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
@@ -44,8 +17,6 @@ export function DataTable() {
   const [dialogOpenAd, setDialogOpenAd] = useState(false);
   const [dialogOpenDe, setDialogOpenDe] = useState(false);
   const [refresh, setrefresh] = useState(false);
-  const [columnVisibility, setColumnVisibility] = useState({});
-  const [sorting, setSorting] = useState([]);
 
   const handleEditClick = (parent) => {
     setEditingParent(parent);
@@ -76,156 +47,20 @@ export function DataTable() {
     }
   };
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnVisibilityChange: setColumnVisibility,
-
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-
-    state: {
-      globalFilter,
-      columnVisibility,
-      sorting,
-    },
-  });
   useEffect(() => {
     handleSubmit();
   }, [refresh]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder="Rechercher..."
-          value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm bg-transparent dark:border-white/10 dark:text-white dark:placeholder:text-white/50"
-        />
+    <>
+      <CreateTable
+        data={data}
+        columns={columns}
+        title={"parent"}
+        handleAddClick={handleAddClick}
+      />
 
-        <div className="flex gap-4">
-          <DropdownMenu className="flex-1">
-            <DropdownMenuTrigger
-              render={
-                <Button variant="outline" className="ml-auto">
-                  Columns
-                </Button>
-              }
-            ></DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button onClick={() => handleAddClick()} className={"flex-1"}>
-            <IoMdAddCircleOutline className="h-4 w-4" />
-            Add new Parent
-          </Button>
-        </div>
-      </div>
-
-      <div className="overflow-hidden rounded-md border dark:border-white/10 px-5 py-4">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-                className="dark:border-white/10 hover:bg-transparent"
-              >
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className="dark:text-white/50 text-black/40  font-medium"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="dark:border-white/10"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Aucun résultat.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex items-center justify-end space-x-2">
-        <div className="flex-1 text-sm dark:text-white/50 text-black/40">
-          Page {table.getState().pagination.pageIndex + 1} sur{" "}
-          {table.getPageCount()}
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Précédent
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Suivant
-        </Button>
-      </div>
-
-      <EditParentDialog
+      <EditSheet
         parent={editingParent}
         open={dialogOpenEd}
         onOpenChange={setDialogOpenEd}
@@ -233,7 +68,7 @@ export function DataTable() {
         refresh={refresh}
       />
 
-      <DeleteParentDialog
+      <DeleteDialog
         parent={editingParent}
         open={dialogOpenDe}
         onOpenChange={setDialogOpenDe}
@@ -241,12 +76,12 @@ export function DataTable() {
         refresh={refresh}
       />
 
-      <AddParentDialog
+      <AddSheet
         open={dialogOpenAd}
         onOpenChange={setDialogOpenAd}
         setrefresh={setrefresh}
         refresh={refresh}
       />
-    </div>
+    </>
   );
 }

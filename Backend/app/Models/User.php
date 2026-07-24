@@ -26,11 +26,10 @@ class User extends Authenticatable
     'last_login_date',
     'gender',
     'blood_type',
+    'address',
+    'phone',
     'student_parent_id',
-    'email',
-    'password',
-  ];
-
+];
   
 
   /**
