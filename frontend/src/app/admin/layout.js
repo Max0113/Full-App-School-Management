@@ -13,7 +13,7 @@ function layout({ children }) {
       <SidebarProvider className="flex flex-col">
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset>
+          <SidebarInset className={"w-100"}>
             <SiteHeader />
             <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
           </SidebarInset>

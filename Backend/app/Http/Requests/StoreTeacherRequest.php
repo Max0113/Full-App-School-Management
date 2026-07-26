@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class StoreTeacherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,6 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $parentId = $this->route('user');
-
         return [
             'firstname' => 'required|max:50',
             'lastname' => 'required|max:50',
@@ -42,10 +40,9 @@ class UpdateUserRequest extends FormRequest
                 'AB-'
             ])],
             'address' => 'required|max:50',
-            'phone' => ['required', 'max:10', Rule::unique('users')->ignore($parentId)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($parentId)],
-            'password' => 'min:8',
-            'student_parent_id' => 'min:1'
+            'phone' => 'required|max:10|unique:teachers',
+            'email' => 'required|email|unique:teachers',
+            'password' => 'required|min:8'
         ];
     }
 }

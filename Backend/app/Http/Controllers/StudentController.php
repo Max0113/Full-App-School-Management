@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\StudentResource;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -16,7 +17,18 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $results = DB::table('users')
+        ->join('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
+        ->select(
+            'users.*',
+            'student_parents.id as parent_id',
+            'student_parents.firstname as parent_firstname',
+            'student_parents.lastname as parent_lastname'
+        )
+        ->get();
+
+        return StudentResource::collection($results);
+
     }
 
     /**

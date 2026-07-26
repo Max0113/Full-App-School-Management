@@ -60,7 +60,9 @@ function page() {
             <tbody>
               <tr className="border-b transition">
                 <td className="px-6 py-4">{user?.id}</td>
-                <td className="px-6 py-4">{user?.name}</td>
+                <td className="px-6 py-4">
+                  {user?.firstname + " " + user?.lastname}
+                </td>
                 <td className="px-6 py-4">{user?.email}</td>
               </tr>
             </tbody>

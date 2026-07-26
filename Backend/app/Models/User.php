@@ -30,6 +30,7 @@ class User extends Authenticatable
     'phone',
     'student_parent_id',
 ];
+
   
 
   /**
@@ -47,6 +48,11 @@ class User extends Authenticatable
   {
     return 'student';
   }
+
+  public function parent()
+    {
+        return $this->belongsTo(StudentParent::class, 'student_parent_id');
+    }
   /**
    * The attributes that should be cast.
    *

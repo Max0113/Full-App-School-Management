@@ -61,8 +61,14 @@ export function DeleteDialog({
 
         <form id="delete-form" onSubmit={handleSubmit}>
           <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancel</Button>} />
-            <Button type="submit" form="delete-form">
+            <DialogClose
+              render={
+                <Button variant="outline" disabled={submitting}>
+                  Cancel
+                </Button>
+              }
+            />
+            <Button type="submit" form="delete-form" disabled={submitting}>
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />

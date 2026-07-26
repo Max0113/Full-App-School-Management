@@ -33,11 +33,11 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'date_of_birth' => fake()->dateTimeBetween('-60 years', '-5 years'),
             'last_login_date' => fake()->dateTimeBetween('-1 month', 'now'),
-            'address' => fake()->address(),
+            'address' => Str::limit(fake()->address(), 45),
             'phone' => fake()->unique()->numerify('##########'),
             'gender' => fake()->randomElement(['m', 'f']),
             'blood_type' => fake()->randomElement(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']),
-            'student_parent_id' => null,
+            'student_parent_id' => \App\Models\StudentParent::factory(),
         ];
     }
 

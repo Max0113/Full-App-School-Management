@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('teachers', function (Blueprint $table) {
             $table->string('password')->after('email');
+            $table->dateTime('last_login_date')->nullable()->after('password');
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('teachers', function (Blueprint $table) {
             $table->dropColumn('password');
+            $table->dropColumn('date_of_birth');
         });
     }
 };

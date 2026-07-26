@@ -26,6 +26,11 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
   { accessorKey: "email", header: "Email" },
   { accessorKey: "phone", header: "Phone" },
   { accessorKey: "address", header: "Address" },
+  {
+    accessorFn: (row) =>
+      `${row.parent_firstname ?? ""} ${row.parent_lastname ?? ""}`.trim(),
+    header: "Parents name",
+  },
   { accessorKey: "gender", header: "Gender" },
   { accessorKey: "blood_type", header: "Blood type" },
   { accessorKey: "date_of_birth", header: "Date of birth" },

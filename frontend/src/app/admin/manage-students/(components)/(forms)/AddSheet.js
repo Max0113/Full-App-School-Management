@@ -22,9 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Students } from "@/components/Api/Connect";
+import { Connect_Parents, Connect_Students } from "@/components/Api/Connect";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 
@@ -51,6 +51,8 @@ const schema = z.object({
   email: z.string().email("Invalid email"),
 
   password: z.string().min(8, "Password must be at least 8 characters"),
+
+  student_parent_id: z.int().min(1, "Chose a parent"),
 });
 
 function FieldError({ message }) {
@@ -63,7 +65,7 @@ function FieldError({ message }) {
   );
 }
 
-export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
+export function AddSheet({ open, onOpenChange, refresh, setrefresh, parents }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
@@ -247,6 +249,30 @@ export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
               {...register("phone")}
             />
             <FieldError message={errors.phone?.message} />
+          </Field>
+
+          <Field>
+            <Label htmlFor="student_parent_id">Select Parent ID</Label>
+            <Select
+              onValueChange={(val) =>
+                setValue("student_parent_id", val, { shouldValidate: true })
+              }
+            >
+              <SelectTrigger
+                id="student_parent_id"
+                className="py-5 px-4 w-full"
+              >
+                <SelectValue placeholder="Select parent id" />
+              </SelectTrigger>
+              <SelectContent>
+                {parents?.map((bt) => (
+                  <SelectItem key={bt.id} value={bt.id}>
+                    {bt.firstname + " " + bt.lastname}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FieldError message={errors.student_parent_id?.message} />
           </Field>
 
           {Error && (

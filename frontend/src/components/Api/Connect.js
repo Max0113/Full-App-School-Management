@@ -37,7 +37,7 @@ export const Connect_Parents = {
 
 export const Connect_Students = {
   getallstudents: async () => {
-    return await Clientaxios.get("api/getstudents");
+    return await Clientaxios.get("api/students");
   },
   addstudents: async (data) => {
     return await Clientaxios.post("api/students", data);

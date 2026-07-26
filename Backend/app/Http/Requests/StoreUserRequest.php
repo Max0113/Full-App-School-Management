@@ -40,9 +40,10 @@ class StoreUserRequest extends FormRequest
                 'AB-'
             ])],
             'address' => 'required|max:50',
-            'phone' => 'required|max:10|unique:student_parents',
-            'email' => 'required|email|unique:student_parents',
+            'phone' => 'required|max:10|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:8' ,
+            'student_parent_id' => 'min:1'
         ];
     }
 }
