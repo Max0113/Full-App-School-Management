@@ -23,7 +23,7 @@ class UpdateTeacherRequest extends FormRequest
      */
     public function rules(): array
     {
-        $parentId = $this->route('teacher');
+        $Id = $this->route('teacher');
 
         return [
             'firstname' => 'required|max:50',
@@ -42,8 +42,8 @@ class UpdateTeacherRequest extends FormRequest
                 'AB-'
             ])],
             'address' => 'required|max:50',
-            'phone' => ['required', 'max:10', Rule::unique('teachers')->ignore($parentId)],
-            'email' => ['required', 'email', Rule::unique('teachers')->ignore($parentId)],
+            'phone' => ['required', 'max:10', Rule::unique('teachers')->ignore($Id)],
+            'email' => ['required', 'email', Rule::unique('teachers')->ignore($Id)],
             'password' => 'min:8'
         ];
     }

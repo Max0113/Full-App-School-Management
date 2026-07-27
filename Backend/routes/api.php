@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentParentController;
+use App\Http\Controllers\TeacherController;
 use App\Models\StudentParent;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,12 +30,12 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
        return StudentParent::all();
     });
 
-    Route::get('/getparentsid',function () {
-       return StudentParent::all()->only(["id" , "firstname" , "lastname"]);
-    });
-
     Route::apiResources([
         'students' => StudentController::class,
+    ]);
+
+    Route::apiResources([
+        'teachers' => TeacherController::class,
     ]);
 
     Route::apiResources([

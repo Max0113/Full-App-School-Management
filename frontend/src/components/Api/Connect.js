@@ -22,7 +22,7 @@ export const Connect = {
 
 export const Connect_Parents = {
   getallparents: async () => {
-    return await Clientaxios.get("api/getparents");
+    return await Clientaxios.get("api/parents");
   },
   addparents: async (data) => {
     return await Clientaxios.post("api/parents", data);

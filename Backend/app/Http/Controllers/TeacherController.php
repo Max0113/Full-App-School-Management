@@ -16,7 +16,8 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        //
+        $data = Teacher::all();
+        return new TeacherResource($data);
     }
 
     /**
