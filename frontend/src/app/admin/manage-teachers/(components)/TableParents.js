@@ -2,25 +2,24 @@
 import { useState, useEffect } from "react";
 import { getColumns } from "./columns";
 import { useRouter } from "next/navigation";
-import { Connect_Parents, Connect_Students } from "@/components/Api/Connect";
+import { Connect_Teachers } from "@/components/Api/Connect";
 import { EditSheet } from "./(forms)/EditSheet";
 import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import CreateTable from "@/components/Table/CreateTable";
 
-export function DataTable() {
+export function TableTeacher() {
   const [data, Setdata] = useState([]);
-  const [parent, Setparent] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
-  const [editingParent, setEditingParent] = useState(null);
+  const [editingteacher, SetEditingteacher] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
   const [dialogOpenAd, setDialogOpenAd] = useState(false);
   const [dialogOpenDe, setDialogOpenDe] = useState(false);
   const [refresh, setrefresh] = useState(false);
 
-  const handleEditClick = (parent) => {
-    setEditingParent(parent);
+  const handleEditClick = (data) => {
+    SetEditingteacher(data);
     setDialogOpenEd(true);
   };
 
@@ -28,8 +27,8 @@ export function DataTable() {
     setDialogOpenAd(true);
   };
 
-  const handleDeleteClick = (parent) => {
-    setEditingParent(parent);
+  const handleDeleteClick = (data) => {
+    SetEditingteacher(data);
     setDialogOpenDe(true);
   };
 
@@ -38,10 +37,8 @@ export function DataTable() {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await Connect_Students.getallstudents();
-      const pare = await Connect_Parents.getallparents();
-      Setparent(pare.data);
-      Setdata(res.data.data);
+      const res = await Connect_Teachers.getallteachers();
+      Setdata(res.data);
     } catch (error) {
       console.error(error);
       route.push("/login");
@@ -59,20 +56,20 @@ export function DataTable() {
       <CreateTable
         data={data}
         columns={columns}
+        title={"teacher"}
         handleAddClick={handleAddClick}
-        title={"student"}
       />
+
       <EditSheet
-        data={editingParent}
+        teacher={editingteacher}
         open={dialogOpenEd}
         onOpenChange={setDialogOpenEd}
-        parents={parent}
         setrefresh={setrefresh}
         refresh={refresh}
       />
 
       <DeleteDialog
-        data={editingParent}
+        teacher={editingteacher}
         open={dialogOpenDe}
         onOpenChange={setDialogOpenDe}
         setrefresh={setrefresh}
@@ -81,7 +78,6 @@ export function DataTable() {
 
       <AddSheet
         open={dialogOpenAd}
-        parents={parent}
         onOpenChange={setDialogOpenAd}
         setrefresh={setrefresh}
         refresh={refresh}

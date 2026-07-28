@@ -18,9 +18,9 @@ import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IoPersonOutline } from "react-icons/io5";
 import { PiStudentBold } from "react-icons/pi";
-import { BiUser } from "react-icons/bi";
+import { PiUserBold } from "react-icons/pi";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth, isAuthenticated } = useAuth();
@@ -29,7 +29,7 @@ export function AppSidebar({ ...props }) {
   useEffect(() => {
     const runCheckAuth = async () => {
       try {
-        await checkAuth(); // updates `user` and `isAuthenticated` inside the context itself
+        await checkAuth();
       } catch (error) {
         console.error(error);
       } finally {
@@ -57,12 +57,17 @@ export function AppSidebar({ ...props }) {
       {
         name: "Parents",
         url: "/admin/manage-parents",
-        icon: <BiUser />,
+        icon: <PiUserBold />,
       },
       {
         name: "Students",
         url: "/admin/manage-students",
         icon: <PiStudentBold />,
+      },
+      {
+        name: "Teachers",
+        url: "/admin/manage-teachers",
+        icon: <FaChalkboardTeacher />,
       },
       { name: "Support", url: "#", icon: <MapIcon /> },
     ],

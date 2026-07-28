@@ -31,6 +31,10 @@ import { EditParentDialog } from "@/app/admin/manage-students/(components)/(form
 import { DeleteParentDialog } from "@/app/admin/manage-students/(components)/(forms)/DeleteDialog";
 import { AddParentDialog } from "@/app/admin/manage-students/(components)/(forms)/AddSheet";
 
+function capitalizeFirstLetter(str) {
+  return str ? str.at(0).toUpperCase() + str.slice(1) : "";
+}
+
 function CreateTable({ data, columns, title, handleAddClick }) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [refresh, setrefresh] = useState(false);
@@ -98,7 +102,7 @@ function CreateTable({ data, columns, title, handleAddClick }) {
           </DropdownMenu>
           <Button onClick={() => handleAddClick()} className={"flex-1"}>
             <IoMdAddCircleOutline className="h-4 w-4" />
-            Add new Student
+            {"Add new" + " " + capitalizeFirstLetter(title)}
           </Button>
         </div>
       </div>

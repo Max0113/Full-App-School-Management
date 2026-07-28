@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CountController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentParentController;
 use App\Http\Controllers\TeacherController;
@@ -22,13 +23,7 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function ()
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
-    Route::get('/getstudents',function () {
-       return User::all();
-    });
-
-    Route::get('/getparents',function () {
-       return StudentParent::all();
-    });
+    Route::get("/staticNumbers" , [CountController::class , 'count']);
 
     Route::apiResources([
         'students' => StudentController::class,

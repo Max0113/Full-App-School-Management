@@ -49,3 +49,18 @@ export const Connect_Students = {
     return await Clientaxios.delete(`api/students/${data.id}`);
   },
 };
+
+export const Connect_Teachers = {
+  getallteachers: async () => {
+    return await Clientaxios.get("api/teachers");
+  },
+  addteachers: async (data) => {
+    return await Clientaxios.post("api/teachers", data);
+  },
+  Updateteachers: async (data) => {
+    return await Clientaxios.put(`api/teachers/${data.id}`, data);
+  },
+  Deleteteachers: async (data) => {
+    return await Clientaxios.delete(`api/teachers/${data.id}`);
+  },
+};
