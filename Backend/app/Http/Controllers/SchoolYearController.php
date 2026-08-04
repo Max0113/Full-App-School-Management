@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClassTypeCourse;
+use App\Models\SchoolYear;
 use Illuminate\Http\Request;
 
-class ClassTypeCourseController extends Controller
+class SchoolYearController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
         //
     }
@@ -26,7 +34,15 @@ class ClassTypeCourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ClassTypeCourse $classTypeCourse)
+    public function show(SchoolYear $schoolYear)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(SchoolYear $schoolYear)
     {
         //
     }
@@ -34,7 +50,7 @@ class ClassTypeCourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ClassTypeCourse $classTypeCourse)
+    public function update(Request $request, SchoolYear $schoolYear)
     {
         //
     }
@@ -42,7 +58,7 @@ class ClassTypeCourseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClassTypeCourse $classTypeCourse)
+    public function destroy(SchoolYear $schoolYear)
     {
         //
     }

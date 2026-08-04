@@ -38,6 +38,7 @@ class UserFactory extends Factory
             'gender' => fake()->randomElement(['m', 'f']),
             'blood_type' => fake()->randomElement(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']),
             'student_parent_id' => \App\Models\StudentParent::factory(),
+            'classe_id' => null,
         ];
     }
 

@@ -59,7 +59,7 @@ class StudentController extends Controller
     public function update(UpdateUserRequest $request, $id)
     {
         $validated = $request->validated();
-        $student = User::find($id);
+        $student = User::findOrFail($id);
 
         if(!isset($validated['password'])){
             $validated['password'] = $student['password'];
@@ -76,7 +76,7 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        $student = User::find($id);
+        $student = User::findOrFail($id);
         $student->delete();
         return new StudentResource($student);
     }

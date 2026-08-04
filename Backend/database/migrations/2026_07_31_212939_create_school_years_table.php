@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('student_parents', function (Blueprint $table) {
-            $table->string('password')->after('email');
+        Schema::create('school_years', function (Blueprint $table) {
+            $table->id();
+            $table->string("name");
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('student_parents', function (Blueprint $table) {
-            $table->dropColumn('password');
-        });
+        Schema::dropIfExists('school_years');
     }
 };

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExamRecord extends Model
+class Subject extends Model
 {
     //
 }

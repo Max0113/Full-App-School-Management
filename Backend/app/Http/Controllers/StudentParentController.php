@@ -48,7 +48,7 @@ class StudentParentController extends Controller
     public function update(UpdateStudentParentRequest $request, $id)
     {
         $validated = $request->validated();
-        $studentParent = StudentParent::find($id);
+        $studentParent = StudentParent::findOrFail($id);
         if(!isset($validated['password'])){
             $validated['password'] = $studentParent['password'];
         }else {
@@ -64,7 +64,7 @@ class StudentParentController extends Controller
      */
     public function destroy($id)
     {
-        $studentParent = StudentParent::find($id);
+        $studentParent = StudentParent::findOrFail($id);
         $studentParent->delete();
         return new StudentParentResource($studentParent);
     }

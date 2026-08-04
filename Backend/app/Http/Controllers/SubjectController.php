@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExamRecord;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 
-class ExamRecordController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class ExamRecordController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ExamRecord $examRecord)
+    public function show(Subject $subject)
     {
         //
     }
@@ -34,7 +34,7 @@ class ExamRecordController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ExamRecord $examRecord)
+    public function update(Request $request, Subject $subject)
     {
         //
     }
@@ -42,7 +42,7 @@ class ExamRecordController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ExamRecord $examRecord)
+    public function destroy(Subject $subject)
     {
         //
     }

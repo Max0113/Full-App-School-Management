@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\Classe;
-use App\Models\Course;
-use App\Models\Teacher;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('type' , ['cc','efm']);
-            $table->foreignIdFor(Teacher::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Classe::class)->constrained()->cascadeOnDelete();
-            $table->softDeletes();
+            $table->string('name'); 
+            $table->enum('type', ['written', 'oral', 'practical']); 
+            $table->date('exam_date'); 
+            $table->foreignId('teaching_assignment_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
