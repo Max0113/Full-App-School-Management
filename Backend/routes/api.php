@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\CountController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentParentController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Models\StudentParent;
 use App\Models\User;
@@ -29,6 +31,15 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
      Route::apiResources([
         'levels' => LevelController::class,
     ]);
+
+    Route::apiResources([
+        'schoolyears' => SchoolYearController::class,
+    ]);
+
+    Route::apiResources([
+        'subjects' => SubjectController::class,
+    ]);
+
 
     Route::apiResources([
         'students' => StudentController::class,

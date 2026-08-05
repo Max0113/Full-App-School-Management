@@ -69,6 +69,11 @@ export function AppSidebar({ ...props }) {
         url: "/admin/manage-teachers",
         icon: <FaChalkboardTeacher />,
       },
+      {
+        name: "Controlle School",
+        url: "/admin/manage-school",
+        icon: <LifeBuoyIcon />,
+      },
       { name: "Support", url: "#", icon: <MapIcon /> },
     ],
     navSecondary: [
