@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('sessions_date'); 
             $table->date('start_time'); 
             $table->date('end_time'); 
-            $table->foreignId('teaching_assignment_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('teaching_subject_classe_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

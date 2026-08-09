@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Level;
+use App\Models\SchoolYear;
 use App\Models\StudentParent;
 use App\Models\Teacher;
 use App\Models\User;
@@ -62,5 +64,17 @@ class DatabaseSeeder extends Seeder
             'email' => 'Admin@Admin.com',
             'password' => Hash::make('00001111')
         ]);
+
+        SchoolYear::factory()->create([
+            'name' => '2025/2026',
+        ]);
+
+        $levels = ['1Bac', '2Bac'];
+
+        foreach ($levels as $level) {
+            Level::factory()->create([
+                'name' => $level,
+            ]);
+        }
     }
 }

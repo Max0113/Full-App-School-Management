@@ -62,7 +62,7 @@ function SubjectCard() {
         <div>
           <div className="flex justify-between">
             <h1 className="text-xl font-bold flex items-center gap-3">
-              <RiRadioButtonLine className="text-green-400" /> Subject
+              <RiRadioButtonLine className="text-green-400" /> Specialite
             </h1>
             <Button
               variant="outline"
@@ -74,7 +74,7 @@ function SubjectCard() {
               <IoIosAddCircleOutline className="text-2xl" />
             </Button>
           </div>
-          <p className="text-white/20">You can create and delete subject</p>
+          <p className="text-white/20">You can create and delete specialite</p>
         </div>
         {isLoading ? (
           <div className="bg-background px-6 py-5 rounded-lg w-full font-bold">
