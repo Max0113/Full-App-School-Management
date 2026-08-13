@@ -46,3 +46,33 @@ export const Connect_Subject = {
     return await Clientaxios.delete(`api/subjects/${data.id}`);
   },
 };
+
+export const Connect_Speialite = {
+  getallspeialite: async () => {
+    return await Clientaxios.get("api/speialites");
+  },
+  addspeialite: async (data) => {
+    return await Clientaxios.post("api/speialites", data);
+  },
+  Updatespeialite: async (data) => {
+    return await Clientaxios.put(`api/speialites/${data.id}`, data);
+  },
+  Deletespeialite: async (data) => {
+    return await Clientaxios.delete(`api/speialites/${data.id}`);
+  },
+};
+
+export const Connect_Classe = {
+  getallclasse: async () => {
+    return await Clientaxios.get("api/classes");
+  },
+  addclasse: async (data) => {
+    return await Clientaxios.post("api/classes", data);
+  },
+  Updateclasse: async (data) => {
+    return await Clientaxios.put(`api/classes/${data.id}`, data);
+  },
+  Deleteclasse: async (data) => {
+    return await Clientaxios.delete(`api/classes/${data.id}`);
+  },
+};

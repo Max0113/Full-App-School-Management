@@ -27,9 +27,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { EditParentDialog } from "@/app/admin/manage-students/(components)/(forms)/EditSheet";
-import { DeleteParentDialog } from "@/app/admin/manage-students/(components)/(forms)/DeleteDialog";
-import { AddParentDialog } from "@/app/admin/manage-students/(components)/(forms)/AddSheet";
 
 function capitalizeFirstLetter(str) {
   return str ? str.at(0).toUpperCase() + str.slice(1) : "";

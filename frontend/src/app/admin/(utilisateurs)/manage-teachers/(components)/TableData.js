@@ -8,7 +8,7 @@ import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import CreateTable from "@/components/Table/CreateTable";
 
-export function TableTeacher() {
+export function TableData() {
   const [data, Setdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();

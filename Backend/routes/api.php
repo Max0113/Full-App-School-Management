@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\CountController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\SchoolYearController;
@@ -30,6 +32,10 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     Route::get("/staticNumbers" , [CountController::class , 'count']);
 
     Route::apiResources([
+        'classes' => ClasseController::class,
+    ]);
+
+    Route::apiResources([
         'speialites' => SpecialiteController::class,
     ]);
 
@@ -56,6 +62,10 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
 
     Route::apiResources([
         'parents' => StudentParentController::class,
+    ]);
+
+    Route::apiResources([
+        'admins' => AdminController::class,
     ]);
 });
 

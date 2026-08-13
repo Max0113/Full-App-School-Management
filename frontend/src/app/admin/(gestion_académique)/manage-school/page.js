@@ -1,8 +1,6 @@
-"use client";
 import React from "react";
 import LevelCard from "./(components)/(card-level)/LevelCard";
 import YearCard from "./(components)/(card-year)/YearCard";
-import SubjectCard from "./(components)/(card-subject)/SubjectCard";
 
 function page() {
   return (

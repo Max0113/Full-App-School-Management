@@ -25,6 +25,7 @@ class StudentController extends Controller
             'student_parents.firstname as parent_firstname',
             'student_parents.lastname as parent_lastname'
         )
+        ->whereNull('users.deleted_at')
         ->get();
 
         return StudentResource::collection($results);

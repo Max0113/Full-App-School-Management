@@ -78,12 +78,12 @@ export function AppSidebar({ ...props }) {
           {
             title: "Spécialités",
             icon: <BiDna />,
-            url: "#",
+            url: "/admin/manage-specialites",
           },
           {
             title: "Classes",
             icon: <MdOutlineMeetingRoom />,
-            url: "#",
+            url: "/admin/manage-classes",
           },
           {
             title: "Matières",
@@ -114,7 +114,7 @@ export function AppSidebar({ ...props }) {
           {
             title: "Admins",
             icon: <MdOutlineAdminPanelSettings />,
-            url: "#",
+            url: "/admin/manage-admins",
           },
         ],
       },

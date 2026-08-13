@@ -64,3 +64,18 @@ export const Connect_Teachers = {
     return await Clientaxios.delete(`api/teachers/${data.id}`);
   },
 };
+
+export const Connect_Admins = {
+  getalladmins: async () => {
+    return await Clientaxios.get("api/admins");
+  },
+  addadmins: async (data) => {
+    return await Clientaxios.post("api/admins", data);
+  },
+  Updateadmins: async (data) => {
+    return await Clientaxios.put(`api/admins/${data.id}`, data);
+  },
+  Deleteadmins: async (data) => {
+    return await Clientaxios.delete(`api/admins/${data.id}`);
+  },
+};

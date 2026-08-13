@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('phone', 10)->unique();
             $table->string('email',60)->unique();
             $table->string('password');
+            $table->dateTime('last_login_date')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();
