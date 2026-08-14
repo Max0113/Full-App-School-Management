@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SubjectController extends Controller
 {
@@ -12,7 +13,19 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        return Subject::all();
+        $results = DB::table('subjects')
+            ->join('specialites', 'subjects.specialite_id', '=', 'specialites.id')
+            ->select(
+                'subjects.*',
+                'specialites.name as specialite_name',
+            )
+            ->whereNull('subjects.deleted_at')
+            ->get();
+
+        return response()->json([
+            "status" => 200,
+            "data" => $results
+        ], 200);
     }
 
     /**
@@ -29,7 +42,9 @@ class SubjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            "name" => "required|string",
+            "specialite_id" => "required|integer|exists:specialites,id",
+            "facture" => "required|integer|min:1"
         ]);
 
         $data = Subject::create($validated);
@@ -62,7 +77,9 @@ class SubjectController extends Controller
     public function update(Request $request,$id)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            "name" => "required|string",
+            "specialite_id" => "required|integer|exists:specialites,id",
+            "facture" => "required|integer|min:1"
         ]);
 
         $subject = Subject::findOrFail($id);

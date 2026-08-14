@@ -15,6 +15,7 @@ import {
 import { LuGraduationCap } from "react-icons/lu";
 import { NavMain } from "./nav-main";
 
+
 export function SidebarCom({ data, ...props }) {
   return (
     <Sidebar className="top-0 h-screen" {...props}>

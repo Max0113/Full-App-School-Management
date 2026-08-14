@@ -62,7 +62,7 @@ class TeacherController extends Controller
     public function update(UpdateTeacherRequest $request, $id)
     {
         $validated = $request->validated();
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
         if(!isset($validated['password'])){
             $validated['password'] = $teacher['password'];
         }else {
@@ -78,7 +78,7 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
-        $teacher = Teacher::find($id);
+        $teacher = Teacher::findOrFail($id);
         $teacher->delete();
         return new TeacherResource($teacher);
     }

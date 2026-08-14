@@ -11,6 +11,8 @@ class Subject extends Model
     use SoftDeletes , HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'specialite_id',
+        "facture"
     ];
 }

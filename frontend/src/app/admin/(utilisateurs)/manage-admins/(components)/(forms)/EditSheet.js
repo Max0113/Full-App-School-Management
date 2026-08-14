@@ -70,7 +70,7 @@ function FieldError({ message }) {
 }
 
 export function EditSheet({
-  teacher,
+  admin,
   open,
   onOpenChange,
   refresh,
@@ -92,26 +92,26 @@ export function EditSheet({
   });
 
   useEffect(() => {
-    if (teacher) {
+    if (admin) {
       reset({
-        firstname: teacher.firstname || "",
-        lastname: teacher.lastname || "",
-        date_of_birth: teacher.date_of_birth || "",
-        gender: teacher.gender || "",
-        blood_type: teacher.blood_type || "",
-        address: teacher.address || "",
-        phone: teacher.phone || "",
-        email: teacher.email || "",
+        firstname: admin.firstname || "",
+        lastname: admin.lastname || "",
+        date_of_birth: admin.date_of_birth || "",
+        gender: admin.gender || "",
+        blood_type: admin.blood_type || "",
+        address: admin.address || "",
+        phone: admin.phone || "",
+        email: admin.email || "",
         password: "",
       });
     }
-  }, [teacher, reset]);
+  }, [admin, reset]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
     setError(false);
     try {
-      const payload = { ...data, id: teacher.id };
+      const payload = { ...data, id: admin.id };
       if (!payload.password) delete payload.password;
 
       await Connect_Admins.Updateadmins(payload);
@@ -133,7 +133,7 @@ export function EditSheet({
     }
   };
 
-  if (!teacher) return null;
+  if (!admin) return null;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

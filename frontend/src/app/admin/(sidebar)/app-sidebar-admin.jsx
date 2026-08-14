@@ -88,7 +88,7 @@ export function AppSidebar({ ...props }) {
           {
             title: "Matières",
             icon: <FiBook />,
-            url: "#",
+            url: "/admin/manage-subjects",
           },
         ],
       },

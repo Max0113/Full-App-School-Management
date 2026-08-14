@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function ()
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
+    
     Route::get("/staticNumbers" , [CountController::class , 'count']);
 
     Route::apiResources([

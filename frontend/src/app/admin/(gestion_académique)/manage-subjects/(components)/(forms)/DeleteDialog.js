@@ -11,9 +11,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import { Connect_Subject } from "@/components/Api/SchoolSetting";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Level, Connect_Subject } from "@/components/Api/SchoolSetting";
 
 export function DeleteDialog({
   data,
@@ -32,12 +32,12 @@ export function DeleteDialog({
       const res = await Connect_Subject.Deletesubject(data);
       console.log(res);
       onOpenChange(false);
-      toast.success("Level Subject", {
-        description: `${data?.name} subject has been delete successfully.`,
+      toast.success("Matiere Delete", {
+        description: `${data?.name} has been delete successfully.`,
       });
     } catch (error) {
       console.error(error?.response?.data?.message);
-      toast.error("Couldn't delete Subject", {
+      toast.error("Couldn't delete matiere", {
         description: "Something went wrong. Please try again.",
       });
     } finally {
@@ -51,15 +51,15 @@ export function DeleteDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-lg">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete Subject</DialogTitle>
+          <DialogTitle>Delete matiere</DialogTitle>
           <DialogDescription>
-            If you want Subject , click "confirm" to confirm.
+            If you want Delete matiere, click "confirm" to confirm.
           </DialogDescription>
         </DialogHeader>
 
-        <form id="delete-form" onSubmit={handleSubmit}>
+        <form id="edit-form" onSubmit={handleSubmit}>
           <DialogFooter>
             <DialogClose
               render={
@@ -68,14 +68,14 @@ export function DeleteDialog({
                 </Button>
               }
             />
-            <Button type="submit" form="delete-form" disabled={submitting}>
+            <Button type="submit" disabled={submitting} form="edit-form">
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Delete...
                 </>
               ) : (
-                "Delete Subject"
+                "Delete matiere"
               )}
             </Button>
           </DialogFooter>

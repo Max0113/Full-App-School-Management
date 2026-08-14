@@ -23,7 +23,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $parentId = $this->route('student');
+        $Id = $this->route('student');
 
         return [
             'firstname' => 'required|max:50',
@@ -42,8 +42,8 @@ class UpdateUserRequest extends FormRequest
                 'AB-'
             ])],
             'address' => 'required|max:50',
-            'phone' => ['required', 'max:10', Rule::unique('users')->ignore($parentId)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($parentId)],
+            'phone' => ['required', 'max:10', Rule::unique('users')->ignore($Id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($Id)],
             'password' => 'min:8',
             'student_parent_id' => 'min:1'
         ];
