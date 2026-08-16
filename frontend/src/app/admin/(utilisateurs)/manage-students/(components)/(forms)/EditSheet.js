@@ -58,6 +58,8 @@ const schema = z.object({
     }),
 
   student_parent_id: z.int().min(1, "Chose a parent"),
+
+  classe_id: z.int().min(1, "Chose a classe"),
 });
 
 function FieldError({ message }) {
@@ -77,6 +79,7 @@ export function EditSheet({
   refresh,
   setrefresh,
   parents,
+  classes,
 }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -106,6 +109,7 @@ export function EditSheet({
         email: data.email || "",
         password: "",
         student_parent_id: data.parent_id || "",
+        classe_id: data.classe_id || "",
       });
     }
   }, [data, reset]);
@@ -292,30 +296,54 @@ export function EditSheet({
             <FieldError message={errors.phone?.message} />
           </Field>
 
-          <Field>
-            <Label htmlFor="student_parent_id">Select Parent ID</Label>
-            <Select
-              value={watch("student_parent_id") || ""}
-              onValueChange={(val) =>
-                setValue("student_parent_id", val, { shouldValidate: true })
-              }
-            >
-              <SelectTrigger
-                id="student_parent_id"
-                className="py-5 px-4 w-full"
+          <div className="flex gap-4">
+            <Field className="flex-1">
+              <Label htmlFor="student_parent_id">Select Parent ID</Label>
+              <Select
+                value={watch("student_parent_id") || ""}
+                onValueChange={(val) =>
+                  setValue("student_parent_id", val, { shouldValidate: true })
+                }
               >
-                <SelectValue placeholder="Select parent id" />
-              </SelectTrigger>
-              <SelectContent>
-                {parents?.map((bt) => (
-                  <SelectItem key={bt.id} value={bt.id}>
-                    {bt.firstname + " " + bt.lastname}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FieldError message={errors.student_parent_id?.message} />
-          </Field>
+                <SelectTrigger
+                  id="student_parent_id"
+                  className="py-5 px-4 w-full"
+                >
+                  <SelectValue placeholder="Select parent id" />
+                </SelectTrigger>
+                <SelectContent>
+                  {parents?.map((bt) => (
+                    <SelectItem key={bt.id} value={bt.id}>
+                      {bt.firstname + " " + bt.lastname}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FieldError message={errors.student_parent_id?.message} />
+            </Field>
+
+            <Field className="flex-1">
+              <Label htmlFor="classe_id">Select Classe ID</Label>
+              <Select
+                value={watch("classe_id") || ""}
+                onValueChange={(val) =>
+                  setValue("classe_id", val, { shouldValidate: true })
+                }
+              >
+                <SelectTrigger id="classe_id" className="py-5 px-4 w-full">
+                  <SelectValue placeholder="Select classe id" />
+                </SelectTrigger>
+                <SelectContent>
+                  {classes?.map((bt) => (
+                    <SelectItem key={bt.id} value={bt.id}>
+                      {bt.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FieldError message={errors.classe_id?.message} />
+            </Field>
+          </div>
 
           {Error && (
             <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-400">

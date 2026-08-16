@@ -45,7 +45,8 @@ class UpdateUserRequest extends FormRequest
             'phone' => ['required', 'max:10', Rule::unique('users')->ignore($Id)],
             'email' => ['required', 'email', Rule::unique('users')->ignore($Id)],
             'password' => 'min:8',
-            'student_parent_id' => 'min:1'
+            'student_parent_id' => 'required|integer|exists:student_parents,id',
+            'classe_id' => 'required|integer|exists:classes,id',
         ];
     }
 }

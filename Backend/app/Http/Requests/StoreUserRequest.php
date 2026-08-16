@@ -43,7 +43,9 @@ class StoreUserRequest extends FormRequest
             'phone' => 'required|max:10|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8' ,
-            'student_parent_id' => 'min:1'
+            'student_parent_id' => 'required|integer|exists:student_parents,id',
+            'classe_id' => 'required|integer|exists:classes,id',
+
         ];
     }
 }

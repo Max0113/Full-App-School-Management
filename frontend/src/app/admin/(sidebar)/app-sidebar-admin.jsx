@@ -123,14 +123,14 @@ export function AppSidebar({ ...props }) {
         icon: <FaChalkboardTeacher />,
         items: [
           {
-            title: "Affectations",
+            title: "Enseignements",
             icon: <MdOutlineAssignment />,
-            url: "#",
+            url: "/admin/manage-teachings",
           },
           {
             title: "Séances de cours",
             icon: <BiChalkboard />,
-            url: "#",
+            url: "/admin/manage-session",
           },
           {
             title: "Absences",

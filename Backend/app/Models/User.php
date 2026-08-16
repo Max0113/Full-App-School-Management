@@ -30,6 +30,7 @@ class User extends Authenticatable
     'address',
     'phone',
     'student_parent_id',
+    'classe_id',
 ];
 
   

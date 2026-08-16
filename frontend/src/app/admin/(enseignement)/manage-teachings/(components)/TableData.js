@@ -2,27 +2,37 @@
 import { useState, useEffect } from "react";
 import { getColumns } from "./columns";
 import { useRouter } from "next/navigation";
-import { Connect_Parents, Connect_Students } from "@/components/Api/Connect";
 import { EditSheet } from "./(forms)/EditSheet";
 import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import CreateTable from "@/components/Table/CreateTable";
-import { Connect_Classe } from "@/components/Api/SchoolSetting";
+import {
+  Connect_Subject,
+  Connect_Speialite,
+  Connect_Classe,
+} from "@/components/Api/SchoolSetting";
+import { Connect_Teaching } from "@/components/Api/Enseignement";
+import { Connect_Teachers } from "@/components/Api/Connect";
+
+/*
+specialites,
+*/
 
 export function TableData() {
   const [data, Setdata] = useState([]);
-  const [parent, Setparent] = useState([]);
-  const [classe, Setclasse] = useState([]);
+  const [teachers, Setteachers] = useState([]);
+  const [subjects, Setsubjects] = useState([]);
+  const [classes, Setclasses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
-  const [editingParent, setEditingParent] = useState(null);
+  const [editingdata, setEditingdata] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
   const [dialogOpenAd, setDialogOpenAd] = useState(false);
   const [dialogOpenDe, setDialogOpenDe] = useState(false);
   const [refresh, setrefresh] = useState(false);
 
-  const handleEditClick = (parent) => {
-    setEditingParent(parent);
+  const handleEditClick = (info) => {
+    setEditingdata(info);
     setDialogOpenEd(true);
   };
 
@@ -30,8 +40,8 @@ export function TableData() {
     setDialogOpenAd(true);
   };
 
-  const handleDeleteClick = (parent) => {
-    setEditingParent(parent);
+  const handleDeleteClick = (info) => {
+    setEditingdata(info);
     setDialogOpenDe(true);
   };
 
@@ -40,12 +50,15 @@ export function TableData() {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await Connect_Students.getallstudents();
-      const pare = await Connect_Parents.getallparents();
-      const clas = await Connect_Classe.getallclasse();
-      Setparent(pare.data);
-      Setclasse(clas.data.data);
+      const res = await Connect_Teaching.getallteaching();
+      const res1 = await Connect_Teachers.getallteachers();
+      const res2 = await Connect_Subject.getallsubject();
+      const res3 = await Connect_Classe.getallclasse();
       Setdata(res.data.data);
+      Setteachers(res1.data);
+      Setsubjects(res2.data.data);
+      Setclasses(res3.data.data);
+      console.log(data);
     } catch (error) {
       console.error(error);
       route.push("/login");
@@ -64,20 +77,21 @@ export function TableData() {
         data={data}
         columns={columns}
         handleAddClick={handleAddClick}
-        title={"student"}
+        title={"Enseignements"}
       />
       <EditSheet
-        data={editingParent}
+        data={editingdata}
+        teachers={teachers}
+        subjects={subjects}
+        classes={classes}
         open={dialogOpenEd}
         onOpenChange={setDialogOpenEd}
-        parents={parent}
-        classes={classe}
         setrefresh={setrefresh}
         refresh={refresh}
       />
 
       <DeleteDialog
-        data={editingParent}
+        data={editingdata}
         open={dialogOpenDe}
         onOpenChange={setDialogOpenDe}
         setrefresh={setrefresh}
@@ -86,8 +100,9 @@ export function TableData() {
 
       <AddSheet
         open={dialogOpenAd}
-        parents={parent}
-        classes={classe}
+        teachers={teachers}
+        subjects={subjects}
+        classes={classes}
         onOpenChange={setDialogOpenAd}
         setrefresh={setrefresh}
         refresh={refresh}

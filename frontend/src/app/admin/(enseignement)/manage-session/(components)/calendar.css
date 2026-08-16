@@ -1,0 +1,96 @@
+.fc {
+  font-family: "Inter", sans-serif;
+  --fc-border-color: #eef0f3;
+  --fc-today-bg-color: transparent;
+  --fc-now-indicator-color: #6366f1;
+}
+
+/* Toolbar */
+.fc .fc-toolbar {
+  margin-bottom: 1.5rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.fc .fc-button {
+  background-color: transparent;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  box-shadow: none;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background-color: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+.fc .fc-button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* Column headers (MON 24, TUE 25...) */
+.fc .fc-col-header-cell-cushion {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 10px 0;
+}
+
+.fc .fc-col-header-cell.fc-day-today .fc-col-header-cell-cushion {
+  color: #111827;
+}
+
+/* Time slots */
+.fc .fc-timegrid-slot-label-cushion {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: #f1f2f4;
+}
+
+/* Now indicator (ligne violette avec point) */
+.fc .fc-timegrid-now-indicator-line {
+  border-color: #6366f1;
+  border-width: 1.5px;
+}
+
+.fc .fc-timegrid-now-indicator-arrow {
+  border-color: #6366f1;
+  background-color: #6366f1;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+}
+
+/* Events - cartes arrondies */
+.fc-event {
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  box-shadow: none;
+}
+
+.fc-event-title {
+  font-weight: 600;
+}
+
+.fc-event-time {
+  font-size: 0.7rem;
+  opacity: 0.75;
+}

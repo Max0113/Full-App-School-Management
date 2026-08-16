@@ -18,17 +18,20 @@ class StudentController extends Controller
     public function index()
     {
         $results = DB::table('users')
-        ->join('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
+        ->leftJoin('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
+        ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
         ->select(
             'users.*',
-            'student_parents.id as parent_id',
             'student_parents.firstname as parent_firstname',
-            'student_parents.lastname as parent_lastname'
+            'student_parents.lastname as parent_lastname',
+            'classes.name as classe_name'
         )
         ->whereNull('users.deleted_at')
         ->get();
 
-        return StudentResource::collection($results);
+        return response()->json([
+            "data" => $results,
+        ]);
 
     }
 
