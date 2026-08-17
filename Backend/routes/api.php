@@ -10,6 +10,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentParentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\ClassSessionController;
 use App\Http\Controllers\TeachingSubjectClasseController;
 use App\Models\StudentParent;
 use App\Models\User;
@@ -35,6 +36,10 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
 
     Route::apiResources([
         'classes' => ClasseController::class,
+    ]);
+
+    Route::apiResources([
+        'sessions' => ClassSessionController::class,
     ]);
 
     Route::apiResources([

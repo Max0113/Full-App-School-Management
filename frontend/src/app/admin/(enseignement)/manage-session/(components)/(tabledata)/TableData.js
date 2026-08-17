@@ -11,8 +11,9 @@ import {
   Connect_Speialite,
   Connect_Classe,
 } from "@/components/Api/SchoolSetting";
-import { Connect_Teaching } from "@/components/Api/Enseignement";
+import { Connect_Sessions, Connect_Teaching } from "@/components/Api/Enseignement";
 import { Connect_Teachers } from "@/components/Api/Connect";
+import { IoArrowUpCircle } from "react-icons/io5";
 
 /*
 specialites,
@@ -20,9 +21,7 @@ specialites,
 
 export function TableData() {
   const [data, Setdata] = useState([]);
-  const [teachers, Setteachers] = useState([]);
-  const [subjects, Setsubjects] = useState([]);
-  const [classes, Setclasses] = useState([]);
+  const [teaching, Setteaching] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
   const [editingdata, setEditingdata] = useState(null);
@@ -39,26 +38,21 @@ export function TableData() {
   const handleAddClick = () => {
     setDialogOpenAd(true);
   };
- 
+
   const handleDeleteClick = (info) => {
     setEditingdata(info);
     setDialogOpenDe(true);
   };
- 
+
   const columns = getColumns(handleEditClick, handleDeleteClick);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const res = await Connect_Teaching.getallteaching();
-      const res1 = await Connect_Teachers.getallteachers();
-      const res2 = await Connect_Subject.getallsubject();
-      const res3 = await Connect_Classe.getallclasse();
+      const res = await Connect_Sessions.getallsessions();      
+      const res1 = await Connect_Teaching.getallteaching();
       Setdata(res.data.data);
-      Setteachers(res1.data);
-      Setsubjects(res2.data.data);
-      Setclasses(res3.data.data);
-      console.log(data);
+      Setteaching(res1.data.data);
     } catch (error) {
       console.error(error);
       route.push("/login");
@@ -77,13 +71,11 @@ export function TableData() {
         data={data}
         columns={columns}
         handleAddClick={handleAddClick}
-        title={"Enseignements"}
+        title={"Seance"}
       />
       <EditSheet
         data={editingdata}
-        teachers={teachers}
-        subjects={subjects}
-        classes={classes}
+        teaching={teaching}
         open={dialogOpenEd}
         onOpenChange={setDialogOpenEd}
         setrefresh={setrefresh}
@@ -100,9 +92,7 @@ export function TableData() {
 
       <AddSheet
         open={dialogOpenAd}
-        teachers={teachers}
-        subjects={subjects}
-        classes={classes}
+        teaching={teaching}
         onOpenChange={setDialogOpenAd}
         setrefresh={setrefresh}
         refresh={refresh}

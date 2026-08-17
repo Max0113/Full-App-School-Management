@@ -16,3 +16,17 @@ export const Connect_Teaching = {
     return await Clientaxios.delete(`api/teachings/${data.id}`);
   },
 };
+export const Connect_Sessions = {
+  getallsessions: async () => {
+    return await Clientaxios.get("api/sessions");
+  },
+  addsessions: async (data) => { 
+    return await Clientaxios.post("api/sessions", data);
+  },
+  Updatesessions: async (data) => {
+    return await Clientaxios.put(`api/sessions/${data.id}`, data);
+  },
+  Deletesessions: async (data) => {
+    return await Clientaxios.delete(`api/sessions/${data.id}`);
+  },
+};

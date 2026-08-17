@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('class_sessions', function (Blueprint $table) {
             $table->id();
-            $table->date('sessions_date'); 
-            $table->date('start_time'); 
-            $table->date('end_time'); 
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->foreignId('teaching_subject_classe_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();

@@ -1,11 +1,11 @@
 "use client";
 
+import React , { useEffect , useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import "./calendar-dark.css";
-
 // Palette pastel façon capture d'écran
 const subjectColors = {
   Mathématiques: { bg: "#EDE9FE", text: "#6D28D9" }, // violet clair
@@ -14,7 +14,14 @@ const subjectColors = {
   Anglais: { bg: "#FEF3C7", text: "#B45309" },
 };
 
+/*
+input type : datetime-local
+*/
+
+
 export function ClanderSession() {
+
+
   const sessions = [
     {
       id: 1,
