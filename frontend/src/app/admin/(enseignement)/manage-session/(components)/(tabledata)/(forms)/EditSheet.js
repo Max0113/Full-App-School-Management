@@ -23,16 +23,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Subject } from "@/components/Api/SchoolSetting";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Teaching } from "@/components/Api/Enseignement";
+import { Connect_Sessions } from "@/components/Api/Enseignement";
 
 const schema = z.object({
-  teacher_id: z.int().min(1, "Chose a teacher"),
-  subject_id: z.int().min(1, "Chose a subject"),
-  classe_id: z.int().min(1, "Chose a classe"),
+  start_time: z.iso.datetime({ message: "Invalid start time" }), // accepts with or without offset/ms depending on version
+  end_time: z.iso.datetime({ message: "Invalid end time" }),
+  teaching_subject_classe_id: z.int().min(1, "Chose a teacher"),
 });
 
 function FieldError({ message }) {
@@ -51,9 +50,7 @@ export function EditSheet({
   onOpenChange,
   refresh,
   setrefresh,
-  teachers,
-  subjects,
-  classes,
+  teaching
 }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -73,9 +70,9 @@ export function EditSheet({
   useEffect(() => {
     if (data) {
       reset({
-        teacher_id: data.teacher_id || "",
-        subject_id: data.subject_id || "",
-        classe_id: data.classe_id || "",
+        start_time: data.start_time || "",
+        end_time: data.end_time || "",
+        teaching_subject_classe_id: data.teaching_subject_classe_id || "",
       });
     }
   }, [data, reset]);
@@ -87,17 +84,17 @@ export function EditSheet({
       const payload = { ...newdata, id: data.id };
       if (!payload.password) delete payload.password;
 
-      await Connect_Teaching.Updateteaching(payload);
+      await Connect_Sessions.Updatesessions(payload);
       onOpenChange(false);
-      toast.success("Enseignements updated", {
-        description: `${newdata.name} has been updated successfully.`,
+      toast.success("Seance updated", {
+        description: `has been updated successfully.`,
       });
     } catch (error) {
       const message =
-        error?.response?.data?.message || "Failed to update enseignement info.";
+        error?.response?.data?.message || "Failed to update seance info.";
       setError(message);
-      toast.error("Couldn't update enseignement", {
-        description: message,
+      toast.error("Couldn't update seance", {
+        description: "Failed to update seance info.",
       });
     } finally {
       setSubmitting(false);
@@ -115,9 +112,9 @@ export function EditSheet({
         className="w-full sm:max-w-lg overflow-y-auto p-0"
       >
         <SheetHeader>
-          <SheetTitle>Edit Enseignement</SheetTitle>
+          <SheetTitle>Edit Seances</SheetTitle>
           <SheetDescription>
-            Update the enseignement's details, then click "Save changes" to
+            Update the seance's details, then click "Save changes" to
             confirm.
           </SheetDescription>
         </SheetHeader>
@@ -127,70 +124,57 @@ export function EditSheet({
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
-          <Field>
-            <Label htmlFor="teacher_id">Select Teacher ID</Label>
-            <Select
-              value={watch("teacher_id") || ""}
-              onValueChange={(val) =>
-                setValue("teacher_id", val, { shouldValidate: true })
-              }
-            >
-              <SelectTrigger id="teacher_id" className="py-5 px-4 w-full">
-                <SelectValue placeholder="Select Teacher id" />
-              </SelectTrigger>
-              <SelectContent>
-                {teachers?.map((bt) => (
-                  <SelectItem key={bt.id} value={bt.id}>
-                    {bt.firstname + " " + bt.lastname}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FieldError message={errors.teacher_id?.message} />
-          </Field>
 
           <Field>
-            <Label htmlFor="subject_id">Select Subject ID</Label>
-            <Select
-              value={watch("subject_id") || ""}
-              onValueChange={(val) =>
-                setValue("subject_id", val, { shouldValidate: true })
-              }
-            >
-              <SelectTrigger id="subject_id" className="py-5 px-4 w-full">
-                <SelectValue placeholder="Select Subject id" />
-              </SelectTrigger>
-              <SelectContent>
-                {subjects?.map((bt) => (
-                  <SelectItem key={bt.id} value={bt.id}>
-                    {bt.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FieldError message={errors.subject_id?.message} />
+            <Label htmlFor="start_time">Start Time</Label>
+            <Input
+              id="start_time"
+              type="datetime-local"
+              className="py-5 px-4"
+              aria-invalid={!!errors.start_time}
+              {...register("start_time", {
+                setValueAs: (value) =>
+                  value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value,
+              })}
+            />
+            <FieldError message={errors.start_time?.message} />
           </Field>
 
+            <Field>
+            <Label htmlFor="end_time">End Time</Label>
+            <Input
+                id="end_time"
+                type="datetime-local"
+                className="py-5 px-4"
+                aria-invalid={!!errors.end_time}
+                {...register("end_time", {
+                  setValueAs: (value) =>
+                    value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value, // returns STRING
+                })}
+              />
+              <FieldError message={errors.end_time?.message} />
+            </Field>
+
           <Field>
-            <Label htmlFor="classe_id">Select Classe ID</Label>
+            <Label htmlFor="teaching_subject_classe_id">Select Teaching ID</Label>
             <Select
-              value={watch("classe_id") || ""}
+              value={watch("teaching_subject_classe_id") || ""}
               onValueChange={(val) =>
-                setValue("classe_id", val, { shouldValidate: true })
+                setValue("teaching_subject_classe_id", val, { shouldValidate: true })
               }
             >
-              <SelectTrigger id="classe_id" className="py-5 px-4 w-full">
-                <SelectValue placeholder="Select Classe id" />
+              <SelectTrigger id="teaching_subject_classe_id" className="py-5 px-4 w-full">
+                <SelectValue placeholder="Select Teaching Subject Class" />
               </SelectTrigger>
               <SelectContent>
-                {classes?.map((bt) => (
+                {teaching?.map((bt) => (
                   <SelectItem key={bt.id} value={bt.id}>
-                    {bt.name}
+                    {bt.teachers_firstname + " / " +  bt.classes_name + " / " + bt.subjects_name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <FieldError message={errors.classe_id?.message} />
+            <FieldError message={errors.teaching_subject_classe_id?.message} />
           </Field>
 
           {Error && (

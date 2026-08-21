@@ -12,8 +12,6 @@ import {
   Connect_Classe,
 } from "@/components/Api/SchoolSetting";
 import { Connect_Sessions, Connect_Teaching } from "@/components/Api/Enseignement";
-import { Connect_Teachers } from "@/components/Api/Connect";
-import { IoArrowUpCircle } from "react-icons/io5";
 
 /*
 specialites,

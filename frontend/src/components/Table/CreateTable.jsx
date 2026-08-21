@@ -97,10 +97,12 @@ function CreateTable({ data, columns, title, handleAddClick }) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+         {title && (
           <Button onClick={() => handleAddClick()} className={"flex-1"}>
             <IoMdAddCircleOutline className="h-4 w-4" />
             {"Add new" + " " + capitalizeFirstLetter(title)}
           </Button>
+        )}
         </div>
       </div>
 

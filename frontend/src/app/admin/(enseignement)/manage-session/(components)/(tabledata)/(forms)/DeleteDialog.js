@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Teaching } from "@/components/Api/Enseignement";
+import { Loader2 } from "lucide-react";
+import { Connect_Sessions } from "@/components/Api/Enseignement";
 
 export function DeleteDialog({
   data,
@@ -29,15 +29,15 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Teaching.Deleteteaching(data);
+      const res = await Connect_Sessions.Deletesessions(data);
       console.log(res);
       onOpenChange(false);
-      toast.success("Enseignement Delete", {
+      toast.success("Seance Delete", {
         description: `has been delete successfully.`,
       });
     } catch (error) {
       console.error(error?.response?.data?.message);
-      toast.error("Couldn't delete enseignement", {
+      toast.error("Couldn't delete seance", {
         description: "Something went wrong. Please try again.",
       });
     } finally {
@@ -53,9 +53,9 @@ export function DeleteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete Enseignement</DialogTitle>
+          <DialogTitle>Delete Seance</DialogTitle>
           <DialogDescription>
-            If you want Delete enseignement, click "confirm" to confirm.
+            If you want Delete seance, click "confirm" to confirm.
           </DialogDescription>
         </DialogHeader>
 
@@ -75,7 +75,7 @@ export function DeleteDialog({
                   Delete...
                 </>
               ) : (
-                "Delete enseignement"
+                "Delete seance"
               )}
             </Button>
           </DialogFooter>

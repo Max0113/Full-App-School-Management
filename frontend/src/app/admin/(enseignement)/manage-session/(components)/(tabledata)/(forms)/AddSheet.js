@@ -30,9 +30,9 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Connect_Sessions } from "@/components/Api/Enseignement";
 
 const schema = z.object({
-  start_time: z.coerce.date() , 
-  end_time : z.coerce.date(),
-  teaching_id: z.int().min(1, "Chose a teacher"),
+  start_time: z.iso.datetime({ message: "Invalid start time" }), // accepts with or without offset/ms depending on version
+  end_time: z.iso.datetime({ message: "Invalid end time" }),
+  teaching_subject_classe_id: z.int().min(1, "Chose a teacher"),
 });
 
 function FieldError({ message }) {
@@ -45,7 +45,6 @@ function FieldError({ message }) {
   );
 }
 
-const formatForApi = (datetimeLocal) => datetimeLocal + ":00Z";
 
 export function AddSheet({
   open,
@@ -69,12 +68,9 @@ export function AddSheet({
   const onSubmit = async (data) => {
     setSubmitting(true);
     setError(false);
+    console.log("Form data:", data); // Log the form data for debugging
     try {
-      await Connect_Sessions.addsessions({
-        ...data,
-        start_time: formatForApi(data.start_time),
-        end_time: formatForApi(data.end_time),
-      });
+      await Connect_Sessions.addsessions(data);
       onOpenChange(false);
       toast.success("Seance created", {
         description: `has been added successfully.`,
@@ -114,41 +110,45 @@ export function AddSheet({
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
-          
-
-           <Field className="flex-1">
+           <Field>
             <Label htmlFor="start_time">Start Time</Label>
             <Input
-                id="start_time"
-                type="datetime-local"
-                className="py-5 px-4"
-                aria-invalid={!!errors.start_time}
-                {...register("start_time")}
-              />
-              <FieldError message={errors.start_time?.message} />
-            </Field>
+              id="start_time"
+              type="datetime-local"
+              className="py-5 px-4"
+              aria-invalid={!!errors.start_time}
+              {...register("start_time", {
+                setValueAs: (value) =>
+                  value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value,
+              })}
+            />
+            <FieldError message={errors.start_time?.message} />
+          </Field>
 
-            <Field className="flex-1">
+            <Field>
             <Label htmlFor="end_time">End Time</Label>
             <Input
                 id="end_time"
                 type="datetime-local"
                 className="py-5 px-4"
                 aria-invalid={!!errors.end_time}
-                {...register("end_time")}
+                {...register("end_time", {
+                  setValueAs: (value) =>
+                    value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value, // returns STRING
+                })}
               />
               <FieldError message={errors.end_time?.message} />
             </Field>
 
           <Field>
-            <Label htmlFor="teaching_id">Select Teaching ID</Label>
+            <Label htmlFor="teaching_subject_classe_id">Select Teaching ID</Label>
             <Select
               onValueChange={(val) =>
-                setValue("teaching_id", val, { shouldValidate: true })
+                setValue("teaching_subject_classe_id", val, { shouldValidate: true })
               }
             >
-              <SelectTrigger id="teaching_id" className="py-5 px-4 w-full">
-                <SelectValue placeholder="Select Teacher id" />
+              <SelectTrigger id="teaching_subject_classe_id" className="py-5 px-4 w-full">
+                <SelectValue placeholder="Select Teaching Subject Class" />
               </SelectTrigger>
               <SelectContent>
                 {teaching?.map((bt) => (
@@ -158,7 +158,7 @@ export function AddSheet({
                 ))}
               </SelectContent>
             </Select>
-            <FieldError message={errors.teaching_id?.message} />
+            <FieldError message={errors.teaching_subject_classe_id?.message} />
           </Field>
 
           {Error && (

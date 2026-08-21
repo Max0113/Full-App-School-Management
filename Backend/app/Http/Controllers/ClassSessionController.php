@@ -23,6 +23,7 @@ class ClassSessionController extends Controller
             ->select(
                 'class_sessions.*',
                 'classes.name as classe_name',
+                'classes.id as classe_id',
                 'subjects.name as subject_name',
                 'teachers.firstname as teacher_firstname',
                 'teachers.lastname as teacher_lastname'
@@ -65,9 +66,29 @@ class ClassSessionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ClassSession $classSession)
+    public function show($id)
     {
-        //
+        $results = DB::table('class_sessions')
+            ->join('teaching_subject_classes', 'class_sessions.teaching_subject_classe_id', '=', 'teaching_subject_classes.id')
+            ->join('classes', 'teaching_subject_classes.classe_id', '=', 'classes.id')
+            ->join('teachers', 'teaching_subject_classes.teacher_id', '=', 'teachers.id')
+            ->join('subjects', 'teaching_subject_classes.subject_id', '=', 'subjects.id')
+            ->select(
+                'class_sessions.*',
+                'classes.name as classe_name',
+                'classes.id as classe_id',
+                'subjects.name as subject_name',
+                'teachers.firstname as teacher_firstname',
+                'teachers.lastname as teacher_lastname'
+            )
+            ->where('classes.id', $id)
+            ->whereNull('class_sessions.deleted_at')
+            ->get();
+
+        return response()->json([
+            "status" => 202,
+            "data" => $results
+        ]);
     }
 
     /**
