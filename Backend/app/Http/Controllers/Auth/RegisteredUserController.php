@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\UniqueAccountEmail;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 
@@ -19,17 +21,21 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        $validated = $request->validate([
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:50',
+            'date_of_birth' => 'required|date',
+            'gender' => ['required', Rule::in(['m', 'f'])],
+            'blood_type' => ['required', Rule::in(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'])],
+            'address' => 'required|string|max:255',
+            'phone' => ['required', 'string', 'max:10', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', new UniqueAccountEmail],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+        $user = User::create($validated + [
             'password' => Hash::make($request->string('password')),
         ]);
 
@@ -37,6 +43,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return response()->noContent();
+        return response()->json([
+            'user' => $user,
+            'token' => $user->createToken('api', [$user->role])->plainTextToken,
+        ], 201);
     }
 }

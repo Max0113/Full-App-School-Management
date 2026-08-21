@@ -12,7 +12,10 @@ class SpecialiteController extends Controller
      */
     public function index()
     {
-        return Specialite::all();
+        return response()->json([
+            'status' => 200,
+            'data' => Specialite::all(),
+        ]);
     }
 
     /**
@@ -21,15 +24,15 @@ class SpecialiteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            'name' => 'required|string|max:255',
         ]);
 
         $data = Specialite::create($validated);
 
         return response()->json([
-            "status" => 201,
-            "data" => $data
-        ]);
+            'status' => 201,
+            'data' => $data,
+        ], 201);
     }
 
     /**
@@ -37,7 +40,10 @@ class SpecialiteController extends Controller
      */
     public function show(Specialite $specialite)
     {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => $specialite,
+        ]);
     }
 
     /**
@@ -46,7 +52,7 @@ class SpecialiteController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            'name' => 'required|string|max:255',
         ]);
 
         $specialite = Specialite::findOrFail($id);
@@ -54,8 +60,8 @@ class SpecialiteController extends Controller
         $specialite->update($validated);
 
         return response()->json([
-            "status" => 200,
-            "data" => $specialite
+            'status' => 200,
+            'data' => $specialite,
         ]);
     }
 
@@ -66,9 +72,7 @@ class SpecialiteController extends Controller
     {
         $specialite = Specialite::findOrFail($id);
         $specialite->delete();
-        return response()->json([
-            "status" => 200,
-            "data" => $specialite
-        ]);
+
+        return response()->noContent();
     }
 }

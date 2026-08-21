@@ -12,15 +12,10 @@ class LevelController extends Controller
      */
     public function index()
     {
-        return Level::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => Level::all(),
+        ]);
     }
 
     /**
@@ -29,15 +24,15 @@ class LevelController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            'name' => 'required|string|max:255',
         ]);
 
         $data = Level::create($validated);
 
         return response()->json([
-            "status" => 201,
-            "data" => $data
-        ]);
+            'status' => 201,
+            'data' => $data,
+        ], 201);
     }
 
     /**
@@ -45,24 +40,19 @@ class LevelController extends Controller
      */
     public function show(Level $level)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Level $level)
-    {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => $level,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            'name' => 'required|string|max:255',
         ]);
 
         $level = Level::findOrFail($id);
@@ -70,8 +60,8 @@ class LevelController extends Controller
         $level->update($validated);
 
         return response()->json([
-            "status" => 200,
-            "data" => $level
+            'status' => 200,
+            'data' => $level,
         ]);
     }
 
@@ -82,9 +72,7 @@ class LevelController extends Controller
     {
         $level = Level::findOrFail($id);
         $level->delete();
-        return response()->json([
-            "status" => 200,
-            "data" => $level
-        ]);
+
+        return response()->noContent();
     }
 }

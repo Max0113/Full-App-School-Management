@@ -38,7 +38,7 @@ export function TableData() {
     setIsLoading(true);
     try {
       const res = await Connect_Parents.getallparents();
-      Setdata(res.data);
+      Setdata(res.data.data);
     } catch (error) {
       console.error(error);
       route.push("/login");

@@ -70,7 +70,7 @@ export function ClanderSession() {
       setClasses(resClasses.data.data);
     } catch (error) {
       console.error("Error fetching classes:", error);
-    } finally {
+     } finally {
       setIsLoading(false);
     }
   };

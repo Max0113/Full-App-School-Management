@@ -18,7 +18,7 @@ class LevelFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->unique()->randomElement(['1ere', '2eme', '3eme', 'Tronc', '1Bac', '2Bac']).'-'.fake()->unique()->numberBetween(1, 999),
         ];
     }
 }

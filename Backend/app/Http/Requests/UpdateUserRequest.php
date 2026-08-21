@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueAccountEmail;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -30,7 +31,7 @@ class UpdateUserRequest extends FormRequest
             'lastname' => 'required|max:50',
             'date_of_birth' => 'required|date',
             'last_login_date' => 'date',
-            'gender' => ['required', Rule::in(['m','f'])],
+            'gender' => ['required', Rule::in(['m', 'f'])],
             'blood_type' => ['required', Rule::in([
                 'O-',
                 'O+',
@@ -39,11 +40,11 @@ class UpdateUserRequest extends FormRequest
                 'B+',
                 'B-',
                 'AB+',
-                'AB-'
+                'AB-',
             ])],
             'address' => 'required|max:50',
             'phone' => ['required', 'max:10', Rule::unique('users')->ignore($Id)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($Id)],
+            'email' => ['required', 'email', new UniqueAccountEmail('users', is_numeric($Id) ? (int) $Id : $Id?->id)],
             'password' => 'min:8',
             'student_parent_id' => 'required|integer|exists:student_parents,id',
             'classe_id' => 'required|integer|exists:classes,id',

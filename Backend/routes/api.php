@@ -1,19 +1,22 @@
 <?php
 
+use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\ClassSessionController;
 use App\Http\Controllers\CountController;
+use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentParentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\ClassSessionController;
 use App\Http\Controllers\TeachingSubjectClasseController;
-use App\Models\StudentParent;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +26,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum', 'ability:student'])->group(static function () {
     //
-
 });
 
 Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function () {
@@ -31,8 +33,11 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function ()
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
-    
-    Route::get("/staticNumbers" , [CountController::class , 'count']);
+
+    Route::get('/staticNumbers', [CountController::class, 'count']);
+
+    // Timetable: sessions of one classe (explicit route kept out of the resource).
+    Route::get('sessions/classe/{classe}', [ClassSessionController::class, 'byClasse']);
 
     Route::apiResources([
         'classes' => ClasseController::class,
@@ -47,10 +52,10 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     ]);
 
     Route::apiResources([
-        'speialites' => SpecialiteController::class,
+        'specialites' => SpecialiteController::class,
     ]);
 
-     Route::apiResources([
+    Route::apiResources([
         'levels' => LevelController::class,
     ]);
 
@@ -61,7 +66,6 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     Route::apiResources([
         'subjects' => SubjectController::class,
     ]);
-
 
     Route::apiResources([
         'students' => StudentController::class,
@@ -78,8 +82,39 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     Route::apiResources([
         'admins' => AdminController::class,
     ]);
+
+    // --- Exams & grades ---
+    Route::get('grades/report-card/{student}', [GradeController::class, 'reportCard']);
+
+    Route::apiResources([
+        'exams' => ExamController::class,
+    ]);
+
+    Route::apiResources([
+        'grades' => GradeController::class,
+    ]);
+
+    // --- Absences ---
+    Route::post('absences/bulk', [AbsenceController::class, 'bulkStore']);
+    Route::patch('absences/{absence}/justify', [AbsenceController::class, 'justify']);
+
+    Route::apiResources([
+        'absences' => AbsenceController::class,
+    ]);
+
+    // --- Payments ---
+    Route::get('payments/student/{student}', [PaymentController::class, 'receipts']);
+    Route::patch('payments/{payment}/status', [PaymentController::class, 'setStatus']);
+
+    Route::apiResources([
+        'payments' => PaymentController::class,
+    ]);
+
+    // --- Salaries ---
+    Route::get('salaries/month/{mois}', [SalaryController::class, 'monthly']);
+    Route::patch('salaries/{salary}/status', [SalaryController::class, 'setStatus']);
+
+    Route::apiResources([
+        'salaries' => SalaryController::class,
+    ]);
 });
-
-
-
-

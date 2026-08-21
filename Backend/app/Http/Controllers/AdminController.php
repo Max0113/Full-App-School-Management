@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
-use DateTime;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -15,7 +14,10 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return Admin::all();
+        $admins = Admin::orderBy('id', 'desc')
+            ->paginate(max(1, (int) request()->query('per_page', 15)));
+
+        return $this->paginated($admins);
     }
 
     /**
@@ -25,14 +27,13 @@ class AdminController extends Controller
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
-        $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
 
         $admin = Admin::create($validated);
 
         return response()->json([
-            "status" => 202,
-            "data" => $admin
-        ]);
+            'status' => 201,
+            'data' => $admin,
+        ], 201);
     }
 
     /**
@@ -40,7 +41,10 @@ class AdminController extends Controller
      */
     public function show(Admin $admin)
     {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => $admin,
+        ]);
     }
 
     /**
@@ -50,16 +54,17 @@ class AdminController extends Controller
     {
         $validated = $request->validated();
         $admin = Admin::findOrFail($id);
-        if(!isset($validated['password'])){
+        if (! isset($validated['password'])) {
             $validated['password'] = $admin['password'];
-        }else {
+        } else {
             $validated['password'] = Hash::make($validated['password']);
-        };
+        }
 
         $admin->update($validated);
+
         return response()->json([
-            "status" => 202,
-            "data" => $admin
+            'status' => 200,
+            'data' => $admin,
         ]);
     }
 
@@ -70,9 +75,7 @@ class AdminController extends Controller
     {
         $admin = Admin::findOrFail($id);
         $admin->delete();
-        return response()->json([
-            "status" => 202,
-            "data" => $admin
-        ]);
+
+        return response()->noContent();
     }
 }

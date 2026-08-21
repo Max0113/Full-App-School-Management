@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Classe;
 use App\Models\Level;
 use App\Models\SchoolYear;
+use App\Models\Specialite;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,7 @@ class ClasseFactory extends Factory
         return [
             'name' => fake()->bothify('Class ##'),
             'level_id' => Level::factory(),
+            'specialite_id' => Specialite::factory(),
             'school_year_id' => SchoolYear::factory(),
         ];
     }

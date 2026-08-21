@@ -7,20 +7,15 @@ use Illuminate\Http\Request;
 
 class SchoolYearController extends Controller
 {
-   /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return SchoolYear::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => SchoolYear::all(),
+        ]);
     }
 
     /**
@@ -29,40 +24,35 @@ class SchoolYearController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            'name' => 'required|string|max:255',
         ]);
 
         $data = SchoolYear::create($validated);
 
         return response()->json([
-            "status" => 201,
-            "data" => $data
-        ]);
+            'status' => 201,
+            'data' => $data,
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(SchoolYear $level)
+    public function show(SchoolYear $schoolYear)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SchoolYear $level)
-    {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => $schoolYear,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            "name" => "required|string"
+            'name' => 'required|string|max:255',
         ]);
 
         $year = SchoolYear::findOrFail($id);
@@ -70,8 +60,8 @@ class SchoolYearController extends Controller
         $year->update($validated);
 
         return response()->json([
-            "status" => 200,
-            "data" => $year
+            'status' => 200,
+            'data' => $year,
         ]);
     }
 
@@ -82,9 +72,7 @@ class SchoolYearController extends Controller
     {
         $year = SchoolYear::findOrFail($id);
         $year->delete();
-        return response()->json([
-            "status" => 200,
-            "data" => $year
-        ]);
+
+        return response()->noContent();
     }
 }

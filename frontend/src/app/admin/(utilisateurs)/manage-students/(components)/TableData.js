@@ -43,7 +43,7 @@ export function TableData() {
       const res = await Connect_Students.getallstudents();
       const pare = await Connect_Parents.getallparents();
       const clas = await Connect_Classe.getallclasse();
-      Setparent(pare.data);
+      Setparent(pare.data.data);
       Setclasse(clas.data.data);
       Setdata(res.data.data);
     } catch (error) {

@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class StudentParent extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $appends = ['role'];
 
@@ -41,4 +41,16 @@ class StudentParent extends Authenticatable
         'last_login_date',
         'password',
     ];
+
+    protected $casts = [
+        'date_of_birth' => 'date:Y-m-d',
+        'email_verified_at' => 'datetime',
+        'last_login_date' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function children()
+    {
+        return $this->hasMany(User::class, 'student_parent_id');
+    }
 }

@@ -8,11 +8,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Subject extends Model
 {
-    use SoftDeletes , HasFactory;
+    use HasFactory , SoftDeletes;
 
     protected $fillable = [
         'name',
         'specialite_id',
-        "facture"
+        'facture',
     ];
+
+    public function specialite()
+    {
+        return $this->belongsTo(Specialite::class);
+    }
+
+    public function teachings()
+    {
+        return $this->hasMany(TeachingSubjectClasse::class, 'subject_id');
+    }
 }

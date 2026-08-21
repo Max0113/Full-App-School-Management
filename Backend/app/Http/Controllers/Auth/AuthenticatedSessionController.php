@@ -17,20 +17,25 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): JsonResponse
     {
         $request->authenticate();
-        $guards = ['web', 'teacher', 'admin' , 'parent'];
+        $guards = ['web', 'teacher', 'admin', 'parent'];
 
         $user = null;
         foreach ($guards as $guard) {
-        $currentGuard = Auth::guard($guard);
-        if ($currentGuard->check()) {
-            $user = $currentGuard->user();
-            break;
+            $currentGuard = Auth::guard($guard);
+            if ($currentGuard->check()) {
+                $user = $currentGuard->user();
+                break;
+            }
         }
-        };
+
+        // Track the real last login date instead of the account creation date.
+        $user->forceFill(['last_login_date' => now()])->saveQuietly();
+
         $request->session()->regenerate();
+
         return response()->json([
-        'user' => $user,
-        'token' => $user->createToken('api',[$user->getRoleAttribute()])->plainTextToken
+            'user' => $user,
+            'token' => $user->createToken('api', [$user->getRoleAttribute()])->plainTextToken,
         ]);
     }
 
@@ -39,17 +44,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        $guards = ['web', 'teacher', 'admin' , 'parent'];
+        $user = $request->user('sanctum');
 
-        $user = null;
-        foreach ($guards as $guard) {
-        $currentGuard = Auth::guard($guard);
-        if ($currentGuard->check()) {
-            $user = $currentGuard->user();break;
+        if ($user) {
+            $user->tokens()->delete();
         }
-        };
-
-        $user->tokens()->delete();
 
         Auth::guard('web')->logout();
 

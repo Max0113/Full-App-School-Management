@@ -49,16 +49,16 @@ export const Connect_Subject = {
 
 export const Connect_Speialite = {
   getallspeialite: async () => {
-    return await Clientaxios.get("api/speialites");
+    return await Clientaxios.get("api/specialites");
   },
   addspeialite: async (data) => {
-    return await Clientaxios.post("api/speialites", data);
+    return await Clientaxios.post("api/specialites", data);
   },
   Updatespeialite: async (data) => {
-    return await Clientaxios.put(`api/speialites/${data.id}`, data);
+    return await Clientaxios.put(`api/specialites/${data.id}`, data);
   },
   Deletespeialite: async (data) => {
-    return await Clientaxios.delete(`api/speialites/${data.id}`);
+    return await Clientaxios.delete(`api/specialites/${data.id}`);
   },
 };
 

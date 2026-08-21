@@ -48,7 +48,7 @@ export function TableData() {
       const res = await Connect_Subject.getallsubject();
       const res2 = await Connect_Speialite.getallspeialite();
       Setdata(res.data.data);
-      Setspecialites(res2.data);
+      Setspecialites(res2.data.data);
       console.log(data);
     } catch (error) {
       console.error(error);

@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Level extends Model
 {
-    use SoftDeletes , HasFactory ;
+    use HasFactory , SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
+
+    public function classes()
+    {
+        return $this->hasMany(Classe::class);
+    }
 }

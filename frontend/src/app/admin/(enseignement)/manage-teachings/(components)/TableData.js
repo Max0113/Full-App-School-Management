@@ -55,7 +55,7 @@ export function TableData() {
       const res2 = await Connect_Subject.getallsubject();
       const res3 = await Connect_Classe.getallclasse();
       Setdata(res.data.data);
-      Setteachers(res1.data);
+      Setteachers(res1.data.data);
       Setsubjects(res2.data.data);
       Setclasses(res3.data.data);
       console.log(data);

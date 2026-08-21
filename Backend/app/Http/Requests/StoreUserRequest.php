@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueAccountEmail;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,7 @@ class StoreUserRequest extends FormRequest
             'lastname' => 'required|max:50',
             'date_of_birth' => 'required|date',
             'last_login_date' => 'date',
-            'gender' => ['required', Rule::in(['m','f'])],
+            'gender' => ['required', Rule::in(['m', 'f'])],
             'blood_type' => ['required', Rule::in([
                 'O-',
                 'O+',
@@ -37,12 +38,12 @@ class StoreUserRequest extends FormRequest
                 'B+',
                 'B-',
                 'AB+',
-                'AB-'
+                'AB-',
             ])],
             'address' => 'required|max:50',
             'phone' => 'required|max:10|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8' ,
+            'email' => ['required', 'email', new UniqueAccountEmail],
+            'password' => 'required|min:8',
             'student_parent_id' => 'required|integer|exists:student_parents,id',
             'classe_id' => 'required|integer|exists:classes,id',
 

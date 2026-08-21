@@ -21,7 +21,7 @@ export const Connect_Sessions = {
     return await Clientaxios.get("api/sessions");
   },
    getbyclasse: async (data) => {
-    return await Clientaxios.get(`api/sessions/${data.classe_id}`);
+    return await Clientaxios.get(`api/sessions/classe/${data.classe_id}`);
   },
   addsessions: async (data) => { 
     return await Clientaxios.post("api/sessions", data);

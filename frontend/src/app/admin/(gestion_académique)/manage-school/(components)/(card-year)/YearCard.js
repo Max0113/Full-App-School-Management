@@ -44,7 +44,7 @@ function YearCard() {
     setIsLoading(true);
     try {
       const res = await Connect_SchoolYear.getallschoolyear();
-      Setdata(res.data);
+      Setdata(res.data.data);
     } catch (error) {
       console.error(error);
       route.push("/login");

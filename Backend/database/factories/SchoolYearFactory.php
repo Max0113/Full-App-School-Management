@@ -18,7 +18,7 @@ class SchoolYearFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->unique()->numberBetween(2024, 2035).'/'.fake()->numberBetween(2025, 2036),
         ];
     }
 }

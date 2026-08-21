@@ -1,23 +1,24 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
-    $response = $this->post('/login', [
+    $response = $this->postJson('/api/login', [
         'email' => $user->email,
         'password' => 'password',
     ]);
 
     $this->assertAuthenticated();
-    $response->assertNoContent();
+    $response->assertStatus(200)->assertJsonStructure(['user', 'token']);
 });
 
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/login', [
+    $this->post('/api/login', [
         'email' => $user->email,
         'password' => 'wrong-password',
     ]);
@@ -27,9 +28,14 @@ test('users can not authenticate with invalid password', function () {
 
 test('users can logout', function () {
     $user = User::factory()->create();
+    $token = $user->createToken('test', ['student'])->plainTextToken;
 
-    $response = $this->actingAs($user)->post('/logout');
+    $response = $this->withHeaders([
+        'Authorization' => "Bearer {$token}",
+        'Accept' => 'application/json',
+    ])->postJson('/api/logout');
 
-    $this->assertGuest();
     $response->assertNoContent();
+
+    expect(DB::table('personal_access_tokens')->count())->toBe(0);
 });

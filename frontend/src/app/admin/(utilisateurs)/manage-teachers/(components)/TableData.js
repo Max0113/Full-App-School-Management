@@ -38,7 +38,7 @@ export function TableData() {
     setIsLoading(true);
     try {
       const res = await Connect_Teachers.getallteachers();
-      Setdata(res.data);
+      Setdata(res.data.data);
     } catch (error) {
       console.error(error);
       route.push("/login");

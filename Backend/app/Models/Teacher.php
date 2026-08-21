@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class Teacher extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
-    
+
     protected $fillable = [
         'firstname',
         'lastname',
@@ -37,9 +36,25 @@ class Teacher extends Authenticatable
 
     protected $appends = ['role'];
 
-  public function getRoleAttribute()
-  {
-    return 'teacher';
-  }
+    protected $casts = [
+        'date_of_birth' => 'date:Y-m-d',
+        'email_verified_at' => 'datetime',
+        'last_login_date' => 'datetime',
+        'password' => 'hashed',
+    ];
 
+    public function getRoleAttribute()
+    {
+        return 'teacher';
+    }
+
+    public function teachings()
+    {
+        return $this->hasMany(TeachingSubjectClasse::class);
+    }
+
+    public function salaries()
+    {
+        return $this->hasMany(Salary::class);
+    }
 }

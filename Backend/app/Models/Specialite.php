@@ -8,9 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Specialite extends Model
 {
-    use SoftDeletes , HasFactory;
+    use HasFactory , SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name',
     ];
+
+    public function classes()
+    {
+        return $this->hasMany(Classe::class);
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
 }

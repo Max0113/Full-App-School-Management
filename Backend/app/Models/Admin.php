@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Override;
 
 class Admin extends Authenticatable
 {
@@ -37,9 +36,25 @@ class Admin extends Authenticatable
 
     protected $appends = ['role'];
 
-  public function getRoleAttribute()
-  {
-    return 'admin';
-  }
+    protected $casts = [
+        'date_of_birth' => 'date:Y-m-d',
+        'email_verified_at' => 'datetime',
+        'last_login_date' => 'datetime',
+        'password' => 'hashed',
+    ];
 
+    public function getRoleAttribute()
+    {
+        return 'admin';
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function salaries()
+    {
+        return $this->hasMany(Salary::class);
+    }
 }

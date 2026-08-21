@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClasseRequest;
+use App\Http\Requests\UpdateClasseRequest;
 use App\Models\Classe;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ClasseController extends Controller
@@ -13,51 +14,35 @@ class ClasseController extends Controller
      */
     public function index()
     {
-        $results = DB::table('classes')
-            ->join('levels', 'classes.level_id', '=', 'levels.id')
-            ->join('specialites', 'classes.specialite_id', '=', 'specialites.id')
-            ->join('school_years', 'classes.school_year_id', '=', 'school_years.id')
-            ->select(
-                'classes.*',
-                'levels.name as level_name',
-                'specialites.name as specialite_name',
-                'school_years.name as school_year_name'
-            )
-            ->whereNull('classes.deleted_at')
+       $results = Classe::with(['level', 'specialite', 'schoolYear'])
+            ->whereHas('level', function ($q) {
+                $q->whereNull('deleted_at');
+            })
+            ->whereHas('specialite', function ($q) {
+                $q->whereNull('deleted_at');
+            })
+            ->whereHas('schoolYear', function ($q) {
+                $q->whereNull('deleted_at');
+            })
             ->get();
 
         return response()->json([
-            "status" => 200,
-            "data" => $results
+            'status' => 200,
+            'data' => $results,
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreClasseRequest $request)
     {
-        $validated = $request->validate([
-            "name" => "required|string",
-            "level_id" => "required|integer|exists:levels,id",
-            "specialite_id" => "required|integer|exists:specialites,id",
-            "school_year_id" => "required|integer|exists:school_years,id",
-        ]);
-
-        $data = Classe::create($validated);
+        $data = Classe::create($request->validated());
 
         return response()->json([
-            "status" => 202,
-            "data" => $data
-        ]);
+            'status' => 201,
+            'data' => $data,
+        ], 201);
     }
 
     /**
@@ -65,36 +50,24 @@ class ClasseController extends Controller
      */
     public function show(Classe $classe)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Classe $classe)
-    {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => $classe,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(UpdateClasseRequest $request, $id)
     {
-        $validated = $request->validate([
-            "name" => "required|string",
-            "level_id" => "required|integer|exists:levels,id",
-            "specialite_id" => "required|integer|exists:specialites,id",
-            "school_year_id" => "required|integer|exists:school_years,id",
-        ]);
-
         $classe = Classe::findOrFail($id);
 
-        $classe->update($validated);
+        $classe->update($request->validated());
 
         return response()->json([
-            "status" => 202,
-            "data" => $classe
+            'status' => 200,
+            'data' => $classe,
         ]);
     }
 
@@ -105,18 +78,15 @@ class ClasseController extends Controller
     {
         $classe = Classe::find($id);
 
-        if (!$classe) {
+        if (! $classe) {
             return response()->json([
-                "status" => 404,
-                "message" => "Classe not found"
+                'status' => 404,
+                'message' => 'Classe not found',
             ], 404);
         }
 
         $classe->delete();
 
-        return response()->json([
-            "status" => 202,
-            "data" => $classe
-        ], 202);
+        return response()->noContent();
     }
 }

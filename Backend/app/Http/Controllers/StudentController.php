@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\StudentResource;
-use DateTime;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,21 +17,21 @@ class StudentController extends Controller
     public function index()
     {
         $results = DB::table('users')
-        ->leftJoin('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
-        ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
-        ->select(
-            'users.*',
-            'student_parents.firstname as parent_firstname',
-            'student_parents.lastname as parent_lastname',
-            'classes.name as classe_name'
-        )
-        ->whereNull('users.deleted_at')
-        ->get();
+            ->leftJoin('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
+            ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
+            ->select(
+                'users.*',
+                'student_parents.firstname as parent_firstname',
+                'student_parents.lastname as parent_lastname',
+                'classes.name as classe_name'
+            )
+            ->whereNull('users.deleted_at')
+            ->whereNull('student_parents.deleted_at')
+            ->whereNull('classes.deleted_at')
+            ->orderBy('users.id', 'desc')
+            ->paginate(max(1, (int) request()->query('per_page', 15)));
 
-        return response()->json([
-            "data" => $results,
-        ]);
-
+        return $this->paginated($results);
     }
 
     /**
@@ -42,19 +41,36 @@ class StudentController extends Controller
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
-        $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
 
         $student = User::create($validated);
 
-        return new StudentResource($student);
+        return response()->json([
+            'status' => 201,
+            'data' => new StudentResource($student),
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $student)
     {
-        //
+        $data = DB::table('users')
+            ->leftJoin('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
+            ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
+            ->select(
+                'users.*',
+                'student_parents.firstname as parent_firstname',
+                'student_parents.lastname as parent_lastname',
+                'classes.name as classe_name'
+            )
+            ->where('users.id', $student->id)
+            ->first();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -65,14 +81,18 @@ class StudentController extends Controller
         $validated = $request->validated();
         $student = User::findOrFail($id);
 
-        if(!isset($validated['password'])){
+        if (! isset($validated['password'])) {
             $validated['password'] = $student['password'];
-        }else {
+        } else {
             $validated['password'] = Hash::make($validated['password']);
-        };
+        }
 
         $student->update($validated);
-        return new StudentResource($student);
+
+        return response()->json([
+            'status' => 200,
+            'data' => new StudentResource($student),
+        ]);
     }
 
     /**
@@ -82,6 +102,7 @@ class StudentController extends Controller
     {
         $student = User::findOrFail($id);
         $student->delete();
-        return new StudentResource($student);
+
+        return response()->noContent();
     }
 }

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Teacher;
 use App\Http\Requests\StoreTeacherRequest;
 use App\Http\Requests\UpdateTeacherRequest;
 use App\Http\Resources\TeacherResource;
-use DateTime;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
@@ -16,16 +15,10 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $data = Teacher::all();
-        return response()->json($data);
-    }
+        $data = Teacher::orderBy('id', 'desc')
+            ->paginate(max(1, (int) request()->query('per_page', 15)));
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->paginated($data);
     }
 
     /**
@@ -35,9 +28,13 @@ class TeacherController extends Controller
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
-        $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
-        $date = Teacher::create($validated);
-        return new TeacherResource($date);
+
+        $teacher = Teacher::create($validated);
+
+        return response()->json([
+            'status' => 201,
+            'data' => new TeacherResource($teacher),
+        ], 201);
     }
 
     /**
@@ -45,15 +42,10 @@ class TeacherController extends Controller
      */
     public function show(Teacher $teacher)
     {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Teacher $teacher)
-    {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => new TeacherResource($teacher),
+        ]);
     }
 
     /**
@@ -63,14 +55,18 @@ class TeacherController extends Controller
     {
         $validated = $request->validated();
         $teacher = Teacher::findOrFail($id);
-        if(!isset($validated['password'])){
+        if (! isset($validated['password'])) {
             $validated['password'] = $teacher['password'];
-        }else {
+        } else {
             $validated['password'] = Hash::make($validated['password']);
-        };
+        }
 
         $teacher->update($validated);
-        return new TeacherResource($teacher);
+
+        return response()->json([
+            'status' => 200,
+            'data' => new TeacherResource($teacher),
+        ]);
     }
 
     /**
@@ -80,6 +76,7 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::findOrFail($id);
         $teacher->delete();
-        return new TeacherResource($teacher);
+
+        return response()->noContent();
     }
 }

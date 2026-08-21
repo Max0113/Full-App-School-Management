@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\StudentParentResource;
-use App\Models\StudentParent;
 use App\Http\Requests\StoreStudentParentRequest;
 use App\Http\Requests\UpdateStudentParentRequest;
-use DateTime;
+use App\Http\Resources\StudentParentResource;
+use App\Models\StudentParent;
 use Illuminate\Support\Facades\Hash;
 
 class StudentParentController extends Controller
@@ -16,8 +15,10 @@ class StudentParentController extends Controller
      */
     public function index()
     {
-        $parents = StudentParent::all();
-        return  $parents;
+        $parents = StudentParent::orderBy('id', 'desc')
+            ->paginate(max(1, (int) request()->query('per_page', 15)));
+
+        return $this->paginated($parents);
     }
 
     /**
@@ -27,11 +28,13 @@ class StudentParentController extends Controller
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
-        $validated['last_login_date'] = (new DateTime())->format('Y-m-d');
 
         $parent = StudentParent::create($validated);
 
-        return new StudentParentResource($parent);
+        return response()->json([
+            'status' => 201,
+            'data' => new StudentParentResource($parent),
+        ], 201);
     }
 
     /**
@@ -39,7 +42,10 @@ class StudentParentController extends Controller
      */
     public function show(StudentParent $studentParent)
     {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => new StudentParentResource($studentParent),
+        ]);
     }
 
     /**
@@ -49,14 +55,18 @@ class StudentParentController extends Controller
     {
         $validated = $request->validated();
         $studentParent = StudentParent::findOrFail($id);
-        if(!isset($validated['password'])){
+        if (! isset($validated['password'])) {
             $validated['password'] = $studentParent['password'];
-        }else {
+        } else {
             $validated['password'] = Hash::make($validated['password']);
-        };
+        }
 
         $studentParent->update($validated);
-        return new StudentParentResource($studentParent);
+
+        return response()->json([
+            'status' => 200,
+            'data' => new StudentParentResource($studentParent),
+        ]);
     }
 
     /**
@@ -66,6 +76,7 @@ class StudentParentController extends Controller
     {
         $studentParent = StudentParent::findOrFail($id);
         $studentParent->delete();
-        return new StudentParentResource($studentParent);
+
+        return response()->noContent();
     }
 }

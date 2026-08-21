@@ -22,9 +22,9 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
     header: "Id",
   },
   { accessorKey: "name", header: "Name" },
-  { accessorKey: "level_name", header: "Level name" },
-  { accessorKey: "specialite_name", header: "Specialite name" },
-  { accessorKey: "school_year_name", header: "School year name" },
+  { accessorKey: "level.name", header: "Level name" },
+  { accessorKey: "specialite.name", header: "Specialite name" },
+  { accessorKey: "school_year.name", header: "School year name" },
   { accessorKey: "updated_at", header: "Updated at" },
   {
     id: "actions",

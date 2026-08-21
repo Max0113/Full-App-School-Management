@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTeachingSubjectClasseRequest;
+use App\Http\Requests\UpdateTeachingSubjectClasseRequest;
 use App\Models\TeachingSubjectClasse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TeachingSubjectClasseController extends Controller
@@ -25,59 +26,53 @@ class TeachingSubjectClasseController extends Controller
                 'classes.name as classes_name'
             )
             ->whereNull('teaching_subject_classes.deleted_at')
+            ->whereNull('teachers.deleted_at')
+            ->whereNull('subjects.deleted_at')
+            ->whereNull('classes.deleted_at')
             ->get();
 
         return response()->json([
-            "status" => 200,
-            "data" => $results
+            'status' => 200,
+            'data' => $results,
         ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTeachingSubjectClasseRequest $request)
     {
-        $validated = $request->validate([
-            "teacher_id" => "required|integer|exists:teachers,id",
-            "subject_id" => "required|integer|exists:subjects,id",
-            "classe_id" => "required|integer|exists:classes,id",
-        ]);
-
-        $data = TeachingSubjectClasse::create($validated);
+        $data = TeachingSubjectClasse::create($request->validated());
 
         return response()->json([
-            "status" => 202,
-            "data" => $data
-        ]);
+            'status' => 201,
+            'data' => $data,
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(TeachingSubjectClasse $classe)
+    public function show(TeachingSubjectClasse $teaching)
     {
-        //
+        return response()->json([
+            'status' => 200,
+            'data' => $teaching,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(UpdateTeachingSubjectClasseRequest $request, $id)
     {
-        $validated = $request->validate([
-            "teacher_id" => "required|integer|exists:teachers,id",
-            "subject_id" => "required|integer|exists:subjects,id",
-            "classe_id" => "required|integer|exists:classes,id",
-        ]);
-
         $classe = TeachingSubjectClasse::findOrFail($id);
 
-        $classe->update($validated);
+        $classe->update($request->validated());
 
         return response()->json([
-            "status" => 202,
-            "data" => $classe
+            'status' => 200,
+            'data' => $classe,
         ]);
     }
 
@@ -90,9 +85,6 @@ class TeachingSubjectClasseController extends Controller
 
         $classe->delete();
 
-        return response()->json([
-            "status" => 202,
-            "data" => $classe
-        ], 202);
+        return response()->noContent();
     }
 }

@@ -56,9 +56,9 @@ export function TableData() {
       const res2 = await Connect_Speialite.getallspeialite();
       const res3 = await Connect_SchoolYear.getallschoolyear();
       Setdata(res.data.data);
-      Setlevels(res1.data);
-      Setspecialites(res2.data);
-      Setschool_years(res3.data);
+      Setlevels(res1.data.data);
+      Setspecialites(res2.data.data);
+      Setschool_years(res3.data.data);
       console.log(data);
     } catch (error) {
       console.error(error);
