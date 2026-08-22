@@ -30,13 +30,11 @@ export function DeleteDialog({
     e.preventDefault();
     try {
       const res = await Connect_Admins.Deleteadmins(admin);
-      console.log(res);
       onOpenChange(false);
       toast.success("Admin Delete", {
         description: `${admin?.firstname} ${admin?.lastname} has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.admin?.message);
       toast.error("Couldn't delete admin", {
         description: "Something went wrong. Please try again.",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete Admin</DialogTitle>
           <DialogDescription>
-            If you want Delete admin, click "confirm" to confirm.
+            If you want Delete admin, click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

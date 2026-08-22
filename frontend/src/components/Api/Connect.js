@@ -2,6 +2,14 @@
 
 import { Clientaxios } from "@/lib/axios";
 
+const withParams = (url, params = {}) => {
+  const query = Object.entries(params)
+    .filter(([, v]) => v !== undefined && v !== null && v !== "")
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join("&");
+  return Clientaxios.get(url + (query ? `?${query}` : ""));
+};
+
 export const Connect = {
   postLogin: async (data) => {
     return await Clientaxios.post("api/login", data);
@@ -21,9 +29,7 @@ export const Connect = {
 };
 
 export const Connect_Parents = {
-  getallparents: async () => {
-    return await Clientaxios.get("api/parents");
-  },
+  getallparents: async (params = {}) => withParams("api/parents", params),
   addparents: async (data) => {
     return await Clientaxios.post("api/parents", data);
   },
@@ -36,9 +42,7 @@ export const Connect_Parents = {
 };
 
 export const Connect_Students = {
-  getallstudents: async () => {
-    return await Clientaxios.get("api/students");
-  },
+  getallstudents: async (params = {}) => withParams("api/students", params),
   addstudents: async (data) => {
     return await Clientaxios.post("api/students", data);
   },
@@ -51,9 +55,7 @@ export const Connect_Students = {
 };
 
 export const Connect_Teachers = {
-  getallteachers: async () => {
-    return await Clientaxios.get("api/teachers");
-  },
+  getallteachers: async (params = {}) => withParams("api/teachers", params),
   addteachers: async (data) => {
     return await Clientaxios.post("api/teachers", data);
   },
@@ -66,9 +68,7 @@ export const Connect_Teachers = {
 };
 
 export const Connect_Admins = {
-  getalladmins: async () => {
-    return await Clientaxios.get("api/admins");
-  },
+  getalladmins: async (params = {}) => withParams("api/admins", params),
   addadmins: async (data) => {
     return await Clientaxios.post("api/admins", data);
   },

@@ -6,7 +6,6 @@ import { BsGithub } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Clientaxios } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/Context/AuthContext";
 
@@ -19,7 +18,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
@@ -28,23 +26,40 @@ const schema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
+const DASHBOARD_BY_ROLE = {
+  student: process.env.NEXT_PUBLIC_DASHBOARD_STUDENT_URL || "/student/dashboard",
+  admin: process.env.NEXT_PUBLIC_DASHBOARD_Admin_URL || "/admin/dashboard",
+  teacher: process.env.NEXT_PUBLIC_DASHBOARD_TEACHER_URL || "/teacher/dashboard",
+  parent: process.env.NEXT_PUBLIC_DASHBOARD_PARENT_URL || "/parent/dashboard",
+};
+
 export default function Page() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const route = useRouter();
 
-  const { isAuthenticated, login, SetToken } = useAuth();
+  const { isAuthenticated, checkAuth, login } = useAuth();
 
+  // Already signed in? Bounce to the right dashboard.
   useEffect(() => {
-    const verifyAuth = async () => {
-      const authenticated = localStorage.getItem("AUTHENTICATED") === "true";
-      if (authenticated) {
-        setIsLoading(false);
+    let active = true;
+    const verify = async () => {
+      if (!isAuthenticated && typeof window !== "undefined" && !document.cookie.includes("auth_token=")) {
         return;
       }
+      try {
+        const u = await checkAuth();
+        if (!active || !u?.role) return;
+        route.replace(DASHBOARD_BY_ROLE[u.role] ?? "/login");
+      } catch {
+        // Not actually authenticated — stay on login.
+      }
     };
-    verifyAuth();
-  }, [isAuthenticated]);
+    verify();
+    return () => {
+      active = false;
+    };
+  }, [checkAuth, isAuthenticated, route]);
 
   const {
     register,
@@ -57,34 +72,23 @@ export default function Page() {
   const onSubmit = async (value) => {
     setError("");
     setIsLoading(true);
-    await login(value)
-      .then((res) => {
-        SetToken(res.data.token);
-        if (res.status != 404) {
-          switch (res.data.user.role) {
-            case "student":
-              route.refresh();
-              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_STUDENT_URL);
-              break;
-            case "admin":
-              route.refresh();
-              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_Admin_URL);
-              break;
-            case "teacher":
-              route.refresh();
-              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_TEACHER_URL);
-              break;
-            case "parent":
-              route.refresh();
-              route.replace(process.env.NEXT_PUBLIC_DASHBOARD_PARENT_URL);
-              break;
-          }
-        }
-      })
-      .catch((err) => {
-        setError(err.response?.data?.message);
-      });
-    setIsLoading(false);
+    try {
+      const res = await login(value);
+      const role = res?.data?.user?.role;
+      if (!role || !DASHBOARD_BY_ROLE[role]) {
+        setError("Unknown account role. Please contact an administrator.");
+        return;
+      }
+      route.replace(DASHBOARD_BY_ROLE[role]);
+    } catch (err) {
+      setError(
+        err?.response
+          ? err?.response?.data?.message || "Invalid email or password."
+          : "Server unreachable. Make sure the backend is running (php artisan serve).",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -140,7 +144,7 @@ export default function Page() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full py-6 px-5 text-[1rem] font-blod dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white"
+              className="w-full py-6 px-5 text-[1rem] font-bold dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white"
             >
               {isLoading ? "Logging in..." : "Login"}
             </Button>
@@ -173,17 +177,6 @@ export default function Page() {
             </Button>
           </div>
         </CardContent>
-
-        <p className="text-xs text-gray-500 text-center w-full">
-          I agree to abide by templatana's{" "}
-          <a href="#" className="underline">
-            Terms of Service
-          </a>{" "}
-          and its{" "}
-          <a href="#" className="underline">
-            Privacy Policy
-          </a>
-        </p>
       </Card>
     </div>
   );

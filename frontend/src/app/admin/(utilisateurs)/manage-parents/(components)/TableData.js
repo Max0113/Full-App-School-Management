@@ -7,10 +7,17 @@ import { EditSheet } from "./(forms)/EditSheet";
 import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import CreateTable from "@/components/Table/CreateTable";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
+
+const PER_PAGE = 15;
 
 export function TableData() {
   const [data, Setdata] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [total, setTotal] = useState(null);
   const route = useRouter();
   const [editingParent, setEditingParent] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
@@ -34,22 +41,49 @@ export function TableData() {
 
   const columns = getColumns(handleEditClick, handleDeleteClick);
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Connect_Parents.getallparents();
-      Setdata(res.data.data);
-    } catch (error) {
-      console.error(error);
-      route.push("/login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleSubmit();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_Parents.getallparents({
+          page,
+          per_page: PER_PAGE,
+        });
+        if (!active) return;
+        const meta = res.data?.meta ?? {};
+        Setdata(res.data?.data ?? []);
+        setPage(meta.current_page ?? page);
+        setLastPage(meta.last_page ?? page);
+        setTotal(meta.total ?? null);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les parents", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [page, refresh, route]);
+
+  const serverPagination = {
+    page,
+    lastPage,
+    total,
+    onPageChange: (nextPage) => {
+      if (nextPage === page || nextPage < 1 || nextPage > lastPage) return;
+      setIsLoading(true);
+      setPage(nextPage);
+    },
+  };
 
   return (
     <>
@@ -58,6 +92,8 @@ export function TableData() {
         columns={columns}
         title={"parent"}
         handleAddClick={handleAddClick}
+        isLoading={isLoading}
+        serverPagination={serverPagination}
       />
 
       <EditSheet

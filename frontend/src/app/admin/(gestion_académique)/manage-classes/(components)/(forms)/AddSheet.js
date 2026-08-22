@@ -102,8 +102,8 @@ export function AddSheet({
         <SheetHeader>
           <SheetTitle>Add Classe</SheetTitle>
           <SheetDescription>
-            Fill in the classe's details, then click "Create classe" to add them
-            to the system.
+            Fill in the classe&apos;s details, then click &quot;Create
+            classe&quot; to add them to the system.
           </SheetDescription>
         </SheetHeader>
 

@@ -117,8 +117,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit Enseignement</SheetTitle>
           <SheetDescription>
-            Update the enseignement's details, then click "Save changes" to
-            confirm.
+            Update the enseignement&apos;s details, then click &quot;Save
+            changes&quot; to confirm.
           </SheetDescription>
         </SheetHeader>
 

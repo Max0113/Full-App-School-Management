@@ -144,7 +144,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit admin</SheetTitle>
           <SheetDescription>
-            Update the admin's details, then click "Save changes" to confirm.
+            Update the admin&apos;s details, then click &quot;Save changes&quot; to
+            confirm.
           </SheetDescription>
         </SheetHeader>
 

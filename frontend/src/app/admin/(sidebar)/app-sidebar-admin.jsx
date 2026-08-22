@@ -1,8 +1,7 @@
 "use client";
 
-import { LifeBuoyIcon, SendIcon, PieChartIcon, MapIcon } from "lucide-react";
+import { LifeBuoyIcon, SendIcon } from "lucide-react";
 import { useAuth } from "@/components/Context/AuthContext";
-import { GoHomeFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,7 +12,6 @@ import { SidebarCom } from "@/components/app-sidebar";
 import { BiArchive } from "react-icons/bi";
 import { BiArrowFromBottom } from "react-icons/bi";
 import { BiDna } from "react-icons/bi";
-import { FiCalendar } from "react-icons/fi";
 import { MdOutlineMeetingRoom } from "react-icons/md";
 import { FiBook } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa";
@@ -25,36 +23,32 @@ import { BiBarChartAlt2 } from "react-icons/bi";
 import { BiColumns } from "react-icons/bi";
 import { BiFontColor } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import { GoHome } from "react-icons/go";
 import { BiHomeAlt } from "react-icons/bi";
 
 export function AppSidebar({ ...props }) {
-  const { user, checkAuth, isAuthenticated } = useAuth();
+  const { user, checkAuth } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const runCheckAuth = async () => {
+    let active = true;
+    const run = async () => {
       try {
         await checkAuth();
-      } catch (error) {
-        console.error(error);
+      } catch {
+        // Proxy/guard handles redirection; nothing to do here.
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     };
-    runCheckAuth();
-  }, [isAuthenticated]);
+    run();
+    return () => {
+      active = false;
+    };
+  }, [checkAuth]);
 
   const data = {
     user: {
-      name: isLoading ? (
-        <div className="space-y-2">
-          <Skeleton className="h-3 w-[100px]" />
-          <Skeleton className="h-3 w-[150px]" />
-        </div>
-      ) : (
-        (user?.firstname ?? "Unknown")
-      ),
+      name: isLoading ? "" : `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim() || "Unknown",
       email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },
@@ -135,7 +129,7 @@ export function AppSidebar({ ...props }) {
           {
             title: "Absences",
             icon: <MdOutlineCheckCircleOutline />,
-            url: "#",
+            url: "/admin/manage-absences",
           },
         ],
       },
@@ -146,12 +140,12 @@ export function AppSidebar({ ...props }) {
           {
             title: "Examens",
             icon: <BiColumns />,
-            url: "#",
+            url: "/admin/manage-exams",
           },
           {
             title: "Notes",
             icon: <BiFontColor />,
-            url: "#",
+            url: "/admin/manage-grades",
           },
         ],
       },
@@ -162,12 +156,12 @@ export function AppSidebar({ ...props }) {
           {
             title: "Paiements élèves",
             icon: <PiStudentBold />,
-            url: "#",
+            url: "/admin/manage-payments",
           },
           {
             title: "Salaires enseignants",
             icon: <FaChalkboardTeacher />,
-            url: "#",
+            url: "/admin/manage-salaries",
           },
         ],
       },

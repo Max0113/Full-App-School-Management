@@ -1,9 +1,9 @@
-import React from "react";
-
-const router = {
+const ROUTES = {
   STUDENT_DASHBOARD: "/student/dashboard",
-  STUDENT_DASHBOARD: "/admin/dashboard",
+  ADMIN_DASHBOARD: "/admin/dashboard",
   TEACHER_DASHBOARD: "/teacher/dashboard",
+  PARENT_DASHBOARD: "/parent/dashboard",
 };
 
-export default router;
+export const router = ROUTES;
+export default ROUTES;

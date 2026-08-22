@@ -116,7 +116,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit Matiere</SheetTitle>
           <SheetDescription>
-            Update the matiere's details, then click "Save changes" to confirm.
+            Update the matiere&apos;s details, then click &quot;Save
+            changes&quot; to confirm.
           </SheetDescription>
         </SheetHeader>
 

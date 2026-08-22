@@ -95,7 +95,8 @@ export function EditDialog({ level, open, onOpenChange, refresh, setrefresh }) {
         <DialogHeader>
           <DialogTitle>Edit Level</DialogTitle>
           <DialogDescription>
-            Update the level's details, then click "Save changes" to confirm.
+            Update the level&apos;s details, then click &quot;Save
+            changes&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

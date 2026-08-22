@@ -117,8 +117,8 @@ export function AddSheet({
         <SheetHeader>
           <SheetTitle>Add student</SheetTitle>
           <SheetDescription>
-            Fill in the student's details, then click "Create student" to add
-            them to the system.
+            Fill in the student&apos;s details, then click &quot;Create student&quot; to
+            add them to the system.
           </SheetDescription>
         </SheetHeader>
 

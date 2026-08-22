@@ -107,8 +107,8 @@ export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
         <SheetHeader>
           <SheetTitle>Add teacher</SheetTitle>
           <SheetDescription>
-            Fill in the teacher's details, then click "Create teacher" to add
-            them to the system.
+            Fill in the teacher&apos;s details, then click &quot;Create teacher&quot; to
+            add them to the system.
           </SheetDescription>
         </SheetHeader>
 

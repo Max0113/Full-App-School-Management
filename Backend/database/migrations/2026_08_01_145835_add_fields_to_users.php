@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Classe;
 
 return new class extends Migration
 {
@@ -12,8 +13,8 @@ return new class extends Migration
     public function up(): void
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->foreignId('classe_id')->nullable()
-              ->constrained('classes')
+        $table->foreignIdFor(Classe::class)->nullable()
+              ->constrained()
               ->cascadeOnDelete();
     });
 }

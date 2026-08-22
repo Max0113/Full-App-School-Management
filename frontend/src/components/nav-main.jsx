@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 import {
   Collapsible,
@@ -18,10 +19,10 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 
 export function NavMain({ items, title }) {
   const pathname = usePathname();
+  const safeItems = Array.isArray(items) ? items : [];
 
   const isLinkActive = (url) => url && url !== "#" && pathname === url;
 
@@ -35,7 +36,7 @@ export function NavMain({ items, title }) {
           {title}
         </SidebarGroupLabel>
         <SidebarMenu>
-          {items.map((item) => (
+          {safeItems.map((item) => (
             <Collapsible
               key={item.title}
               defaultOpen={isParentActive(item)}
@@ -47,7 +48,7 @@ export function NavMain({ items, title }) {
                 render={
                   <SidebarMenuButton
                     tooltip={item.title}
-                    render={<a href={item.url || "#"} />}
+                    render={<Link href={item.url || "#"} />}
                   >
                     {item.icon}
                     <span>{item.title}</span>
@@ -64,10 +65,10 @@ export function NavMain({ items, title }) {
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton
                           render={
-                            <a href={subItem.url}>
+                            <Link href={subItem.url}>
                               {subItem.icon}
                               <span>{subItem.title}</span>
-                            </a>
+                            </Link>
                           }
                         />
                       </SidebarMenuSubItem>

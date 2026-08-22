@@ -1,6 +1,5 @@
 "use client";
 import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown } from "lucide-react";
-
-const afficher = (parent) => {
-  console.log(parent);
-};
 
 export const getColumns = (handleEditClick, handleDeleteClick) => [
   {
@@ -49,7 +43,7 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
                   navigator.clipboard.writeText(parent.id.toString())
                 }
               >
-                Copier l'Id
+                Copier l&apos;Id
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleEditClick(parent)}>

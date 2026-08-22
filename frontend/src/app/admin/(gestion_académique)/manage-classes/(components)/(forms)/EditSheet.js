@@ -120,7 +120,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit classe</SheetTitle>
           <SheetDescription>
-            Update the classe's details, then click "Save changes" to confirm.
+            Update the classe&apos;s details, then click &quot;Save
+            changes&quot; to confirm.
           </SheetDescription>
         </SheetHeader>
 

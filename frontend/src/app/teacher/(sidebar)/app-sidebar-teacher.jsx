@@ -1,83 +1,60 @@
 "use client";
 
-import {
-  TerminalSquareIcon,
-  BotIcon,
-  BookOpenIcon,
-  Settings2Icon,
-  LifeBuoyIcon,
-  SendIcon,
-  FrameIcon,
-  PieChartIcon,
-  MapIcon,
-  TerminalIcon,
-  Cast,
-} from "lucide-react";
 import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { SidebarCom } from "@/components/app-sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PiStudentBold } from "react-icons/pi";
+import { PiUsersThreeBold } from "react-icons/pi";
 
 export function AppSidebar({ ...props }) {
-  const { user, checkAuth, isAuthenticated } = useAuth();
+  const { user, checkAuth } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const runCheckAuth = async () => {
+    let active = true;
+    const run = async () => {
       try {
-        await checkAuth(); // updates `user` and `isAuthenticated` inside the context itself
-      } catch (error) {
-        console.error(error);
+        await checkAuth();
+      } catch {
+        // Guard handles redirection.
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     };
-    runCheckAuth();
-  }, []);
+    run();
+    return () => {
+      active = false;
+    };
+  }, [checkAuth]);
 
   const data = {
     user: {
-      name: isLoading ? (
-        <div className="space-y-2">
-          <Skeleton className="h-3 w-[100px]" />
-          <Skeleton className="h-3 w-[150px]" />
-        </div>
-      ) : (
-        (user?.firstname + " " + user?.lastname ?? "Unknown")
-      ),
+      name: isLoading ? "" : `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim() || "Unknown",
       email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },
-    pageGeneral: [
+    pageMain: [
       {
-        name: "Dahbord",
+        title: "Dashboard",
         url: "/teacher/dashboard",
         icon: <GoHomeFill />,
+        items: null,
       },
       {
-        name: "Student",
+        title: "My Students",
         url: "#",
-        icon: <PieChartIcon />,
+        icon: <PiStudentBold />,
+        items: null,
       },
       {
-        name: "Parents of Students",
+        title: "Parents of Students",
         url: "#",
-        icon: <MapIcon />,
+        icon: <PiUsersThreeBold />,
+        items: null,
       },
     ],
-    navSecondary: [
-      {
-        title: "Setting Avenc",
-        url: "#",
-        icon: <LifeBuoyIcon />,
-      },
-      {
-        title: "Feedback",
-        url: "#",
-        icon: <SendIcon />,
-      },
-    ],
+    navSecondary: [],
   };
 
   return <SidebarCom data={data} />;

@@ -29,14 +29,12 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Classe.Deleteclasse(data);
-      console.log(res);
+      await Connect_Classe.Deleteclasse(data);
       onOpenChange(false);
       toast.success("Classe Delete", {
         description: `${data?.name} has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Couldn't delete classe", {
         description: "Something went wrong. Please try again.",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete classe</DialogTitle>
           <DialogDescription>
-            If you want Delete classe, click "confirm" to confirm.
+            If you want Delete classe, click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

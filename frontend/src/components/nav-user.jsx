@@ -28,6 +28,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const { logout } = useAuth()
+  const displayName = typeof user?.name === "string" ? user.name : ""
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -39,7 +40,7 @@ export function NavUser({
                 className="aria-expanded:bg-muted aria-expanded:text-foreground" />
             }>
             <Avatar>
-              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarImage src={user.avatar} alt={displayName} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -57,7 +58,7 @@ export function NavUser({
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar>
-                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarImage src={user.avatar} alt={displayName} />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -90,8 +91,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup onClick={logout}>
-              <DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={(e) => { e.preventDefault(); logout(); }}>
                 <LogOutIcon />
                 Log out
               </DropdownMenuItem>

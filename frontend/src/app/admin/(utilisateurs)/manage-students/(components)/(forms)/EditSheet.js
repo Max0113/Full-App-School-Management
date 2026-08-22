@@ -151,7 +151,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit student</SheetTitle>
           <SheetDescription>
-            Update the student's details, then click "Save changes" to confirm.
+            Update the student&apos;s details, then click &quot;Save changes&quot; to
+            confirm.
           </SheetDescription>
         </SheetHeader>
 

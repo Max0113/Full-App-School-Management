@@ -68,7 +68,6 @@ export function AddSheet({
   const onSubmit = async (data) => {
     setSubmitting(true);
     setError(false);
-    console.log("Form data:", data); // Log the form data for debugging
     try {
       await Connect_Sessions.addsessions(data);
       onOpenChange(false);
@@ -100,8 +99,8 @@ export function AddSheet({
         <SheetHeader>
           <SheetTitle>Add Seance</SheetTitle>
           <SheetDescription>
-            Fill in the seance's details, then click "Create seance"
-            to add them to the system.
+            Fill in the seance&apos;s details, then click &quot;Create
+            seance&quot; to add them to the system.
           </SheetDescription>
         </SheetHeader>
 

@@ -29,14 +29,12 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Level.Deletelevel(data);
-      console.log(res);
+      await Connect_Level.Deletelevel(data);
       onOpenChange(false);
       toast.success("Level Delete", {
         description: `${data?.name} Level has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Couldn't delete level", {
         description: "Something went wrong. Please try again.",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete Level</DialogTitle>
           <DialogDescription>
-            If you want Level , click "confirm" to confirm.
+            If you want Level , click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

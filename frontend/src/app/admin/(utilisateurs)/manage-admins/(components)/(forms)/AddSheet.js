@@ -106,8 +106,8 @@ export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
         <SheetHeader>
           <SheetTitle>Add Admin</SheetTitle>
           <SheetDescription>
-            Fill in the admin's details, then click "Create admin" to add them
-            to the system.
+            Fill in the admin&apos;s details, then click &quot;Create admin&quot; to
+            add them to the system.
           </SheetDescription>
         </SheetHeader>
 

@@ -12,6 +12,8 @@ import {
   Connect_Speialite,
   Connect_SchoolYear,
 } from "@/components/Api/SchoolSetting";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 /*
 levels,
@@ -24,7 +26,7 @@ export function TableData() {
   const [levels, Setlevels] = useState([]);
   const [specialites, Setspecialites] = useState([]);
   const [school_years, Setschool_years] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const route = useRouter();
   const [editingdata, setEditingdata] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
@@ -48,29 +50,37 @@ export function TableData() {
 
   const columns = getColumns(handleEditClick, handleDeleteClick);
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Connect_Classe.getallclasse();
-      const res1 = await Connect_Level.getalllevel();
-      const res2 = await Connect_Speialite.getallspeialite();
-      const res3 = await Connect_SchoolYear.getallschoolyear();
-      Setdata(res.data.data);
-      Setlevels(res1.data.data);
-      Setspecialites(res2.data.data);
-      Setschool_years(res3.data.data);
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-      route.push("/login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleSubmit();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_Classe.getallclasse();
+        const res1 = await Connect_Level.getalllevel();
+        const res2 = await Connect_Speialite.getallspeialite();
+        const res3 = await Connect_SchoolYear.getallschoolyear();
+        if (!active) return;
+        Setdata(res.data.data);
+        Setlevels(res1.data.data);
+        Setspecialites(res2.data.data);
+        Setschool_years(res3.data.data);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les classes", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [refresh, route]);
 
   return (
     <>

@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Teacher;
+use App\Models\Admin;
 
 return new class extends Migration
 {
@@ -13,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('teacher_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Teacher::class)->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('amount');
             $table->string('mois');
             $table->date('date_payment');
             $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
-            $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Admin::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

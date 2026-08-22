@@ -15,10 +15,12 @@ import {
 } from "@/components/Api/SchoolSetting";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import { EditDialog } from "./(forms)/EditDialog";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 function YearCard() {
   const [data, Setdata] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const route = useRouter();
   const [editingdata, setEditingdata] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
@@ -40,22 +42,31 @@ function YearCard() {
     setDialogOpenEd(true);
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Connect_SchoolYear.getallschoolyear();
-      Setdata(res.data.data);
-    } catch (error) {
-      console.error(error);
-      route.push("/login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleSubmit();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_SchoolYear.getallschoolyear();
+        if (!active) return;
+        Setdata(res.data.data);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les années scolaires", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [refresh, route]);
   return (
     <>
       <div className="bg-sidebar px-6 py-5 rounded-lg flex flex-col gap-4 w-full">

@@ -147,7 +147,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit teacher</SheetTitle>
           <SheetDescription>
-            Update the teacher's details, then click "Save changes" to confirm.
+            Update the teacher&apos;s details, then click &quot;Save changes&quot; to
+            confirm.
           </SheetDescription>
         </SheetHeader>
 

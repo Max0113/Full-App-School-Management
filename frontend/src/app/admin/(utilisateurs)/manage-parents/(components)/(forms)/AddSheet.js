@@ -107,8 +107,8 @@ export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
         <SheetHeader>
           <SheetTitle>Add parent</SheetTitle>
           <SheetDescription>
-            Fill in the parent's details, then click "Create parent" to add them
-            to the system.
+            Fill in the parent&apos;s details, then click &quot;Create parent&quot;
+            to add them to the system.
           </SheetDescription>
         </SheetHeader>
 

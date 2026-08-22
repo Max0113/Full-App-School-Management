@@ -114,8 +114,8 @@ export function EditSheet({
         <SheetHeader>
           <SheetTitle>Edit Seances</SheetTitle>
           <SheetDescription>
-            Update the seance's details, then click "Save changes" to
-            confirm.
+            Update the seance&apos;s details, then click &quot;Save changes&quot;
+            to confirm.
           </SheetDescription>
         </SheetHeader>
 

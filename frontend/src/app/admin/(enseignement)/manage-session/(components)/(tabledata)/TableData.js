@@ -12,6 +12,8 @@ import {
   Connect_Classe,
 } from "@/components/Api/SchoolSetting";
 import { Connect_Sessions, Connect_Teaching } from "@/components/Api/Enseignement";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 /*
 specialites,
@@ -20,7 +22,7 @@ specialites,
 export function TableData() {
   const [data, Setdata] = useState([]);
   const [teaching, Setteaching] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const route = useRouter();
   const [editingdata, setEditingdata] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
@@ -44,24 +46,33 @@ export function TableData() {
 
   const columns = getColumns(handleEditClick, handleDeleteClick);
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Connect_Sessions.getallsessions();      
-      const res1 = await Connect_Teaching.getallteaching();
-      Setdata(res.data.data);
-      Setteaching(res1.data.data);
-    } catch (error) {
-      console.error(error);
-      route.push("/login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleSubmit();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_Sessions.getallsessions();
+        const res1 = await Connect_Teaching.getallteaching();
+        if (!active) return;
+        Setdata(res.data.data);
+        Setteaching(res1.data.data);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les séances", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [refresh, route]);
 
   return (
     <>

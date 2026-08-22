@@ -26,6 +26,7 @@ import { AddSheet } from "../(tabledata)/(forms)/AddSheet";
 import { useRouter } from "next/navigation";
 import { Connect_Teaching } from "@/components/Api/Enseignement";
 import { IoSearch } from "react-icons/io5";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 
 
 const subjectColors = {
@@ -40,12 +41,13 @@ const shema = z.object({
 });
 
 export function ClanderSession() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [sessionsData, setSessionsData] = useState([]);
   const [classes, setClasses] = useState([]);
   const [dialogOpenAd, setDialogOpenAd] = useState(false);
   const [teaching, Setteaching] = useState([]);
   const [refresh, setrefresh] = useState(false);
+  const route = useRouter();
 
 
   const {
@@ -59,20 +61,6 @@ export function ClanderSession() {
 
   const handleAddClick = () => {
     setDialogOpenAd(true);
-  };
-
-  const getDataClasses = async () => {
-    setIsLoading(true);
-    try {
-      const resClasses = await Connect_Classe.getallclasse();
-      const resTeaching = await Connect_Teaching.getallteaching();
-      Setteaching(resTeaching.data.data);
-      setClasses(resClasses.data.data);
-    } catch (error) {
-      console.error("Error fetching classes:", error);
-     } finally {
-      setIsLoading(false);
-    }
   };
 
   const events = sessionsData?.map((s) => {
@@ -92,8 +80,32 @@ export function ClanderSession() {
     });
 
   useEffect(() => {
-    getDataClasses();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const resClasses = await Connect_Classe.getallclasse();
+        const resTeaching = await Connect_Teaching.getallteaching();
+        if (!active) return;
+        Setteaching(resTeaching.data.data);
+        setClasses(resClasses.data.data);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les classes", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [refresh, route]);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -102,7 +114,6 @@ export function ClanderSession() {
       toast.success("Search session successful");
       setSessionsData(Array.isArray(resSessions.data?.data) ? resSessions.data.data : []);
     } catch (error) {
-      console.error("Error searching session:", error);
       toast.error("Failed to search session");
     } finally {
       setIsLoading(false);

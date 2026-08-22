@@ -141,7 +141,8 @@ export function EditSheet({ parent, open, onOpenChange, refresh, setrefresh }) {
         <SheetHeader>
           <SheetTitle>Edit parent</SheetTitle>
           <SheetDescription>
-            Update the parent's details, then click "Save changes" to confirm.
+            Update the parent&apos;s details, then click &quot;Save changes&quot; to
+            confirm.
           </SheetDescription>
         </SheetHeader>
 

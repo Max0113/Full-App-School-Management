@@ -29,14 +29,12 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Subject.Deletesubject(data);
-      console.log(res);
+      await Connect_Subject.Deletesubject(data);
       onOpenChange(false);
       toast.success("Matiere Delete", {
         description: `${data?.name} has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Couldn't delete matiere", {
         description: "Something went wrong. Please try again.",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete matiere</DialogTitle>
           <DialogDescription>
-            If you want Delete matiere, click "confirm" to confirm.
+            If you want Delete matiere, click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

@@ -20,7 +20,15 @@ class StudentController extends Controller
             ->leftJoin('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
             ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
             ->select(
-                'users.*',
+                'users.id',
+                'users.firstname',
+                'users.lastname',
+                'users.email',
+                DB::raw("'student' as role"),
+                'users.address',
+                'users.phone',
+                'users.student_parent_id',
+                'users.classe_id',
                 'student_parents.firstname as parent_firstname',
                 'student_parents.lastname as parent_lastname',
                 'classes.name as classe_name'
@@ -59,7 +67,15 @@ class StudentController extends Controller
             ->leftJoin('student_parents', 'users.student_parent_id', '=', 'student_parents.id')
             ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
             ->select(
-                'users.*',
+                'users.id',
+                'users.firstname',
+                'users.lastname',
+                'users.email',
+                DB::raw("'student' as role"),
+                'users.address',
+                'users.phone',
+                'users.student_parent_id',
+                'users.classe_id',
                 'student_parents.firstname as parent_firstname',
                 'student_parents.lastname as parent_lastname',
                 'classes.name as classe_name'

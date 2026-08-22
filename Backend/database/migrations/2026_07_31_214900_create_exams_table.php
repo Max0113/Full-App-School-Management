@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\TeachingSubjectClasse;
 
 return new class extends Migration
 {
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->string('name'); 
             $table->enum('type', ['written', 'oral', 'practical']); 
             $table->date('exam_date'); 
-            $table->foreignId('teaching_subject_classe_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(TeachingSubjectClasse::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -30,13 +30,11 @@ export function DeleteDialog({
     e.preventDefault();
     try {
       const res = await Connect_Parents.Deleteparents(parent);
-      console.log(res);
       onOpenChange(false);
       toast.success("Parent Delete", {
         description: `${parent?.firstname} ${parent?.lastname} has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Error", {
         description: "",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete parent</DialogTitle>
           <DialogDescription>
-            If you want Delete parent, click "confirm" to confirm.
+            If you want Delete parent, click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

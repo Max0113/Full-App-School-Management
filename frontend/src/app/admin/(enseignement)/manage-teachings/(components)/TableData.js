@@ -13,6 +13,8 @@ import {
 } from "@/components/Api/SchoolSetting";
 import { Connect_Teaching } from "@/components/Api/Enseignement";
 import { Connect_Teachers } from "@/components/Api/Connect";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 /*
 specialites,
@@ -23,7 +25,7 @@ export function TableData() {
   const [teachers, Setteachers] = useState([]);
   const [subjects, Setsubjects] = useState([]);
   const [classes, Setclasses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const route = useRouter();
   const [editingdata, setEditingdata] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
@@ -47,29 +49,37 @@ export function TableData() {
  
   const columns = getColumns(handleEditClick, handleDeleteClick);
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Connect_Teaching.getallteaching();
-      const res1 = await Connect_Teachers.getallteachers();
-      const res2 = await Connect_Subject.getallsubject();
-      const res3 = await Connect_Classe.getallclasse();
-      Setdata(res.data.data);
-      Setteachers(res1.data.data);
-      Setsubjects(res2.data.data);
-      Setclasses(res3.data.data);
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-      route.push("/login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleSubmit();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_Teaching.getallteaching();
+        const res1 = await Connect_Teachers.getallteachers();
+        const res2 = await Connect_Subject.getallsubject();
+        const res3 = await Connect_Classe.getallclasse();
+        if (!active) return;
+        Setdata(res.data.data);
+        Setteachers(res1.data.data);
+        Setsubjects(res2.data.data);
+        Setclasses(res3.data.data);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les enseignements", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [refresh, route]);
 
   return (
     <>

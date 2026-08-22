@@ -30,13 +30,11 @@ export function DeleteDialog({
     e.preventDefault();
     try {
       const res = await Connect_Teachers.Deleteteachers(teacher);
-      console.log(res);
       onOpenChange(false);
       toast.success("Teacher Delete", {
         description: `${teacher?.firstname} ${teacher?.lastname} has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.teacher?.message);
       toast.error("Error", {
         description: "",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete Teacher</DialogTitle>
           <DialogDescription>
-            If you want Delete teacher, click "confirm" to confirm.
+            If you want Delete teacher, click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

@@ -1,8 +1,13 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Connect } from "../Api/Connect";
 import { useRouter } from "next/navigation";
+import {
+  clearAuthCookie,
+  hasAuthCookie,
+  setAuthCookie,
+} from "@/lib/api";
 
 export const StateContext = createContext();
 
@@ -11,32 +16,57 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(null);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("AUTHENTICATED") === "true";
-  });
+  // Start false on both server and client, then hydrate from localStorage in an
+  // effect to avoid SSR/CSR mismatch. The proxy guard uses the cookie instead.
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Deferred to a microtask: keeps SSR/client first paint identical (false)
+    // without calling setState synchronously inside the effect body.
+    let cancelled = false;
+    Promise.resolve().then(() => {
+      if (
+        !cancelled &&
+        hasAuthCookie() &&
+        localStorage.getItem("AUTHENTICATED") === "true"
+      ) {
+        setIsAuthenticated(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const StorAuth = (value) => {
     setIsAuthenticated(value);
-    localStorage.setItem("AUTHENTICATED", value ? "true" : "false");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("AUTHENTICATED", value ? "true" : "false");
+    }
   };
 
   const login = async (value) => {
     const response = await Connect.postLogin(value);
+    SetToken(response.data.token);
     StorAuth(true);
     return response;
   };
 
   const logout = async () => {
-    const response = await Connect.postLogout();
-    setUser(null);
     StorAuth(false);
+    setUser(null);
+    clearAuthCookie();
     route.push("/login");
-    return response;
+    try {
+      await Connect.postLogout();
+    } catch {
+      // Token already invalid or server unreachable — local session is cleared anyway.
+    }
   };
 
   const Register = async (value) => {
     const response = await Connect.postRegister(value);
+    SetToken(response.data.token);
     StorAuth(true);
     return response;
   };
@@ -50,12 +80,16 @@ export function AuthProvider({ children }) {
     } catch (error) {
       setUser(null);
       StorAuth(false);
+      clearAuthCookie();
       throw error;
     }
   }, []);
 
   const SetToken = (token) => {
-    localStorage.setItem("access_token", token);
+    if (token) {
+      localStorage.setItem("access_token", token);
+      setAuthCookie(token);
+    }
   };
 
   return (

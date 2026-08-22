@@ -13,10 +13,12 @@ import { AddDialog } from "./(forms)/AddDialog";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LuNotebookTabs } from "react-icons/lu";
+import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
+import { toast } from "sonner";
 
 function Page() {
   const [data, Setdata] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const route = useRouter();
   const [editingdata, setEditingdata] = useState(null);
   const [dialogOpenEd, setDialogOpenEd] = useState(false);
@@ -38,22 +40,31 @@ function Page() {
     setDialogOpenEd(true);
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    try {
-      const res = await Connect_Speialite.getallspeialite();
-      Setdata(res.data.data);
-    } catch (error) {
-      console.error(error);
-      route.push("/login");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    handleSubmit();
-  }, [refresh]);
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_Speialite.getallspeialite();
+        if (!active) return;
+        Setdata(res.data.data);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les specialites", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [refresh, route]);
   return (
     <main className="px-10 py-5 flex flex-col gap-8">
       <div className="flex justify-between items-center mb-1">

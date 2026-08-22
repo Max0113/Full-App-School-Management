@@ -99,8 +99,8 @@ export function AddSheet({
         <SheetHeader>
           <SheetTitle>Add Matieres</SheetTitle>
           <SheetDescription>
-            Fill in the matieres's details, then click "Create matieres" to add
-            them to the system.
+            Fill in the matieres&apos;s details, then click &quot;Create
+            matieres&quot; to add them to the system.
           </SheetDescription>
         </SheetHeader>
 

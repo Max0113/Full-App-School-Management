@@ -101,8 +101,8 @@ export function EditDialog({
         <DialogHeader>
           <DialogTitle>Edit Speialite</DialogTitle>
           <DialogDescription>
-            Update the Speialite's details, then click "Save changes" to
-            confirm.
+            Update the Speialite&apos;s details, then click &quot;Save
+            changes&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

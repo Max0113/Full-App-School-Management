@@ -29,14 +29,12 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Teaching.Deleteteaching(data);
-      console.log(res);
+      await Connect_Teaching.Deleteteaching(data);
       onOpenChange(false);
       toast.success("Enseignement Delete", {
         description: `has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Couldn't delete enseignement", {
         description: "Something went wrong. Please try again.",
       });
@@ -55,7 +53,8 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete Enseignement</DialogTitle>
           <DialogDescription>
-            If you want Delete enseignement, click "confirm" to confirm.
+            If you want Delete enseignement, click &quot;confirm&quot; to
+            confirm.
           </DialogDescription>
         </DialogHeader>
 

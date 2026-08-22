@@ -97,7 +97,8 @@ export function EditDialog({ level, open, onOpenChange, refresh, setrefresh }) {
         <DialogHeader>
           <DialogTitle>Edit School Year</DialogTitle>
           <DialogDescription>
-            Update the Year's details, then click "Save changes" to confirm.
+            Update the Year&apos;s details, then click &quot;Save changes&quot;
+            to confirm.
           </DialogDescription>
         </DialogHeader>
 

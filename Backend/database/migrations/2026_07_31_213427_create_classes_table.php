@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Level;
+use App\Models\SchoolYear;
 
 return new class extends Migration
 {
@@ -14,8 +16,8 @@ return new class extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('level_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('school_year_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Level::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(SchoolYear::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -32,14 +32,12 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_SchoolYear.Deleteschoolyear(data);
-      console.log(res);
+      await Connect_SchoolYear.Deleteschoolyear(data);
       onOpenChange(false);
       toast.success("School Year Delete", {
         description: `${data?.name} Year has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Couldn't delete school year", {
         description: "Something went wrong. Please try again.",
       });
@@ -58,7 +56,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete School Year</DialogTitle>
           <DialogDescription>
-            If you want school year , click "confirm" to confirm.
+            If you want school year , click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

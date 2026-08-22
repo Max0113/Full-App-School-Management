@@ -29,14 +29,12 @@ export function DeleteDialog({
     setSubmitting(true);
     e.preventDefault();
     try {
-      const res = await Connect_Speialite.Deletespeialite(data);
-      console.log(res);
+      await Connect_Speialite.Deletespeialite(data);
       onOpenChange(false);
       toast.success("Speialite Delete", {
         description: `${data?.name} Speialite has been delete successfully.`,
       });
     } catch (error) {
-      console.error(error?.response?.data?.message);
       toast.error("Couldn't delete Speialite", {
         description: "Something went wrong. Please try again.",
       });
@@ -55,7 +53,7 @@ export function DeleteDialog({
         <DialogHeader>
           <DialogTitle>Delete Speialite</DialogTitle>
           <DialogDescription>
-            If you want Speialite , click "confirm" to confirm.
+            If you want Speialite , click &quot;confirm&quot; to confirm.
           </DialogDescription>
         </DialogHeader>
 

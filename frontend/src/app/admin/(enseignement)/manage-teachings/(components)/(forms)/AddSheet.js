@@ -100,8 +100,8 @@ export function AddSheet({
         <SheetHeader>
           <SheetTitle>Add Enseignement</SheetTitle>
           <SheetDescription>
-            Fill in the enseignement's details, then click "Create enseignement"
-            to add them to the system.
+            Fill in the enseignement&apos;s details, then click &quot;Create
+            enseignement&quot; to add them to the system.
           </SheetDescription>
         </SheetHeader>
 

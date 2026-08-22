@@ -12,10 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown } from "lucide-react";
 
-const afficher = (parent) => {
-  console.log(parent);
-};
-
 export const getColumns = (handleEditClick, handleDeleteClick) => [
   {
     accessorKey: "id",
@@ -49,7 +45,7 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
                   navigator.clipboard.writeText(parent.id.toString())
                 }
               >
-                Copier l'Id
+                Copier l&apos;Id
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleEditClick(parent)}>

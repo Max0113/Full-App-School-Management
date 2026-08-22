@@ -68,7 +68,7 @@ function Navbar() {
     };
 
     verifyAuth();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, checkAuth]);
 
   const LogoutFun = async () => {
     await logout();
@@ -119,10 +119,10 @@ function Navbar() {
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => router.push(role + "/dashboard")}
+                    onClick={() => router.push(`/${role}/dashboard`)}
                   >
                     <IoCardOutline />
-                    Dashbord
+                    Dashboard
                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
