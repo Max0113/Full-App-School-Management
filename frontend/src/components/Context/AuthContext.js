@@ -8,6 +8,7 @@ import {
   hasAuthCookie,
   setAuthCookie,
 } from "@/lib/api";
+import { toast } from "sonner";
 
 export const StateContext = createContext();
 
@@ -46,10 +47,15 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (value) => {
-    const response = await Connect.postLogin(value);
-    SetToken(response.data.token);
-    StorAuth(true);
-    return response;
+    try {
+      const response = await Connect.postLogin(value);
+      SetToken(response.data.token);
+      StorAuth(true);
+      return response;
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
+      throw error;
+    }
   };
 
   const logout = async () => {
@@ -59,16 +65,10 @@ export function AuthProvider({ children }) {
     route.push("/login");
     try {
       await Connect.postLogout();
+      toast.success("Logged out successfully.");
     } catch {
-      // Token already invalid or server unreachable — local session is cleared anyway.
+      toast.error("Logout failed. Please try again.");
     }
-  };
-
-  const Register = async (value) => {
-    const response = await Connect.postRegister(value);
-    SetToken(response.data.token);
-    StorAuth(true);
-    return response;
   };
 
   const checkAuth = useCallback(async () => {
@@ -99,7 +99,6 @@ export function AuthProvider({ children }) {
         setUser,
         login,
         logout,
-        Register,
         checkAuth,
         isAuthenticated,
         setIsAuthenticated,

@@ -18,7 +18,7 @@ class Teacher extends Authenticatable
         'date_of_birth',
         'last_login_date',
         'gender',
-        'blood_type',
+        'cin',
         'address',
         'phone',
         'email',
@@ -53,8 +53,4 @@ class Teacher extends Authenticatable
         return $this->hasMany(TeachingSubjectClasse::class);
     }
 
-    public function salaries()
-    {
-        return $this->hasMany(Salary::class);
-    }
 }

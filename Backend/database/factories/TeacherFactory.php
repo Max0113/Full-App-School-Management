@@ -21,7 +21,7 @@ class TeacherFactory extends Factory
             'lastname' => fake()->lastName(),
             'date_of_birth' => fake()->dateTimeBetween('-60 years', '-25 years'),
             'gender' => fake()->randomElement(['m', 'f']),
-            'blood_type' => fake()->randomElement(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']),
+            'cin' => strtoupper(chr(rand(65, 90))) . strtoupper(chr(rand(65, 90))) . fake()->unique()->numerify('##########'),
             'address' => Str::limit(fake()->address(), 45),
             'phone' => fake()->unique()->numerify('##########'),
             'email' => fake()->unique()->safeEmail(),

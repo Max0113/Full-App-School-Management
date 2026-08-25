@@ -189,33 +189,5 @@ class DatabaseSeeder extends Seeder
                 ]));
         });
 
-        // ------------------------------------------------------------------
-        // Finances
-        // ------------------------------------------------------------------
-        foreach ($students as $s) {
-            Payment::factory()->create([
-                'user_id' => $s->id,
-                'admin_id' => $admin->id,
-                'status' => 'completed',
-            ]);
-            Payment::factory()->pending()->create([
-                'user_id' => $s->id,
-                'admin_id' => $admin->id,
-            ]);
-        }
-
-        foreach (Teacher::all() as $t) {
-            Salary::factory()->create([
-                'teacher_id' => $t->id,
-                'admin_id' => $admin->id,
-                'mois' => Carbon::now()->format('Y-m'),
-                'status' => 'completed',
-            ]);
-            Salary::factory()->pending()->create([
-                'teacher_id' => $t->id,
-                'admin_id' => $admin->id,
-                'mois' => Carbon::now()->format('Y-m'),
-            ]);
-        }
     }
 }

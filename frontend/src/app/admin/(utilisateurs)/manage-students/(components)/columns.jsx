@@ -29,7 +29,7 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
     header: "Parents name",
   },
   { accessorKey: "gender", header: "Gender" },
-  { accessorKey: "blood_type", header: "Blood type" },
+  { accessorKey: "code_masser", header: "Code Massar" },
   { accessorKey: "date_of_birth", header: "Date of birth" },
   {
     id: "actions",

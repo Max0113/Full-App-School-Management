@@ -24,7 +24,7 @@ class UniqueAccountEmail implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         foreach (['users', 'teachers', 'admins', 'student_parents'] as $table) {
-            $query = DB::table($table)->where('email', $value);
+            $query = DB::table($table)->where('email', $value)->whereNull('deleted_at');
 
             if ($this->ignoreTable === $table && $this->ignoreId !== null) {
                 $query->where('id', '!=', $this->ignoreId);

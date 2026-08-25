@@ -28,7 +28,7 @@ class RegisteredUserController extends Controller
             'lastname' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
             'gender' => ['required', Rule::in(['m', 'f'])],
-            'blood_type' => ['required', Rule::in(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'])],
+            'code_masser' => 'required|string|size:10|unique:'.User::class.'|regex:/^[A-Z][0-9]{9}$/',
             'address' => 'required|string|max:255',
             'phone' => ['required', 'string', 'max:10', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', new UniqueAccountEmail],

@@ -29,6 +29,7 @@ class TeachingSubjectClasseController extends Controller
             ->whereNull('teachers.deleted_at')
             ->whereNull('subjects.deleted_at')
             ->whereNull('classes.deleted_at')
+            ->orderByDesc('teaching_subject_classes.id')
             ->get();
 
         return response()->json([

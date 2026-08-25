@@ -40,8 +40,8 @@ const schema = z.object({
     errorMap: () => ({ message: "Select a valid gender" }),
   }),
 
-  blood_type: z.enum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], {
-    errorMap: () => ({ message: "Select a valid blood type" }),
+  code_masser: z.string().regex(/^[A-Z][0-9]{9}$/, {
+    message: "Must be 1 letter + 9 digits (e.g. A123456789)",
   }),
 
   address: z.string().min(1, "Address is required").max(200),
@@ -103,13 +103,13 @@ export function EditSheet({
         lastname: data.lastname || "",
         date_of_birth: data.date_of_birth || "",
         gender: data.gender || "",
-        blood_type: data.blood_type || "",
+        code_masser: data.code_masser || "",
         address: data.address || "",
         phone: data.phone || "",
         email: data.email || "",
         password: "",
-        student_parent_id: data.parent_id || "",
-        classe_id: data.classe_id || "",
+        student_parent_id: data.student_parent_id ? data.student_parent_id : "",
+        classe_id: data.classe_id ? data.classe_id : "",
       });
     }
   }, [data, reset]);
@@ -233,28 +233,17 @@ export function EditSheet({
               </Select>
               <FieldError message={errors.gender?.message} />
             </Field>
-            <Field className={"flex-1"}>
-              <Label htmlFor="blood_type">Blood type</Label>
-              <Select
-                value={watch("blood_type") || ""}
-                onValueChange={(val) =>
-                  setValue("blood_type", val, { shouldValidate: true })
-                }
-              >
-                <SelectTrigger id="blood_type" className="py-5 px-4 w-full">
-                  <SelectValue placeholder="Select blood type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(
-                    (bt) => (
-                      <SelectItem key={bt} value={bt}>
-                        {bt}
-                      </SelectItem>
-                    ),
-                  )}
-                </SelectContent>
-              </Select>
-              <FieldError message={errors.blood_type?.message} />
+            <Field className="flex-1">
+              <Label htmlFor="code_masser">Code Massar</Label>
+              <Input
+                id="code_masser"
+                type="text"
+                placeholder="e.g. A123456789"
+                className="py-5 px-4"
+                aria-invalid={!!errors.code_masser}
+                {...register("code_masser")}
+              />
+              <FieldError message={errors.code_masser?.message} />
             </Field>
           </div>
 

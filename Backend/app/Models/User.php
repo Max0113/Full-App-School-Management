@@ -25,7 +25,7 @@ class User extends Authenticatable
         'date_of_birth',
         'last_login_date',
         'gender',
-        'blood_type',
+        'code_masser',
         'address',
         'phone',
         'student_parent_id',
@@ -67,11 +67,6 @@ class User extends Authenticatable
     public function absences()
     {
         return $this->hasMany(Absence::class, 'user_id');
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'user_id');
     }
 
     /**

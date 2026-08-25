@@ -27,8 +27,11 @@ class StudentController extends Controller
                 DB::raw("'student' as role"),
                 'users.address',
                 'users.phone',
+                'users.code_masser',
                 'users.student_parent_id',
                 'users.classe_id',
+                'users.date_of_birth',
+                'users.gender',
                 'student_parents.firstname as parent_firstname',
                 'student_parents.lastname as parent_lastname',
                 'classes.name as classe_name'
@@ -74,8 +77,11 @@ class StudentController extends Controller
                 DB::raw("'student' as role"),
                 'users.address',
                 'users.phone',
+                'users.code_masser',
                 'users.student_parent_id',
                 'users.classe_id',
+                'users.date_of_birth',
+                'users.gender',
                 'student_parents.firstname as parent_firstname',
                 'student_parents.lastname as parent_lastname',
                 'classes.name as classe_name'

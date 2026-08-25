@@ -29,16 +29,7 @@ class StoreTeacherRequest extends FormRequest
             'date_of_birth' => 'required|date',
             'last_login_date' => 'date',
             'gender' => ['required', Rule::in(['m','f'])],
-            'blood_type' => ['required', Rule::in([
-                'O-',
-                'O+',
-                'A+',
-                'A-',
-                'B+',
-                'B-',
-                'AB+',
-                'AB-'
-            ])],
+            'cin' => 'required|string|max:12|unique:teachers',
             'address' => 'required|max:50',
             'phone' => 'required|max:10|unique:teachers',
             'email' => 'required|email|unique:teachers',

@@ -36,7 +36,7 @@ class UserFactory extends Factory
             'address' => Str::limit(fake()->address(), 45),
             'phone' => fake()->unique()->numerify('##########'),
             'gender' => fake()->randomElement(['m', 'f']),
-            'blood_type' => fake()->randomElement(['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']),
+            'code_masser' => strtoupper(chr(rand(65, 90))) . fake()->unique()->numerify('#########'),
             'student_parent_id' => \App\Models\StudentParent::factory(),
             'classe_id' => null,
         ];

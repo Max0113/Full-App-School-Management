@@ -16,7 +16,7 @@ class SubjectFactory extends Factory
         return [
             'name' => fake()->unique()->word(),
             'specialite_id' => Specialite::factory(),
-            'facture' => fake()->numberBetween(100, 1000),
+            'facture' => fake()->numberBetween(1,10),
         ];
     }
 }

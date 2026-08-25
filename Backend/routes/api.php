@@ -8,8 +8,6 @@ use App\Http\Controllers\CountController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\LevelController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\StudentController;
@@ -39,33 +37,7 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     // Timetable: sessions of one classe (explicit route kept out of the resource).
     Route::get('sessions/classe/{classe}', [ClassSessionController::class, 'byClasse']);
 
-    Route::apiResources([
-        'classes' => ClasseController::class,
-    ]);
-
-    Route::apiResources([
-        'sessions' => ClassSessionController::class,
-    ]);
-
-    Route::apiResources([
-        'teachings' => TeachingSubjectClasseController::class,
-    ]);
-
-    Route::apiResources([
-        'specialites' => SpecialiteController::class,
-    ]);
-
-    Route::apiResources([
-        'levels' => LevelController::class,
-    ]);
-
-    Route::apiResources([
-        'schoolyears' => SchoolYearController::class,
-    ]);
-
-    Route::apiResources([
-        'subjects' => SubjectController::class,
-    ]);
+    // --- Account ---
 
     Route::apiResources([
         'students' => StudentController::class,
@@ -81,6 +53,38 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
 
     Route::apiResources([
         'admins' => AdminController::class,
+    ]);
+
+    // --- Setting School ---
+    
+    Route::apiResources([
+        'classes' => ClasseController::class,
+    ]);
+
+    Route::apiResources([
+        'specialites' => SpecialiteController::class,
+    ]);
+
+    Route::apiResources([
+        'subjects' => SubjectController::class,
+    ]);
+
+    Route::apiResources([
+        'levels' => LevelController::class,
+    ]);
+
+    Route::apiResources([
+        'schoolyears' => SchoolYearController::class,
+    ]);
+
+    // --- Sessions & Teachings ---
+
+    Route::apiResources([
+        'sessions' => ClassSessionController::class,
+    ]);
+
+    Route::apiResources([
+        'teachings' => TeachingSubjectClasseController::class,
     ]);
 
     // --- Exams & grades ---
@@ -102,19 +106,4 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
         'absences' => AbsenceController::class,
     ]);
 
-    // --- Payments ---
-    Route::get('payments/student/{student}', [PaymentController::class, 'receipts']);
-    Route::patch('payments/{payment}/status', [PaymentController::class, 'setStatus']);
-
-    Route::apiResources([
-        'payments' => PaymentController::class,
-    ]);
-
-    // --- Salaries ---
-    Route::get('salaries/month/{mois}', [SalaryController::class, 'monthly']);
-    Route::patch('salaries/{salary}/status', [SalaryController::class, 'setStatus']);
-
-    Route::apiResources([
-        'salaries' => SalaryController::class,
-    ]);
 });

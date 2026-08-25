@@ -30,23 +30,13 @@ class StoreUserRequest extends FormRequest
             'date_of_birth' => 'required|date',
             'last_login_date' => 'date',
             'gender' => ['required', Rule::in(['m', 'f'])],
-            'blood_type' => ['required', Rule::in([
-                'O-',
-                'O+',
-                'A+',
-                'A-',
-                'B+',
-                'B-',
-                'AB+',
-                'AB-',
-            ])],
+            'code_masser' => 'required|string|size:10|unique:users|regex:/^[A-Z][0-9]{9}$/',
             'address' => 'required|max:50',
             'phone' => 'required|max:10|unique:users',
             'email' => ['required', 'email', new UniqueAccountEmail],
             'password' => 'required|min:8',
             'student_parent_id' => 'required|integer|exists:student_parents,id',
             'classe_id' => 'required|integer|exists:classes,id',
-
         ];
     }
 }

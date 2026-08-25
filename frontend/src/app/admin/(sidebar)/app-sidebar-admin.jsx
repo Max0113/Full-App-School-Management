@@ -22,7 +22,6 @@ import { MdOutlineCheckCircleOutline } from "react-icons/md";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { BiColumns } from "react-icons/bi";
 import { BiFontColor } from "react-icons/bi";
-import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { BiHomeAlt } from "react-icons/bi";
 
 export function AppSidebar({ ...props }) {
@@ -146,22 +145,6 @@ export function AppSidebar({ ...props }) {
             title: "Notes",
             icon: <BiFontColor />,
             url: "/admin/manage-grades",
-          },
-        ],
-      },
-      {
-        title: "Finance",
-        icon: <RiMoneyDollarCircleLine />,
-        items: [
-          {
-            title: "Paiements élèves",
-            icon: <PiStudentBold />,
-            url: "/admin/manage-payments",
-          },
-          {
-            title: "Salaires enseignants",
-            icon: <FaChalkboardTeacher />,
-            url: "/admin/manage-salaries",
           },
         ],
       },

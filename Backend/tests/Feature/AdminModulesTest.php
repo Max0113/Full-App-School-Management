@@ -170,23 +170,37 @@ it('tracks teacher salaries per month with totals', function () {
     withAdminToken()->postJson('/api/salaries', [
         'teacher_id' => $teacher->id,
         'amount' => 4000,
-        'mois' => '2026-08',
+        'month' => 8,
+        'year' => 2026,
         'date_payment' => '2026-08-28',
         'status' => 'completed',
     ])->assertStatus(201);
 
+    // Same period for the same teacher is rejected (unique constraint).
     withAdminToken()->postJson('/api/salaries', [
         'teacher_id' => $teacher->id,
         'amount' => 1000,
-        'mois' => '2026-08',
+        'month' => 8,
+        'year' => 2026,
         'date_payment' => '2026-08-28',
+    ])->assertStatus(422);
+
+    withAdminToken()->postJson('/api/salaries', [
+        'teacher_id' => $teacher->id,
+        'amount' => 1000,
+        'month' => 9,
+        'year' => 2026,
+        'date_payment' => '2026-09-02',
     ])->assertStatus(201); // defaults to pending
+
+    withAdminToken()->getJson('/api/salaries?month=9&year=2026')
+        ->assertStatus(200)
+        ->assertJsonCount(1, 'data');
 
     $monthly = withAdminToken()->getJson('/api/salaries/month/2026-08')
         ->assertStatus(200)
         ->json('data');
 
     expect($monthly['totals']['paid'])->toEqual(4000.0)
-        ->and($monthly['totals']['pending'])->toEqual(1000.0)
-        ->and($monthly['totals']['count'])->toBe(2);
+        ->and($monthly['totals']['count'])->toBe(1);
 });

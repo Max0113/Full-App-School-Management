@@ -25,7 +25,7 @@ class StudentParent extends Authenticatable
         'date_of_birth',
         'last_login_date',
         'gender',
-        'blood_type',
+        'cin',
         'address',
         'phone',
         'email',

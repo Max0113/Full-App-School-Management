@@ -16,23 +16,14 @@ return new class extends Migration
             $table->id();
             $table->string('firstname', 50);
             $table->string('lastname', 50);
-            $table->dateTime('date_of_birth');
+            $table->string('code_masser', 10)->unique();
             $table->enum('gender', ['m', 'f']);
-            $table->enum('blood_type', [
-                'O-',
-                'O+',
-                'A+',
-                'A-',
-                'B+',
-                'B-',
-                'AB+',
-                'AB-'
-            ]);
             $table->string('address');
             $table->string('phone', 10)->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->dateTime('last_login_date');
+            $table->date('date_of_birth');
+            $table->dateTime('last_login_date')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->softDeletes();
             $table->rememberToken();

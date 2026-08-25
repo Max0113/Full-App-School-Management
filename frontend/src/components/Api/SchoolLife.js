@@ -34,26 +34,6 @@ export const Connect_Absences = {
   Deleteabsences: async (id) => Clientaxios.delete(`api/absences/${id}`),
 };
 
-export const Connect_Payments = {
-  getallpayments: async (params = {}) => list("api/payments", params),
-  addpayments: async (data) => Clientaxios.post("api/payments", data),
-  setPaymentStatus: async (id, status) =>
-    Clientaxios.patch(`api/payments/${id}/status`, { status }),
-  Updatepayments: async (data) =>
-    Clientaxios.put(`api/payments/${data.id}`, data),
-  Deletepayments: async (id) => Clientaxios.delete(`api/payments/${id}`),
-};
-
-export const Connect_Salaries = {
-  getallsalaries: async (params = {}) => list("api/salaries", params),
-  addsalaries: async (data) => Clientaxios.post("api/salaries", data),
-  setSalaryStatus: async (id, status) =>
-    Clientaxios.patch(`api/salaries/${id}/status`, { status }),
-  Updatesalaries: async (data) =>
-    Clientaxios.put(`api/salaries/${data.id}`, data),
-  Deletesalaries: async (id) => Clientaxios.delete(`api/salaries/${id}`),
-};
-
 export const Connect_Lookups = {
   getTeachings: async () => list("api/teachings", { per_page: 1000 }),
   getStudents: async () => list("api/students", { per_page: 1000 }),

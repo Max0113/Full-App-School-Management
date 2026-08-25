@@ -18,7 +18,7 @@ class Admin extends Authenticatable
         'date_of_birth',
         'last_login_date',
         'gender',
-        'blood_type',
+        'cin',
         'address',
         'phone',
         'email',
@@ -48,13 +48,4 @@ class Admin extends Authenticatable
         return 'admin';
     }
 
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
-    public function salaries()
-    {
-        return $this->hasMany(Salary::class);
-    }
 }

@@ -33,7 +33,7 @@ const schema = z.object({
 
   specialite_id: z.int().min(1, "Chose a specialite"),
 
-  facture: z.int().min(1, "Chose a facture"),
+  facture: z.int().min(1, "Chose a facture").max(10, "Facture must be between 1 and 10"),
 });
 
 function FieldError({ message }) {

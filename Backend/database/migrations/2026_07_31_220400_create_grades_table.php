@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Exam::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('note')->default(0);
+            $table->decimal('note', 4, 2)->default(0);
             $table->string('appreciation');
             $table->timestamps();
             $table->softDeletes();

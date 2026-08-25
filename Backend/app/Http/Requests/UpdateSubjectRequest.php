@@ -20,7 +20,7 @@ class UpdateSubjectRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'specialite_id' => 'required|integer|exists:specialites,id',
-            'facture' => 'required|integer|min:1',
+            'facture' => 'required|integer|min:1|max:10',
         ];
     }
 }
