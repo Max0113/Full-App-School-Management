@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Rules\UniqueAccountEmail;
+use App\Rules\UniqueAccountCIN;
+use App\Rules\UniqueAccountPhone;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -30,10 +32,10 @@ class StoreAdminRequest extends FormRequest
             'date_of_birth' => 'required|date',
             'last_login_date' => 'date',
             'gender' => ['required', Rule::in(['m', 'f'])],
-            'cin' => 'required|string|max:12|unique:admins',
+            'cin' => ['required', 'string', 'max:12', new UniqueAccountCIN('admins')],
             'address' => 'required|max:50',
-            'phone' => 'required|max:10|unique:admins',
-            'email' => ['required', 'email', new UniqueAccountEmail],
+            'phone' => ['required', 'max:10', new UniqueAccountPhone('admins')],
+            'email' => ['required', 'email', new UniqueAccountEmail('admins')],
             'password' => 'required|min:8',
         ];
     }

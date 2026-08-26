@@ -7,10 +7,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Ensures an email is unique within a single table only (not across
- * roles), ignoring soft-deleted rows.
+ * Ensures a phone number is unique within a single table only (not
+ * across roles), ignoring soft-deleted rows.
  */
-class UniqueAccountEmail implements ValidationRule
+class UniqueAccountPhone implements ValidationRule
 {
     public function __construct(
         private string $table,
@@ -20,7 +20,7 @@ class UniqueAccountEmail implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $query = DB::table($this->table)
-            ->where('email', $value)
+            ->where('phone', $value)
             ->whereNull('deleted_at');
 
         if ($this->ignoreId !== null) {

@@ -7,20 +7,19 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Ensures an email is unique within a single table only (not across
- * roles), ignoring soft-deleted rows.
+ * Ensures a code_masser is unique in the users table (only students have
+ * a Massar code in this project), ignoring soft-deleted rows.
  */
-class UniqueAccountEmail implements ValidationRule
+class UniqueAccountMasser implements ValidationRule
 {
     public function __construct(
-        private string $table,
         private ?int $ignoreId = null,
     ) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $query = DB::table($this->table)
-            ->where('email', $value)
+        $query = DB::table('users')
+            ->where('code_masser', $value)
             ->whereNull('deleted_at');
 
         if ($this->ignoreId !== null) {
