@@ -49,7 +49,9 @@ class AbsenceController extends Controller
      */
     public function store(StoreAbsenceRequest $request)
     {
-        $absence = Absence::create($request->validated());
+        $validate = $request->validated();
+        $validate['justified'] = false;
+        $absence = Absence::create($validate);
 
         return response()->json([
             'status' => 201,
@@ -121,7 +123,9 @@ class AbsenceController extends Controller
      */
     public function update(UpdateAbsenceRequest $request, Absence $absence)
     {
-        $absence->update($request->validated());
+        $validate = $request->validated();
+        $validate['justified'] = $absence->justified;
+        $absence->update($validate);
 
         return response()->json([
             'status' => 200,

@@ -19,8 +19,7 @@ export function DeleteDialog({
   data,
   open,
   onOpenChange,
-  refresh,
-  setrefresh,
+  onRefresh,
 }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -40,7 +39,7 @@ export function DeleteDialog({
       });
     } finally {
       route.refresh();
-      setrefresh(!refresh);
+      if (onRefresh) onRefresh();
       setSubmitting(false);
     }
   };

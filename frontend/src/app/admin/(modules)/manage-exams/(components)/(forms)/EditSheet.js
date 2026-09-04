@@ -52,11 +52,11 @@ function FieldError({ message }) {
 }
 
 const teachingLabel = (t) =>
-  `${t.subjects_name ?? "Matière"} — ${t.classes_name ?? "Classe"} (${
+  `${t.subjects_name ?? "Matière"} — (${
     t.teachers_firstname ?? ""
   } ${t.teachers_lastname ?? ""})`.trim();
 
-export function EditSheet({ exam, open, onOpenChange, refresh, setrefresh }) {
+export function EditSheet({ exam, open, onOpenChange, refresh, setrefresh , selectedClasse}) {
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
   const [teachings, setTeachings] = useState([]);
@@ -87,10 +87,10 @@ export function EditSheet({ exam, open, onOpenChange, refresh, setrefresh }) {
 
   useEffect(() => {
     if (!open) return;
-    Connect_Lookups.getTeachings()
+    Connect_Lookups.getTeachings(selectedClasse.id)
       .then((res) => setTeachings(res.data?.data ?? []))
       .catch(() => setTeachings([]));
-  }, [open]);
+  }, [open, selectedClasse]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);

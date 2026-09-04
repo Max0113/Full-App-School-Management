@@ -30,8 +30,8 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Connect_Sessions } from "@/components/Api/Enseignement";
 
 const schema = z.object({
-  start_time: z.iso.datetime({ message: "Invalid start time" }), // accepts with or without offset/ms depending on version
-  end_time: z.iso.datetime({ message: "Invalid end time" }),
+  start_time: z.string(),
+  end_time: z.string(),
   teaching_subject_classe_id: z.int().min(1, "Chose a teacher"),
 });
 
@@ -49,9 +49,9 @@ function FieldError({ message }) {
 export function AddSheet({
   open,
   onOpenChange,
-  refresh,
-  setrefresh,
-  teaching
+  teaching,
+  selectedClasse,
+  onRefresh,
 }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -85,13 +85,20 @@ export function AddSheet({
     } finally {
       setSubmitting(false);
       route.refresh();
-      setrefresh(!refresh);
+      if (onRefresh) onRefresh();
     }
   };
 
-  if (!teaching) {
-    return null;
-  }
+ function isoToDatetimeLocal(isoString) {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  const pad = (n) => String(n).padStart(2, "0");
+  return (
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
+    `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  );
+}
+
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -99,8 +106,9 @@ export function AddSheet({
         <SheetHeader>
           <SheetTitle>Add Seance</SheetTitle>
           <SheetDescription>
-            Fill in the seance&apos;s details, then click &quot;Create
-            seance&quot; to add them to the system.
+            {selectedClasse
+              ? `Ajouter une séance pour la classe ${selectedClasse.name ?? selectedClasse.id}.`
+              : "Choisis une classe avant d'ajouter une séance."}
           </SheetDescription>
         </SheetHeader>
 
@@ -118,7 +126,7 @@ export function AddSheet({
               aria-invalid={!!errors.start_time}
               {...register("start_time", {
                 setValueAs: (value) =>
-                  value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value,
+                  value ? isoToDatetimeLocal(value) : value,
               })}
             />
             <FieldError message={errors.start_time?.message} />
@@ -133,7 +141,7 @@ export function AddSheet({
                 aria-invalid={!!errors.end_time}
                 {...register("end_time", {
                   setValueAs: (value) =>
-                    value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value, // returns STRING
+                    value ? isoToDatetimeLocal(value) : value, // returns STRING
                 })}
               />
               <FieldError message={errors.end_time?.message} />

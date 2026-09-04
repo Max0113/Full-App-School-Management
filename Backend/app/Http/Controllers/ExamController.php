@@ -29,7 +29,7 @@ class ExamController extends Controller
             )
             ->whereNull('exams.deleted_at')
             ->orderByDesc('exams.exam_date');
-
+            
         if ($tscId = request()->query('teaching_subject_classe_id')) {
             $query->where('exams.teaching_subject_classe_id', $tscId);
         }

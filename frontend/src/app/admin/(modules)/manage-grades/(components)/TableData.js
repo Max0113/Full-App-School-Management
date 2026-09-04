@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 const PER_PAGE = 15;
 
-export function TableData() {
+export function TableData({ classeId, refresh: pageRefresh = 0 }) {
   const [data, Setdata] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -48,6 +48,7 @@ export function TableData() {
         const res = await Connect_Grades.getallgrades({
           page,
           per_page: PER_PAGE,
+          ...(classeId ? { classe_id: classeId } : {}),
         });
         if (!active) return;
         const meta = res.data?.meta ?? {};
@@ -72,7 +73,7 @@ export function TableData() {
     return () => {
       active = false;
     };
-  }, [page, refresh, route]);
+  }, [page, refresh, route , classeId, pageRefresh]);
 
   const serverPagination = {
     page,
@@ -102,6 +103,7 @@ export function TableData() {
         onOpenChange={setDialogOpenEd}
         setrefresh={setrefresh}
         refresh={refresh}
+        selectedClasse={classeId ? { id: classeId } : null}
       />
 
       <DeleteDialog
@@ -117,6 +119,7 @@ export function TableData() {
         onOpenChange={setDialogOpenAd}
         setrefresh={setrefresh}
         refresh={refresh}
+        selectedClasse={classeId ? { id: classeId } : null}
       />
     </>
   );

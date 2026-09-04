@@ -35,7 +35,7 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     Route::get('/staticNumbers', [CountController::class, 'count']);
 
     // Timetable: sessions of one classe (explicit route kept out of the resource).
-    Route::get('sessions/classe/{classe}', [ClassSessionController::class, 'byClasse']);
+    Route::get('sessions/classe/{class_id}', [ClassSessionController::class, 'byClasse']);
 
     // --- Account ---
 

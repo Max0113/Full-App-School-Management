@@ -20,7 +20,7 @@ class UpdateAbsenceRequest extends FormRequest
         return [
             'class_session_id' => 'required|integer|exists:class_sessions,id',
             'user_id' => 'required|integer|exists:users,id',
-            'justified' => ['required', 'boolean'],
+            'justified' => ['boolean'],
         ];
     }
 }

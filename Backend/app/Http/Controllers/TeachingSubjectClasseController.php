@@ -29,6 +29,7 @@ class TeachingSubjectClasseController extends Controller
             ->whereNull('teachers.deleted_at')
             ->whereNull('subjects.deleted_at')
             ->whereNull('classes.deleted_at')
+            ->when(request()->query('classe_id'), fn ($q, $classeId) => $q->where('teaching_subject_classes.classe_id', $classeId))
             ->orderByDesc('teaching_subject_classes.id')
             ->get();
 

@@ -60,9 +60,11 @@ const sessionLabel = (s) => {
   return `${s.subject_name ?? ""} — ${s.classe_name ?? ""}${time}`.trim();
 };
 
-export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh }) {
+export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, selectedClasse }) {
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
+  const [classes, setClasses] = useState([]);
+  const [selectedClassId, setSelectedClassId] = useState("");
   const [sessions, setSessions] = useState([]);
   const [students, setStudents] = useState([]);
 
@@ -78,23 +80,42 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh }) 
   });
 
   useEffect(() => {
+    console.log("absence:", selectedClasse);
     if (absence) {
+      const initialClass = absence.classe_id
+        ? String(absence.classe_id)
+        : selectedClasse?.id
+          ? String(selectedClasse.id)
+          : "";
+      setSelectedClassId(initialClass);
       reset({
         class_session_id: String(absence.class_session_id ?? ""),
         user_id: String(absence.user_id ?? ""),
       });
     }
-  }, [absence, reset]);
+  }, [absence, reset, selectedClasse]);
 
   useEffect(() => {
     if (!open) return;
-    Connect_Lookups.getSessions()
+    Connect_Lookups.getClasses()
+      .then((res) => setClasses(res.data?.data ?? []))
+      .catch(() => setClasses([]));
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (!selectedClassId) {
+      setSessions([]);
+      setStudents([]);
+      return;
+    }
+    Connect_Lookups.getSessionsByClasse(selectedClassId)
       .then((res) => setSessions(res.data?.data ?? []))
       .catch(() => setSessions([]));
-    Connect_Lookups.getStudents()
+    Connect_Lookups.getStudents(selectedClassId)
       .then((res) => setStudents(res.data?.data ?? []))
       .catch(() => setStudents([]));
-  }, [open]);
+  }, [open, selectedClassId]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);

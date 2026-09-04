@@ -29,8 +29,8 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Connect_Sessions } from "@/components/Api/Enseignement";
 
 const schema = z.object({
-  start_time: z.iso.datetime({ message: "Invalid start time" }), // accepts with or without offset/ms depending on version
-  end_time: z.iso.datetime({ message: "Invalid end time" }),
+  start_time: z.string(), // accepts with or without offset/ms depending on version
+  end_time: z.string(),
   teaching_subject_classe_id: z.int().min(1, "Chose a teacher"),
 });
 
@@ -48,9 +48,9 @@ export function EditSheet({
   data,
   open,
   onOpenChange,
-  refresh,
-  setrefresh,
-  teaching
+  teaching,
+  selectedClasse,
+  onRefresh,
 }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -99,9 +99,19 @@ export function EditSheet({
     } finally {
       setSubmitting(false);
       route.refresh();
-      setrefresh(!refresh);
+      if (onRefresh) onRefresh();
     }
   };
+
+   function isoToDatetimeLocal(isoString) {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  const pad = (n) => String(n).padStart(2, "0");
+  return (
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
+    `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  );
+}
 
   if (!data) return null;
 
@@ -134,7 +144,7 @@ export function EditSheet({
               aria-invalid={!!errors.start_time}
               {...register("start_time", {
                 setValueAs: (value) =>
-                  value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value,
+                  value ?  isoToDatetimeLocal(value) : value,
               })}
             />
             <FieldError message={errors.start_time?.message} />
@@ -149,7 +159,7 @@ export function EditSheet({
                 aria-invalid={!!errors.end_time}
                 {...register("end_time", {
                   setValueAs: (value) =>
-                    value ? new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z") : value, // returns STRING
+                    value ?  isoToDatetimeLocal(value) : value, // returns STRING
                 })}
               />
               <FieldError message={errors.end_time?.message} />

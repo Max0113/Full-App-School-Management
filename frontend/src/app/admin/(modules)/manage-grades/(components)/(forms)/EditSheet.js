@@ -48,11 +48,11 @@ function FieldError({ message }) {
 }
 
 const examLabel = (e) =>
-  `${e.name} (${e.subject_name ?? ""} — ${e.classe_name ?? ""})`;
+  `${e.name} (${e.subject_name ?? ""})`;
 
 const studentLabel = (s) => `${s.firstname} ${s.lastname}`;
 
-export function EditSheet({ grade, open, onOpenChange, refresh, setrefresh }) {
+export function EditSheet({ grade, open, onOpenChange, refresh, setrefresh , selectedClasse}) {
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
   const [exams, setExams] = useState([]);
@@ -82,13 +82,13 @@ export function EditSheet({ grade, open, onOpenChange, refresh, setrefresh }) {
 
   useEffect(() => {
     if (!open) return;
-    Connect_Lookups.getExams()
+    Connect_Lookups.getExams(selectedClasse.id)
       .then((res) => setExams(res.data?.data ?? []))
       .catch(() => setExams([]));
-    Connect_Lookups.getStudents()
+    Connect_Lookups.getStudents(selectedClasse.id)
       .then((res) => setStudents(res.data?.data ?? []))
       .catch(() => setStudents([]));
-  }, [open]);
+  }, [open, selectedClasse]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);

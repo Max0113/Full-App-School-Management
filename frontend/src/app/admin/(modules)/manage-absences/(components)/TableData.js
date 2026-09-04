@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 const PER_PAGE = 15;
 
-export function TableData() {
+export function TableData({ classeId, refresh: pageRefresh = 0 }) {
   const [data, Setdata] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -26,7 +26,41 @@ export function TableData() {
   const [dialogOpenDe, setDialogOpenDe] = useState(false);
   const [justifyTarget, SetJustifyTarget] = useState(null);
   const [dialogOpenJu, setDialogOpenJu] = useState(false);
-  const [refresh, setrefresh] = useState(false);
+  const [refresh, setrefresh] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      try {
+        const res = await Connect_Absences.getallabsences({
+          page,
+          per_page: PER_PAGE,
+          ...(classeId ? { classe_id: classeId } : {}),
+        });
+        if (!active) return;
+        const meta = res.data?.meta ?? {};
+        Setdata(res.data?.data ?? []);
+        setPage(meta.current_page ?? page);
+        setLastPage(meta.last_page ?? page);
+        setTotal(meta.total ?? null);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les absences", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [page, refresh, classeId, pageRefresh, route]);
 
   const handleEditClick = (absence) => {
     SetEditingdata(absence);
@@ -52,39 +86,6 @@ export function TableData() {
     handleDeleteClick,
     handleJustifyClick,
   );
-
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      try {
-        const res = await Connect_Absences.getallabsences({
-          page,
-          per_page: PER_PAGE,
-        });
-        if (!active) return;
-        const meta = res.data?.meta ?? {};
-        Setdata(res.data?.data ?? []);
-        setPage(meta.current_page ?? page);
-        setLastPage(meta.last_page ?? page);
-        setTotal(meta.total ?? null);
-      } catch (error) {
-        if (!active) return;
-        if (isUnauthorized(error)) {
-          route.push("/login");
-          return;
-        }
-        toast.error("Impossible de charger les absences", {
-          description: getApiErrorMessage(error),
-        });
-      } finally {
-        if (active) setIsLoading(false);
-      }
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, [page, refresh, route]);
 
   const serverPagination = {
     page,
@@ -114,6 +115,7 @@ export function TableData() {
         onOpenChange={setDialogOpenEd}
         setrefresh={setrefresh}
         refresh={refresh}
+        selectedClasse={classeId ? { id: classeId } : { id: null }}
       />
 
       <DeleteDialog
@@ -137,6 +139,7 @@ export function TableData() {
         onOpenChange={setDialogOpenAd}
         setrefresh={setrefresh}
         refresh={refresh}
+        selectedClasse={classeId ? { id: classeId } : { id: null }}
       />
     </>
   );

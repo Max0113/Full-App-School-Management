@@ -51,10 +51,10 @@ class ClassSessionController extends Controller
     /**
      * List all sessions of one classe (timetable view).
      */
-    public function byClasse(Classe $classe)
+    public function byClasse($class_id)
     {
         $results = $this->baseQuery()
-            ->where('classes.id', $classe->id)
+            ->where('classes.id', $class_id)
             ->orderBy('class_sessions.start_time')
             ->get();
 

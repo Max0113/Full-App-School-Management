@@ -17,13 +17,9 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(null);
 
-  // Start false on both server and client, then hydrate from localStorage in an
-  // effect to avoid SSR/CSR mismatch. The proxy guard uses the cookie instead.
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Deferred to a microtask: keeps SSR/client first paint identical (false)
-    // without calling setState synchronously inside the effect body.
     let cancelled = false;
     Promise.resolve().then(() => {
       if (
@@ -53,6 +49,7 @@ export function AuthProvider({ children }) {
       StorAuth(true);
       return response;
     } catch (error) {
+      StorAuth(false);
       toast.error("Login failed. Please check your credentials.");
       throw error;
     }

@@ -35,9 +35,16 @@ export const Connect_Absences = {
 };
 
 export const Connect_Lookups = {
-  getTeachings: async () => list("api/teachings", { per_page: 1000 }),
-  getStudents: async () => list("api/students", { per_page: 1000 }),
+  getTeachings: async (classeId) => list("api/teachings", { per_page: 1000, ...(classeId ? { classe_id: classeId } : {}) }),
+  getStudents: async (classeId) =>
+    list("api/students", {
+      per_page: 1000,
+      ...(classeId ? { classe_id: classeId } : {}),
+    }),
   getTeachers: async () => list("api/teachers", { per_page: 1000 }),
   getSessions: async () => list("api/sessions", { per_page: 1000 }),
-  getExams: async () => list("api/exams", { per_page: 1000 }),
+  getSessionsByClasse: async (classeId) =>
+    Clientaxios.get(`api/sessions/classe/${classeId}`),
+  getClasses: async (classeId) => list("api/classes", { per_page: 1000 , ...(classeId ? { classe_id: classeId } : {})  }),
+  getExams: async (classeId) => list("api/exams", { per_page: 1000, ...(classeId ? { classe_id: classeId } : {})  }),
 };

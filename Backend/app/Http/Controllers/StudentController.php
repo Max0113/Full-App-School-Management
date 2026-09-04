@@ -39,6 +39,7 @@ class StudentController extends Controller
             ->whereNull('users.deleted_at')
             ->whereNull('student_parents.deleted_at')
             ->whereNull('classes.deleted_at')
+            ->when(request()->query('classe_id'), fn ($q, $classeId) => $q->where('users.classe_id', $classeId))
             ->orderBy('users.id', 'desc')
             ->paginate(max(1, (int) request()->query('per_page', 15)));
 

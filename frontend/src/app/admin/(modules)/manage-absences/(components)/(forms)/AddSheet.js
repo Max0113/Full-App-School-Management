@@ -57,10 +57,10 @@ const sessionLabel = (s) => {
   } catch {
     time = "";
   }
-  return `${s.subject_name ?? ""} — ${s.classe_name ?? ""}${time}`.trim();
+  return `${s.subject_name ?? ""} — ${time}`.trim();
 };
 
-export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
+export function AddSheet({ open, onOpenChange, refresh, setrefresh , selectedClasse}) {
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
   const [sessions, setSessions] = useState([]);
@@ -79,15 +79,17 @@ export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
   });
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !selectedClasse?.id) return;
     reset({ class_session_id: "", user_id: "" });
-    Connect_Lookups.getSessions()
+
+    Connect_Lookups.getSessionsByClasse(selectedClasse.id)
       .then((res) => setSessions(res.data?.data ?? []))
       .catch(() => setSessions([]));
-    Connect_Lookups.getStudents()
+
+    Connect_Lookups.getStudents(selectedClasse.id)
       .then((res) => setStudents(res.data?.data ?? []))
       .catch(() => setStudents([]));
-  }, [open, reset]);
+  }, [open, reset, selectedClasse?.id]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
