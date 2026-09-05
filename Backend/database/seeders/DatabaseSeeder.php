@@ -130,10 +130,21 @@ class DatabaseSeeder extends Seeder
             foreach ([0, 2] as $dayOffset) {
                 $day = Carbon::now()->startOfWeek()->addDays($dayOffset);
 
+                $days = [
+                    'Monday' => 'Lundi',
+                    'Tuesday' => 'Mardi',
+                    'Wednesday' => 'Mercredi',
+                    'Thursday' => 'Jeudi',
+                    'Friday' => 'Vendredi',
+                    'Saturday' => 'Samedi',
+                    'Sunday' => 'Dimanche',
+                ];
+
                 ClassSession::factory()->create([
                     'teaching_subject_classe_id' => $assignment->id,
-                    'start_time' => $day->copy()->setTimeFromTimeString($slots[$i % 3][0]),
-                    'end_time' => $day->copy()->setTimeFromTimeString($slots[$i % 3][1]),
+                    'day' => $days[$day->format('l')],
+                    'start_time' => $day->copy()->setTimeFromTimeString($slots[$i % 3][0])->format('H:i:s'),
+                    'end_time' => $day->copy()->setTimeFromTimeString($slots[$i % 3][1])->format('H:i:s'),
                 ]);
             }
         });

@@ -14,8 +14,17 @@ return new class extends Migration
     {
         Schema::create('class_sessions', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->enum('day', [
+            "Lundi",
+            "Mardi",
+            "Mercredi",
+            "Jeudi",
+            "Vendredi",
+            "Samedi",
+            "Dimanche",
+            ]);
+            $table->time('start_time');
+            $table->time('end_time');
             $table->foreignIdFor(TeachingSubjectClasse::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();

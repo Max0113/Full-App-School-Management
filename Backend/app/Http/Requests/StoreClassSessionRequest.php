@@ -18,8 +18,9 @@ class StoreClassSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
+            'day' => 'required|string|in:Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi,Dimanche',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s|after:start_time',
             'teaching_subject_classe_id' => 'required|integer|exists:teaching_subject_classes,id',
         ];
     }

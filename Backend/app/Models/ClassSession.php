@@ -11,6 +11,7 @@ class ClassSession extends Model
     use HasFactory , SoftDeletes;
 
     protected $fillable = [
+        'day',
         'start_time',
         'end_time',
         'teaching_subject_classe_id',
