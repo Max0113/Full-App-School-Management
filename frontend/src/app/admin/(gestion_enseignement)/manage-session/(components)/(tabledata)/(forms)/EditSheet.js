@@ -29,9 +29,11 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Connect_Sessions } from "@/components/Api/Enseignement";
 
 const schema = z.object({
-  start_time: z.string(), // accepts with or without offset/ms depending on version
+  day: z.string().min(1, "Chose a day"),
+  start_time: z.string(),
   end_time: z.string(),
   teaching_subject_classe_id: z.int().min(1, "Chose a teacher"),
+  room_id: z.coerce.number().int().min(1, "Chose a room"),
 });
 
 function FieldError({ message }) {
@@ -49,6 +51,7 @@ export function EditSheet({
   open,
   onOpenChange,
   teaching,
+  rooms = [],
   selectedClasse,
   onRefresh,
 }) {
@@ -70,14 +73,17 @@ export function EditSheet({
   useEffect(() => {
     if (data) {
       reset({
+        day: data.day || "",
         start_time: data.start_time || "",
         end_time: data.end_time || "",
         teaching_subject_classe_id: data.teaching_subject_classe_id || "",
+        room_id: data.room_id || "",
       });
     }
   }, [data, reset]);
 
   const onSubmit = async (newdata) => {
+    console.log("Form data:", newdata);
     setSubmitting(true);
     setError(false);
     try {
@@ -103,13 +109,13 @@ export function EditSheet({
     }
   };
 
-   function isoToDatetimeLocal(isoString) {
+ function isoToDatetimeLocal(isoString) {
   if (!isoString) return "";
-  const d = new Date(isoString);
-  const pad = (n) => String(n).padStart(2, "0");
+  if (isoString.length === 8) {
+    return `${isoString}`;
+  }
   return (
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
-    `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+    `${isoString}:00`
   );
 }
 
@@ -136,10 +142,32 @@ export function EditSheet({
         >
 
           <Field>
+            <Label htmlFor="day">Select Jour</Label>
+            <Select
+              value={watch("day") || ""}
+              onValueChange={(val) =>
+                setValue("day", val, { shouldValidate: true })
+              }
+            >
+              <SelectTrigger id="day" className="py-5 px-4 w-full">
+                <SelectValue placeholder="Select Jour" />
+              </SelectTrigger>
+              <SelectContent>
+                {["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]?.map((bt) => (
+                  <SelectItem key={bt} value={bt}>
+                    {bt}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FieldError message={errors.day?.message} />
+          </Field>
+
+          <Field>
             <Label htmlFor="start_time">Start Time</Label>
             <Input
               id="start_time"
-              type="datetime-local"
+              type="time"
               className="py-5 px-4"
               aria-invalid={!!errors.start_time}
               {...register("start_time", {
@@ -154,7 +182,7 @@ export function EditSheet({
             <Label htmlFor="end_time">End Time</Label>
             <Input
                 id="end_time"
-                type="datetime-local"
+                type="time"
                 className="py-5 px-4"
                 aria-invalid={!!errors.end_time}
                 {...register("end_time", {
@@ -185,6 +213,28 @@ export function EditSheet({
               </SelectContent>
             </Select>
             <FieldError message={errors.teaching_subject_classe_id?.message} />
+          </Field>
+
+          <Field>
+            <Label htmlFor="room_id">Select Room</Label>
+            <Select
+              value={watch("room_id") || ""}
+              onValueChange={(val) =>
+                setValue("room_id", val, { shouldValidate: true })
+              }
+            >
+              <SelectTrigger id="room_id" className="py-5 px-4 w-full">
+                <SelectValue placeholder="Select Room" />
+              </SelectTrigger>
+              <SelectContent>
+                {rooms?.map((room) => (
+                  <SelectItem key={room.id} value={String(room.id)}>
+                    {room.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FieldError message={errors.room_id?.message} />
           </Field>
 
           {Error && (

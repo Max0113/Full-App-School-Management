@@ -15,6 +15,7 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
     accessorKey: "id",
     header: "Id",
   },
+  { accessorKey: "day", header: "Jour" },
   { accessorKey: "start_time", header: "Start Time" },
   { accessorKey: "end_time", header: "End Time" },
   {
@@ -24,6 +25,7 @@ export const getColumns = (handleEditClick, handleDeleteClick) => [
   },
   { accessorKey: "classe_name", header: "Classe" },
   { accessorKey: "subject_name", header: "Subject" },
+  { accessorKey: "room_name", header: "Room" },
   { accessorKey: "updated_at", header: "Updated at" },
   {
     id: "actions",

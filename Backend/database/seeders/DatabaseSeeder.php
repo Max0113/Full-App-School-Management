@@ -10,6 +10,7 @@ use App\Models\Exam;
 use App\Models\Grade;
 use App\Models\Level;
 use App\Models\Payment;
+use App\Models\Room;
 use App\Models\Salary;
 use App\Models\SchoolYear;
 use App\Models\Specialite;
@@ -61,6 +62,19 @@ class DatabaseSeeder extends Seeder
         // School structure
         // ------------------------------------------------------------------
         $schoolYear = SchoolYear::factory()->create(['name' => '2025/2026']);
+
+        $rooms = collect([
+            'Département Normal',
+            'Département informatique',
+            'Département mathématiques',
+            'Département physique',
+            'Département chimie',
+            'Département biologie',
+        ])->map(fn (string $name, int $i) => Room::factory()->create([
+            'name' => 'Salle '.($i + 1),
+            'capacity' => 30 + ($i * 10),
+            'type' => $name,
+        ]));
 
         $sciences = Specialite::factory()->create(['name' => 'Sciences Mathématiques']);
         $lettres = Specialite::factory()->create(['name' => 'Lettres']);
@@ -194,6 +208,7 @@ class DatabaseSeeder extends Seeder
         ClassSession::with('classe')->get()->each(function (ClassSession $session) {
             $session->classe->students->random((int) max(1, floor($session->classe->students->count() / 2)))
                 ->each(fn (User $s) => Absence::factory()->create([
+                    'date' => fake()->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
                     'class_session_id' => $session->id,
                     'user_id' => $s->id,
                     'justified' => fake()->boolean(30),

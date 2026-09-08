@@ -33,3 +33,17 @@ export const Connect_Sessions = {
     return await Clientaxios.delete(`api/sessions/${data.id}`);
   },
 };
+export const Connect_Rooms = {
+  getallrooms: async () => {
+    return await Clientaxios.get("api/rooms");
+  },
+  addroom: async (data) => {
+    return await Clientaxios.post("api/rooms", data);
+  },
+  Updateroom: async (data) => {
+    return await Clientaxios.put(`api/rooms/${data.id}`, data);
+  },
+  Deleteroom: async (data) => {
+    return await Clientaxios.delete(`api/rooms/${data.id}`);
+  },
+};

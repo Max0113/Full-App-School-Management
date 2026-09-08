@@ -15,6 +15,7 @@ class ClassSession extends Model
         'start_time',
         'end_time',
         'teaching_subject_classe_id',
+        'room_id',
     ];
 
     public function teachingSubjectClasse()
@@ -38,4 +39,9 @@ class ClassSession extends Model
     {
         return $this->hasMany(Absence::class, 'class_session_id');
     }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'room_id');
+    }    
 }

@@ -21,19 +21,22 @@ class ClassSessionController extends Controller
             ->join('classes', 'teaching_subject_classes.classe_id', '=', 'classes.id')
             ->join('teachers', 'teaching_subject_classes.teacher_id', '=', 'teachers.id')
             ->join('subjects', 'teaching_subject_classes.subject_id', '=', 'subjects.id')
+            ->join('rooms', 'class_sessions.room_id', '=', 'rooms.id')
             ->select(
                 'class_sessions.*',
                 'classes.name as classe_name',
                 'classes.id as classe_id',
                 'subjects.name as subject_name',
                 'teachers.firstname as teacher_firstname',
-                'teachers.lastname as teacher_lastname'
+                'teachers.lastname as teacher_lastname',
+                'rooms.name as room_name'
             )
             ->whereNull('class_sessions.deleted_at')
             ->whereNull('teaching_subject_classes.deleted_at')
             ->whereNull('classes.deleted_at')
             ->whereNull('teachers.deleted_at')
-            ->whereNull('subjects.deleted_at');
+            ->whereNull('subjects.deleted_at')
+            ->whereNull('rooms.deleted_at');
     }
 
     /**

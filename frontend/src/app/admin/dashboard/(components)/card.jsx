@@ -10,7 +10,7 @@ const colorMap = {
 
 function Card({ title, icon, num, color }) {
   return (
-    <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md flex gap-3 flex-col w-96">
+    <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md flex gap-3 flex-col w-full">
       <h2 className="font-bold">{title}</h2>
       <div className="flex justify-between items-center">
         <div

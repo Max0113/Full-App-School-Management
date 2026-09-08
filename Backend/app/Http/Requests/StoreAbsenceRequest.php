@@ -18,6 +18,7 @@ class StoreAbsenceRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'date' => 'required|date|date_format:Y-m-d',
             'class_session_id' => 'required|integer|exists:class_sessions,id',
             'user_id' => 'required|integer|exists:users,id',
             'justified' => ['sometimes', 'boolean'],

@@ -8,6 +8,7 @@ use App\Http\Controllers\CountController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\StudentController;
@@ -33,6 +34,8 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function ()
 Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
 
     Route::get('/staticNumbers', [CountController::class, 'count']);
+
+    Route::get('/dashboard/stats', [CountController::class, 'stats']);
 
     // Timetable: sessions of one classe (explicit route kept out of the resource).
     Route::get('sessions/classe/{class_id}', [ClassSessionController::class, 'byClasse']);
@@ -75,6 +78,12 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
 
     Route::apiResources([
         'schoolyears' => SchoolYearController::class,
+    ]);
+
+    // --- Rooms ---
+
+    Route::apiResources([
+        'rooms' => RoomController::class,
     ]);
 
     // --- Sessions & Teachings ---

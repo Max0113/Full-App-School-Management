@@ -22,6 +22,7 @@ class StoreClassSessionRequest extends FormRequest
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s|after:start_time',
             'teaching_subject_classe_id' => 'required|integer|exists:teaching_subject_classes,id',
+            'room_id' => 'required|integer|exists:rooms,id',
         ];
     }
 }

@@ -25,7 +25,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { IoSearch } from "react-icons/io5";
 import { Connect_Classe } from "@/components/Api/SchoolSetting";
-import { Connect_Sessions, Connect_Teaching } from "@/components/Api/Enseignement";
+import {
+  Connect_Sessions,
+  Connect_Teaching,
+  Connect_Rooms,
+} from "@/components/Api/Enseignement";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 
@@ -39,6 +43,7 @@ function Page() {
   const [sessionsData, setSessionsData] = useState([]);
   const [selectedClasse, setSelectedClasse] = useState(null);
   const [teaching, setTeaching] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [refresh] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -93,14 +98,18 @@ function Page() {
     const load = async () => {
       setSubmitting(true);
       try {
-        const [resClasses, resTeaching] = await Promise.all([
+        const [resClasses, resTeaching, resRooms] = await Promise.all([
           Connect_Classe.getallclasse(),
           Connect_Teaching.getallteaching(),
+          Connect_Rooms.getallrooms(),
         ]);
         if (!active) return;
         setClasses(resClasses.data.data);
         setTeaching(
           Array.isArray(resTeaching.data?.data) ? resTeaching.data.data : []
+        );
+        setRooms(
+          Array.isArray(resRooms.data?.data) ? resRooms.data.data : []
         );
       } catch (error) {
         if (!active) return;
@@ -121,25 +130,24 @@ function Page() {
     };
   }, [refresh, route]);
 
-const handleClassSelect = (val) => {
-  setValue("class_id", val, { shouldValidate: true });
-  loadSessions(val);
-};
+  const handleClassSelect = (val) => {
+    setValue("class_id", val, { shouldValidate: true });
+    loadSessions(val);
+  };
 
-const onSearch = (data) => {
-  loadSessions(data.class_id);
-};
+  const onSearch = (data) => {
+    loadSessions(data.class_id);
+  };
 
-const handleAddClick = () => {
-  if (!selectedClasse) {
-    toast.error("Choisis une classe d'abord", {
-      description: "Sélectionnez une classe avant d'ajouter une séance.",
-    });
-    return;
-  }
-  setAddOpen(true);
-};
-
+  const handleAddClick = () => {
+    if (!selectedClasse) {
+      toast.error("Choisis une classe d'abord", {
+        description: "Sélectionnez une classe avant d'ajouter une séance.",
+      });
+      return;
+    }
+    setAddOpen(true);
+  };
 
   // teachings filtered for the selected class, passed to add/edit forms
   const filteredTeaching = selectedClassId
@@ -147,7 +155,6 @@ const handleAddClick = () => {
         (t) => String(t.classe_id) === String(selectedClassId)
       )
     : [];
-  
 
   return (
     <main className="px-10 py-5">
@@ -157,7 +164,7 @@ const handleAddClick = () => {
           Choisis une classe pour voir son emploi du temps et ses séances.
         </p>
       </div>
-            <form
+      <form
         id="search-form"
         onSubmit={handleSubmit(onSearch)}
         className="mb-5 bg-sidebar p-5 rounded-lg flex items-end gap-5 justify-between"
@@ -185,7 +192,8 @@ const handleAddClick = () => {
         </Button>
       </form>
 
-        {selectedClasse ?  (<Tabs defaultValue="calendar" className="w-full">
+      {selectedClasse ? (
+        <Tabs defaultValue="calendar" className="w-full">
           <TabsList className="mb-5" variant="line">
             <TabsTrigger value="calendar">Emploi de temps</TabsTrigger>
             <TabsTrigger value="session">Seances</TabsTrigger>
@@ -204,25 +212,28 @@ const handleAddClick = () => {
               sessionsData={sessionsData}
               selectedClasse={selectedClasse}
               teaching={filteredTeaching}
+              rooms={rooms}
               onAddClick={handleAddClick}
               onRefresh={() => { if (selectedClassId) loadSessions(selectedClassId); }}
             />
           </TabsContent>
-        </Tabs>) : (
-          <div className="flex flex-col items-center justify-center h-96">
-            <Label className="text-md text-white/50">Choisis une classe pour voir ses séances</Label>
-          </div>
-        )}
+        </Tabs>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-96">
+          <Label className="text-md text-white/50">Choisis une classe pour voir ses séances</Label>
+        </div>
+      )}
 
-        <AddSheet
-          open={addOpen}
-          onOpenChange={setAddOpen}
-          teaching={filteredTeaching}
-          selectedClasse={selectedClasse}
-          onRefresh={() => { if (selectedClassId) loadSessions(selectedClassId); }}
-        />
-      </main>
-    );
+      <AddSheet
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        teaching={filteredTeaching}
+        rooms={rooms}
+        selectedClasse={selectedClasse}
+        onRefresh={() => { if (selectedClassId) loadSessions(selectedClassId); }}
+      />
+    </main>
+  );
 }
 
 export default Page;

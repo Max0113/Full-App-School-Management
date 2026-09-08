@@ -10,6 +10,7 @@ export function TableData({
   sessionsData = [],
   selectedClasse = null,
   teaching = [],
+  rooms = [],
   onRefresh,
   onAddClick,
 }) {
@@ -56,6 +57,7 @@ export function TableData({
       <EditSheet
         data={editingdata}
         teaching={teaching}
+        rooms={rooms}
         selectedClasse={selectedClasse}
         open={dialogOpenEd}
         onOpenChange={setDialogOpenEd}

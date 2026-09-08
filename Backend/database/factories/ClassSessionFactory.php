@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ClassSession;
+use App\Models\Room;
 use App\Models\TeachingSubjectClasse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,6 +20,7 @@ class ClassSessionFactory extends Factory
             'start_time' => $start,
             'end_time' => (clone $start)->modify('+2 hours'),
             'teaching_subject_classe_id' => TeachingSubjectClasse::factory(),
+            'room_id' => Room::factory(),
         ];
     }
 }

@@ -17,22 +17,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Field, FieldGroup } from "@/components/ui/field";
+import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Subject } from "@/components/Api/SchoolSetting";
+import { Connect_Rooms } from "@/components/Api/Enseignement";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Sessions } from "@/components/Api/Enseignement";
+
+const ROOM_TYPES = [
+  "Département Normal",
+  "Département informatique",
+  "Département mathématiques",
+  "Département physique",
+  "Département chimie",
+  "Département biologie",
+];
 
 const schema = z.object({
-  start_time: z.string(),
-  end_time: z.string(),
-  teaching_subject_classe_id: z.int().min(1, "Chose a teacher"),
+  name: z.string().min(1, "Name is required").max(50),
+  capacity: z.coerce.number().int().min(1, "Capacity is required"),
+  type: z.string().min(1, "Choose a type"),
+  availability: z.enum(["Disponible", "Indisponible"]).default("Disponible"),
 });
 
 function FieldError({ message }) {
@@ -45,14 +54,7 @@ function FieldError({ message }) {
   );
 }
 
-
-export function AddSheet({
-  open,
-  onOpenChange,
-  teaching,
-  selectedClasse,
-  onRefresh,
-}) {
+export function AddSheet({ open, onOpenChange, refresh, setrefresh }) {
   const route = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
@@ -63,52 +65,45 @@ export function AddSheet({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: { availability: "Disponible" },
   });
 
   const onSubmit = async (data) => {
     setSubmitting(true);
     setError(false);
     try {
-      await Connect_Sessions.addsessions(data);
+      const payload = {
+        ...data,
+        availability: data.availability === "Disponible",
+      };
+      await Connect_Rooms.addroom(payload);
       onOpenChange(false);
-      toast.success("Seance created", {
-        description: `has been added successfully.`,
+      toast.success("Salle created", {
+        description: `${payload.name} has been added successfully.`,
       });
     } catch (error) {
       const message =
         error?.response?.data?.message ||
         "Something went wrong. Please try again.";
       setError(message);
-      toast.error("Couldn't create seances", {
+      toast.error("Couldn't create salle", {
         description: "Something went wrong. Please try again.",
       });
     } finally {
       setSubmitting(false);
       route.refresh();
-      if (onRefresh) onRefresh();
+      setrefresh(!refresh);
     }
   };
-
- function isoToDatetimeLocal(isoString) {
-  if (!isoString) return "";
-  const d = new Date(isoString);
-  const pad = (n) => String(n).padStart(2, "0");
-  return (
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
-    `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-  );
-}
-
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Add Seance</SheetTitle>
+          <SheetTitle>Add Salle</SheetTitle>
           <SheetDescription>
-            {selectedClasse
-              ? `Ajouter une séance pour la classe ${selectedClasse.name ?? selectedClasse.id}.`
-              : "Choisis une classe avant d'ajouter une séance."}
+            Fill in the salle&apos;s details, then click &quot;Create salle&quot;
+            to add it to the system.
           </SheetDescription>
         </SheetHeader>
 
@@ -117,55 +112,70 @@ export function AddSheet({
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
-           <Field>
-            <Label htmlFor="start_time">Start Time</Label>
+          <Field>
+            <Label htmlFor="name">Name Salle</Label>
             <Input
-              id="start_time"
-              type="datetime-local"
+              id="name"
+              type="text"
+              placeholder="e.g. Salle 1"
               className="py-5 px-4"
-              aria-invalid={!!errors.start_time}
-              {...register("start_time", {
-                setValueAs: (value) =>
-                  value ? isoToDatetimeLocal(value) : value,
-              })}
+              aria-invalid={!!errors.name}
+              {...register("name")}
             />
-            <FieldError message={errors.start_time?.message} />
+            <FieldError message={errors.name?.message} />
           </Field>
 
-            <Field>
-            <Label htmlFor="end_time">End Time</Label>
+          <Field>
+            <Label htmlFor="capacity">Capacity</Label>
             <Input
-                id="end_time"
-                type="datetime-local"
-                className="py-5 px-4"
-                aria-invalid={!!errors.end_time}
-                {...register("end_time", {
-                  setValueAs: (value) =>
-                    value ? isoToDatetimeLocal(value) : value, // returns STRING
-                })}
-              />
-              <FieldError message={errors.end_time?.message} />
-            </Field>
+              id="capacity"
+              type="number"
+              placeholder="e.g. 40"
+              className="py-5 px-4"
+              aria-invalid={!!errors.capacity}
+              {...register("capacity")}
+            />
+            <FieldError message={errors.capacity?.message} />
+          </Field>
 
           <Field>
-            <Label htmlFor="teaching_subject_classe_id">Select Teaching ID</Label>
+            <Label htmlFor="type">Type</Label>
             <Select
               onValueChange={(val) =>
-                setValue("teaching_subject_classe_id", val, { shouldValidate: true })
+                setValue("type", val, { shouldValidate: true })
               }
             >
-              <SelectTrigger id="teaching_subject_classe_id" className="py-5 px-4 w-full">
-                <SelectValue placeholder="Select Teaching Subject Class" />
+              <SelectTrigger id="type" className="py-5 px-4 w-full">
+                <SelectValue placeholder="Select Type" />
               </SelectTrigger>
               <SelectContent>
-                {teaching?.map((bt) => (
-                  <SelectItem key={bt.id} value={bt.id}>
-                    {bt.teachers_firstname + " / " +  bt.classes_name + " / " + bt.subjects_name}
+                {ROOM_TYPES?.map((bt) => (
+                  <SelectItem key={bt} value={bt}>
+                    {bt}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <FieldError message={errors.teaching_subject_classe_id?.message} />
+            <FieldError message={errors.type?.message} />
+          </Field>
+
+          <Field>
+            <Label htmlFor="availability">Availability</Label>
+            <Select
+              defaultValue="Disponible"
+              onValueChange={(val) =>
+                setValue("availability", val, { shouldValidate: true })
+              }
+            >
+              <SelectTrigger id="availability" className="py-5 px-4 w-full">
+                <SelectValue placeholder="Select Availability" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Disponible">Disponible</SelectItem>
+                <SelectItem value="Indisponible">Indisponible</SelectItem>
+              </SelectContent>
+            </Select>
+            <FieldError message={errors.availability?.message} />
           </Field>
 
           {Error && (
@@ -196,7 +206,7 @@ export function AddSheet({
                 Creating...
               </>
             ) : (
-              "Create seance"
+              "Create salle"
             )}
           </Button>
         </SheetFooter>

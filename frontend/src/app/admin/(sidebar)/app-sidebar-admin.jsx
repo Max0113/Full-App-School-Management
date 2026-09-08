@@ -83,6 +83,11 @@ export function AppSidebar({ ...props }) {
             icon: <FiBook />,
             url: "/admin/manage-subjects",
           },
+          {
+            title: "Salles",
+            icon: <MdOutlineMeetingRoom />,
+            url: "/admin/manage-rooms",
+          },
         ],
       },
       {

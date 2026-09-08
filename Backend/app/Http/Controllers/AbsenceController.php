@@ -29,7 +29,7 @@ class AbsenceController extends Controller
                 'users.lastname as student_lastname'
             )
             ->whereNull('absences.deleted_at')
-            ->orderByDesc('class_sessions.start_time');
+            ->orderByDesc('absences.date');
 
         if ($sessionId = request()->query('class_session_id')) {
             $query->where('absences.class_session_id', $sessionId);

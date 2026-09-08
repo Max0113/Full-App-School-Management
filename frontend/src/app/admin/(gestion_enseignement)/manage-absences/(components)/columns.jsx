@@ -24,6 +24,7 @@ export const getColumns = (
         row.original.student_lastname ?? ""
       }`.trim(),
   },
+  { accessorKey: "date", header: "Date" },
   { accessorKey: "classe_name", header: "Classe" },
   { accessorKey: "start_time", header: "Début" },
   { accessorKey: "end_time", header: "Fin" },

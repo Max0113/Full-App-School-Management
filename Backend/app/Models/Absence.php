@@ -11,6 +11,7 @@ class Absence extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'date',
         'class_session_id',
         'user_id',
         'justified',

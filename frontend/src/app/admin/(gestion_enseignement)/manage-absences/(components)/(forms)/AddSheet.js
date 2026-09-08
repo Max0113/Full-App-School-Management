@@ -25,8 +25,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Connect_Absences, Connect_Lookups } from "@/components/Api/SchoolLife";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const schema = z.object({
+  date: z.string().nonempty("La date est requise"),
   class_session_id: z.coerce
     .number()
     .int()
@@ -48,23 +50,12 @@ function FieldError({ message }) {
 }
 
 const sessionLabel = (s) => {
-  let time = "";
-  try {
-    const date = new Date(s.start_time);
-    if (!isNaN(date.getTime())) {
-      time = ` (${date.toLocaleString("fr-FR")})`;
-    }
-  } catch {
-    time = "";
-  }
-  return `${s.subject_name ?? ""} — ${s.classe_name ?? ""}${time}`.trim();
+  return `${s.subject_name ?? ""} — ${s.day} (${s.start_time} - ${s.end_time})`.trim();
 };
 
-export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, selectedClasse }) {
+export function AddSheet({ open, onOpenChange, refresh, setrefresh , selectedClasse}) {
   const [submitting, setSubmitting] = useState(false);
   const [Error, setError] = useState(false);
-  const [classes, setClasses] = useState([]);
-  const [selectedClassId, setSelectedClassId] = useState("");
   const [sessions, setSessions] = useState([]);
   const [students, setStudents] = useState([]);
 
@@ -72,59 +63,36 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, se
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: { class_session_id: "", user_id: "" },
   });
 
   useEffect(() => {
-    console.log("absence:", selectedClasse);
-    if (absence) {
-      const initialClass = absence.classe_id
-        ? String(absence.classe_id)
-        : selectedClasse?.id
-          ? String(selectedClasse.id)
-          : "";
-      setSelectedClassId(initialClass);
-      reset({
-        class_session_id: String(absence.class_session_id ?? ""),
-        user_id: String(absence.user_id ?? ""),
-      });
-    }
-  }, [absence, reset, selectedClasse]);
+    if (!open || !selectedClasse?.id) return;
+    reset({ class_session_id: "", user_id: "" });
 
-  useEffect(() => {
-    if (!open) return;
-    Connect_Lookups.getClasses()
-      .then((res) => setClasses(res.data?.data ?? []))
-      .catch(() => setClasses([]));
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    if (!selectedClassId) {
-      setSessions([]);
-      setStudents([]);
-      return;
-    }
-    Connect_Lookups.getSessionsByClasse(selectedClassId)
+    Connect_Lookups.getSessionsByClasse(selectedClasse.id)
       .then((res) => setSessions(res.data?.data ?? []))
       .catch(() => setSessions([]));
-    Connect_Lookups.getStudents(selectedClassId)
+
+    Connect_Lookups.getStudents(selectedClasse.id)
       .then((res) => setStudents(res.data?.data ?? []))
       .catch(() => setStudents([]));
-  }, [open, selectedClassId]);
+  }, [open, reset, selectedClasse?.id]);
 
   const onSubmit = async (data) => {
+    console.log("Form data:", data);
     setSubmitting(true);
     setError(false);
     try {
-      await Connect_Absences.Updateabsences({ ...data, id: absence.id });
+      await Connect_Absences.addabsences(data);
       onOpenChange(false);
-      toast.success("Absence mise à jour", {
-        description: "L'absence a été modifiée avec succès.",
+      toast.success("Absence créée", {
+        description: "L'absence a été ajoutée avec succès.",
       });
     } catch (error) {
       const apiMessage =
@@ -133,32 +101,43 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, se
       const message =
         apiMessage || error?.response?.data?.message || "Une erreur est survenue.";
       setError(message);
-      toast.error("Impossible de modifier l'absence", { description: message });
+      toast.error("Impossible de créer l'absence", { description: message });
     } finally {
       setSubmitting(false);
       setrefresh(!refresh);
     }
   };
 
-  if (!absence) return null;
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Modifier l&apos;absence</SheetTitle>
+          <SheetTitle>Ajouter une absence</SheetTitle>
           <SheetDescription>
-            Modifiez les informations puis cliquez sur &quot;Enregistrer&quot;.
+            Remplissez les détails de l&apos;absence, puis cliquez sur
+            &quot;Créer&quot;.
           </SheetDescription>
         </SheetHeader>
 
         <form
-          id="edit-absence-form"
+          id="add-absence-form"
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-6 px-4"
         >
           <Field>
-            <Label htmlFor="edit-absence-session">Séance</Label>
+            <Label htmlFor="date">Date</Label>
+            <Input
+              id="date"
+              type="date"
+              className="py-5 px-4"
+              aria-invalid={!!errors.date}
+              {...register("date")}
+            />
+            <FieldError message={errors.date?.message} />
+          </Field>
+
+          <Field>
+            <Label htmlFor="add-absence-session">Séance</Label>
             <Select
               value={watch("class_session_id") || ""}
               onValueChange={(val) =>
@@ -166,7 +145,7 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, se
               }
             >
               <SelectTrigger
-                id="edit-absence-session"
+                id="add-absence-session"
                 className="py-5 px-4 w-full"
               >
                 <SelectValue placeholder="Sélectionner la séance" />
@@ -183,7 +162,7 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, se
           </Field>
 
           <Field>
-            <Label htmlFor="edit-absence-student">Étudiant</Label>
+            <Label htmlFor="add-absence-student">Étudiant</Label>
             <Select
               value={watch("user_id") || ""}
               onValueChange={(val) =>
@@ -191,7 +170,7 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, se
               }
             >
               <SelectTrigger
-                id="edit-absence-student"
+                id="add-absence-student"
                 className="py-5 px-4 w-full"
               >
                 <SelectValue placeholder="Sélectionner l'étudiant" />
@@ -225,17 +204,17 @@ export function EditSheet({ absence, open, onOpenChange, refresh, setrefresh, se
           />
           <Button
             type="submit"
-            form="edit-absence-form"
+            form="add-absence-form"
             disabled={submitting}
             className="min-w-[140px]"
           >
             {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Enregistrement...
+                Création...
               </>
             ) : (
-              "Enregistrer"
+              "Créer l'absence"
             )}
           </Button>
         </SheetFooter>
