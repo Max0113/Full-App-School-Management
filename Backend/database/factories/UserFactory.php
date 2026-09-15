@@ -38,7 +38,6 @@ class UserFactory extends Factory
             'gender' => fake()->randomElement(['m', 'f']),
             'code_masser' => strtoupper(chr(rand(65, 90))) . fake()->unique()->numerify('#########'),
             'student_parent_id' => \App\Models\StudentParent::factory(),
-            'classe_id' => null,
         ];
     }
 

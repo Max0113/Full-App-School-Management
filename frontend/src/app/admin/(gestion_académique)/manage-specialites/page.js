@@ -1,6 +1,6 @@
 "use client";
 
-import { Connect_Speialite } from "@/components/Api/SchoolSetting";
+import { Connect_Speialite } from "@/components/Api/admin/SchoolSetting";
 import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from "react";
 import { FiEdit } from "react-icons/fi";
@@ -72,7 +72,7 @@ function Page() {
           <h1 className="text-3xl font-bold py-1 mb-0">
             Controller Specialites 📖
           </h1>
-          <p className="font-light text-white/20">
+          <p className="font-light dark:text-white/20 text-black/40">
             tu peux update et create , delete tout specialites
           </p>
         </div>

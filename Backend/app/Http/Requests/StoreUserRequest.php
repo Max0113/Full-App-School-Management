@@ -32,7 +32,7 @@ class StoreUserRequest extends FormRequest
             'date_of_birth' => 'required|date',
             'last_login_date' => 'date',
             'gender' => ['required', Rule::in(['m', 'f'])],
-            'code_masser' => ['required', 'string', 'size:10', new UniqueAccountMasser('users'), 'regex:/^[A-Z][0-9]{9}$/' ],
+            'code_masser' => ['required', 'string', 'size:10', new UniqueAccountMasser, 'regex:/^[A-Z][0-9]{9}$/' ],
             'address' => 'required|max:50',
             'phone' => ['required', 'max:10', new UniqueAccountPhone('users')],
             'email' => ['required', 'email', new UniqueAccountEmail('users')],

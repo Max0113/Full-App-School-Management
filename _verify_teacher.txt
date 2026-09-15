@@ -1,0 +1,14 @@
+﻿== TeacherDashboardController exists: True
+== TeachingSubjectClasse model: True | stray controller-named-model: False
+== routes/api.php teacher ability group (lines 26-36):
+Route::middleware(['auth:sanctum', 'ability:student'])->group(static function () {
+    // student can see his grades and absences
+});
+
+Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function () {
+    // teacher can see his classes, subjects, sessions, students, grades and absences
+});
+
+Route::middleware(['auth:sanctum', 'ability:parent'])->group(static function () {
+    // parent can see his children grades and absences
+});

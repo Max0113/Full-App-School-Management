@@ -24,12 +24,12 @@ import {
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { IoSearch } from "react-icons/io5";
-import { Connect_Classe } from "@/components/Api/SchoolSetting";
+import { Connect_Classe } from "@/components/Api/admin/SchoolSetting";
 import {
   Connect_Sessions,
   Connect_Teaching,
   Connect_Rooms,
-} from "@/components/Api/Enseignement";
+} from "@/components/Api/admin/Enseignement";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 
@@ -160,7 +160,7 @@ function Page() {
     <main className="px-10 py-5">
       <div className="mb-5">
         <h1 className="text-3xl font-bold py-1 mb-0">Controller Seances 📙</h1>
-        <p className="font-light text-white/20">
+        <p className="font-light dark:text-white/20 text-black/40">
           Choisis une classe pour voir son emploi du temps et ses séances.
         </p>
       </div>

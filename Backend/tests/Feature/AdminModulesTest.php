@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\Payment;
 use App\Models\Teacher;
 use App\Models\TeachingSubjectClasse;
+use App\Models\StudentClasse;
 use App\Models\User;
 
 function adminToken(): string
@@ -47,7 +48,12 @@ it('creates, lists, shows and deletes an exam', function () {
 
 it('stores grades and aggregates a report card per subject', function () {
     $tsc = TeachingSubjectClasse::factory()->create();
-    $student = User::factory()->create(['classe_id' => $tsc->classe_id]);
+    $student = User::factory()->create();
+    StudentClasse::factory()->create([
+        'student_id' => $student->id,
+        'classe_id' => $tsc->classe_id,
+        'school_year_id' => $tsc->classe->school_year_id,
+    ]);
 
     $math = Exam::factory()->create(['teaching_subject_classe_id' => $tsc->id]);
     $oral = Exam::factory()->create(['teaching_subject_classe_id' => $tsc->id]);
@@ -85,7 +91,12 @@ it('stores grades and aggregates a report card per subject', function () {
 
 it('marks attendance in bulk for one session and justifies absences', function () {
     $session = ClassSession::factory()->create();
-    $students = User::factory()->count(2)->create(['classe_id' => $session->teachingSubjectClasse->classe_id]);
+    $students = User::factory()->count(2)->create();
+    $students->each(fn (User $s) => StudentClasse::factory()->create([
+        'student_id' => $s->id,
+        'classe_id' => $session->teachingSubjectClasse->classe_id,
+        'school_year_id' => $session->teachingSubjectClasse->classe->school_year_id,
+    ]));
 
     withAdminToken()->postJson('/api/absences/bulk', [
         'class_session_id' => $session->id,

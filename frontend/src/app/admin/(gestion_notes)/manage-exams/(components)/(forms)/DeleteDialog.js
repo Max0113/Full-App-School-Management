@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Connect_Exams } from "@/components/Api/SchoolLife";
+import { Connect_Exams } from "@/components/Api/admin/SchoolLife";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 

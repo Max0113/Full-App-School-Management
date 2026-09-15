@@ -19,6 +19,7 @@ use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeachingSubjectClasse;
 use App\Models\User;
+use App\Models\StudentClasse;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -171,18 +172,28 @@ class DatabaseSeeder extends Seeder
             'lastname' => 'Student',
             'email' => 'student@school.test',
             'password' => $demoPassword,
-            'classe_id' => $classes[0]->id,
             'student_parent_id' => $parent->id,
+        ]);
+
+        StudentClasse::factory()->create([
+            'student_id' => $student->id,
+            'classe_id' => $classes[0]->id,
+            'school_year_id' => $schoolYear->id,
         ]);
 
         $students = collect([$student]);
         foreach ($classes as $classe) {
-            $students = $students->merge(
-                User::factory()->count(4)->create([
+            $created = User::factory()->count(4)->create([
+                'student_parent_id' => StudentParent::factory()->create()->id,
+            ]);
+            $created->each(function (User $s) use ($classe, $schoolYear) {
+                StudentClasse::factory()->create([
+                    'student_id' => $s->id,
                     'classe_id' => $classe->id,
-                    'student_parent_id' => StudentParent::factory()->create()->id,
-                ])
-            );
+                    'school_year_id' => $schoolYear->id,
+                ]);
+            });
+            $students = $students->merge($created);
         }
 
         $exams = $assignments->map(fn (TeachingSubjectClasse $assignment) => Exam::factory()->create([
@@ -213,6 +224,16 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $s->id,
                     'justified' => fake()->boolean(30),
                 ]));
+        });
+
+        $previousYear = SchoolYear::factory()->create(['name' => '2024/2025']);
+
+        $students->random(min(10, $students->count()))->each(function (User $s) use ($classes, $previousYear) {
+            StudentClasse::factory()->create([
+                'student_id' => $s->id,
+                'classe_id' => $classes->random()->id,
+                'school_year_id' => $previousYear->id,
+            ]);
         });
 
     }

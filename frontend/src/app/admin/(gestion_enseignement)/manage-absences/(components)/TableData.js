@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getColumns } from "./columns";
-import { Connect_Absences } from "@/components/Api/SchoolLife";
+import { Connect_Absences } from "@/components/Api/admin/SchoolLife";
 import { EditSheet } from "./(forms)/EditSheet";
 import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";

@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Speialite } from "@/components/Api/SchoolSetting";
+import { Connect_Speialite } from "@/components/Api/admin/SchoolSetting";
 import { Separator } from "@/components/ui/separator";
 
 const schema = z.object({

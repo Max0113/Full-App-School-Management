@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-import { Connect_Admins } from "@/components/Api/Connect";
+import { Connect_Admins } from "@/components/Api/admin/UsersCRUD";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 

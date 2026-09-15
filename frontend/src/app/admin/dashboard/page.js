@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Clientaxios } from "@/lib/axios";
 import { getApiErrorMessage } from "@/lib/api";
 import Card from "./(components)/card";
 import {
@@ -27,6 +26,7 @@ import { PiUsersThreeBold } from "react-icons/pi";
 import { FaBookOpen } from "react-icons/fa6";
 import { PiWarningCircleBold } from "react-icons/pi";
 import { toast } from "sonner";
+import { Connect_Dashboard } from "@/components/Api/admin/Dashboard";
 
 const MONTHS_FR = [
   "Jan",
@@ -67,7 +67,7 @@ function Page() {
     let active = true;
     const loadStats = async () => {
       try {
-        const res = await Clientaxios.get("api/dashboard/stats");
+        const res = await Connect_Dashboard.getDashboardData();
         if (!active) return;
         setStats(res.data?.data ?? res.data ?? {});
       } catch (error) {
@@ -105,7 +105,7 @@ function Page() {
 
   return (
     <main className="px-10 py-5">
-      <h1 className="text-3xl font-bold py-2 mb-6 text-white">
+      <h1 className="text-3xl font-bold py-2 mb-6 dark:text-white">
         Welcome to dashboard ⭐
       </h1>
 
@@ -139,13 +139,13 @@ function Page() {
 
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md">
+        <div className="dark:bg-[#171717] border border-sidebar-border dark:text-white p-5 rounded-md">
           <h2 className="flex items-center gap-2 font-bold mb-4">
             <PiUsersThreeBold className="text-purple-400" />
             Étudiants par classe
           </h2>
           {isLoading ? (
-            <p className="text-white/40">Chargement…</p>
+            <p className="dark:text-white/40">Chargement…</p>
           ) : (
             <ChartContainer config={studentsChartConfig} className="h-72 w-full">
               <BarChart data={studentsPerClass}>
@@ -176,13 +176,13 @@ function Page() {
           )}
         </div>
 
-        <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md">
+        <div className="dark:bg-[#171717] border border-sidebar-border dark:text-white p-5 rounded-md">
           <h2 className="flex items-center gap-2 font-bold mb-4">
             <PiWarningCircleBold className="text-red-400" />
             Absences (6 derniers mois)
           </h2>
           {isLoading ? (
-            <p className="text-white/40">Chargement…</p>
+            <p className="dark:text-white/40">Chargement…</p>
           ) : (
             <ChartContainer config={absencesChartConfig} className="h-72 w-full">
               <LineChart data={absencesPerMonth}>
@@ -215,11 +215,11 @@ function Page() {
             </ChartContainer>
           )}
           <div className="flex gap-6 mt-3 text-sm">
-            <span className="text-white/60">
+            <span className="dark:text-white/60">
               Justifiées :{" "}
               <b className="text-emerald-400">{stats.justifiedAbsences ?? 0}</b>
             </span>
-            <span className="text-white/60">
+            <span className="dark:text-white/60">
               Non justifiées :{" "}
               <b className="text-red-400">{stats.unjustifiedAbsences ?? 0}</b>
             </span>
@@ -229,79 +229,79 @@ function Page() {
 
       {/* Recent activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md">
+        <div className="dark:bg-[#171717] border border-sidebar-border dark:text-white p-5 rounded-md">
           <h2 className="flex items-center gap-2 font-bold mb-4">
             <PiStudentBold className="text-purple-400" />
             Derniers étudiants
           </h2>
           {isLoading ? (
-            <p className="text-white/40">Chargement…</p>
+            <p className="dark:text-white/40">Chargement…</p>
           ) : recentStudents.length === 0 ? (
-            <p className="text-white/40">Aucun étudiant.</p>
+            <p className="dark:text-white/40">Aucun étudiant.</p>
           ) : (
             <ul className="space-y-3">
               {recentStudents.map((s) => (
                 <li
                   key={s.id}
-                  className="flex items-center justify-between text-sm px-4 py-2 rounded-md bg-white/5 transition-colors"
+                  className="flex items-center justify-between text-sm px-4 py-2 rounded-md bg-black/5 dark:bg-white/5 transition-colors"
                 >
-                  <span className="text-white/80">
+                  <span className="dark:text-white/80">
                     {s.firstname} {s.lastname}
                   </span>
-                  <span className="text-white/40">{s.classe_name ?? "—"}</span>
+                  <span className="dark:text-white/40">{s.classe_name ?? "—"}</span>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md">
+        <div className="dark:bg-[#171717] border border-sidebar-border dark:text-white p-5 rounded-md">
           <h2 className="flex items-center gap-2 font-bold mb-4">
             <FaBookOpen className="text-blue-400" />
             Derniers examens
           </h2>
           {isLoading ? (
-            <p className="text-white/40">Chargement…</p>
+            <p className="dark:text-white/40">Chargement…</p>
           ) : recentExams.length === 0 ? (
-            <p className="text-white/40">Aucun examen.</p>
+            <p className="dark:text-white/40">Aucun examen.</p>
           ) : (
             <ul className="space-y-3">
               {recentExams.map((e) => (
                 <li
                   key={e.id}
-                  className="flex items-center justify-between text-sm gap-2  px-4 py-2 rounded-md bg-white/5 transition-colors"
+                  className="flex items-center justify-between text-sm gap-2  px-4 py-2 rounded-md bg-black/5 dark:bg-white/5 transition-colors"
                 >
-                  <span className="text-white/80">
+                  <span className="dark:text-white/80">
                     {e.name}
                   </span>
-                  <span className="text-white/40">{e.classe_name}</span>
+                  <span className="dark:text-white/40">{e.classe_name}</span>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        <div className="bg-[#171717] border border-sidebar-border text-white p-5 rounded-md">
+        <div className="dark:bg-[#171717] border border-sidebar-border dark:text-white p-5 rounded-md">
           <h2 className="flex items-center gap-2 font-bold mb-4">
             <PiWarningCircleBold className="text-red-400" />
             Dernières absences
           </h2>
           {isLoading ? (
-            <p className="text-white/40">Chargement…</p>
+            <p className="dark:text-white/40">Chargement…</p>
           ) : recentAbsences.length === 0 ? (
-            <p className="text-white/40">Aucune absence.</p>
+            <p className="dark:text-white/40">Aucune absence.</p>
           ) : (
             <ul className="space-y-3">
               {recentAbsences.map((a) => (
                 <li
                   key={a.id}
-                  className="flex items-center justify-between text-sm gap-2  px-4 py-2 rounded-md bg-white/5 transition-colors"
+                  className="flex items-center justify-between text-sm gap-2  px-4 py-2 rounded-md bg-black/5 dark:bg-white/5 transition-colors"
                 >
-                  <span className="text-white/80">
+                  <span className="dark:text-white/80">
                     {a.student_firstname} {a.student_lastname}
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="text-white/40">{a.classe_name}</span>
+                    <span className="dark:text-white/40">{a.classe_name}</span>
                     <span
                       className={
                         a.justified

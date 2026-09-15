@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { getColumns } from "./columns";
 import { useRouter } from "next/navigation";
-import { Connect_Parents } from "@/components/Api/Connect";
+import { Connect_Parents } from "@/components/Api/admin/UsersCRUD";
 import { EditSheet } from "./(forms)/EditSheet";
 import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";

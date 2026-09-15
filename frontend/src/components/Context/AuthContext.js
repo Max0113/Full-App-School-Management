@@ -1,13 +1,8 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Connect } from "../Api/Connect";
+import { Connect_Auth } from "../Api/auth/Connect_Auth";
 import { useRouter } from "next/navigation";
-import {
-  clearAuthCookie,
-  hasAuthCookie,
-  setAuthCookie,
-} from "@/lib/api";
 import { toast } from "sonner";
 
 export const StateContext = createContext();
@@ -24,7 +19,6 @@ export function AuthProvider({ children }) {
     Promise.resolve().then(() => {
       if (
         !cancelled &&
-        hasAuthCookie() &&
         localStorage.getItem("AUTHENTICATED") === "true"
       ) {
         setIsAuthenticated(true);
@@ -44,7 +38,7 @@ export function AuthProvider({ children }) {
 
   const login = async (value) => {
     try {
-      const response = await Connect.postLogin(value);
+      const response = await Connect_Auth.postLogin(value);
       SetToken(response.data.token);
       StorAuth(true);
       return response;
@@ -58,10 +52,9 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     StorAuth(false);
     setUser(null);
-    clearAuthCookie();
     route.push("/login");
     try {
-      await Connect.postLogout();
+      await Connect_Auth.postLogout();
       toast.success("Logged out successfully.");
     } catch {
       toast.error("Logout failed. Please try again.");
@@ -70,14 +63,13 @@ export function AuthProvider({ children }) {
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await Connect.getUser();
+      const response = await Connect_Auth.getUser();
       setUser(response.data);
       StorAuth(true);
       return response.data;
     } catch (error) {
       setUser(null);
       StorAuth(false);
-      clearAuthCookie();
       throw error;
     }
   }, []);
@@ -85,7 +77,6 @@ export function AuthProvider({ children }) {
   const SetToken = (token) => {
     if (token) {
       localStorage.setItem("access_token", token);
-      setAuthCookie(token);
     }
   };
 

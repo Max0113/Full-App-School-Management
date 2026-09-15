@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Parents } from "@/components/Api/Connect";
+import { Connect_Parents } from "@/components/Api/admin/UsersCRUD";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";

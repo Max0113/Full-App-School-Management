@@ -16,7 +16,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import {
   Connect_Level,
   Connect_SchoolYear,
-} from "@/components/Api/SchoolSetting";
+} from "@/components/Api/admin/SchoolSetting";
 
 export function DeleteDialog({
   data,

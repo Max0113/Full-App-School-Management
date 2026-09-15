@@ -26,7 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Sessions } from "@/components/Api/Enseignement";
+import { Connect_Sessions } from "@/components/Api/admin/Enseignement";
 
 const schema = z.object({
   day: z.string().min(1, "Chose a day"),

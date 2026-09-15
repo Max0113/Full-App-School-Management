@@ -22,7 +22,7 @@ import { Field } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Absences, Connect_Lookups } from "@/components/Api/SchoolLife";
+import { Connect_Absences, Connect_Lookups } from "@/components/Api/admin/SchoolLife";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";

@@ -2,12 +2,12 @@
 import { useState, useEffect } from "react";
 import { getColumns } from "./columns";
 import { useRouter } from "next/navigation";
-import { Connect_Parents, Connect_Students } from "@/components/Api/Connect";
+import { Connect_Parents, Connect_Students } from "@/components/Api/admin/UsersCRUD";
 import { EditSheet } from "./(forms)/EditSheet";
 import { AddSheet } from "./(forms)/AddSheet";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import CreateTable from "@/components/Table/CreateTable";
-import { Connect_Classe } from "@/components/Api/SchoolSetting";
+import { Connect_Classe } from "@/components/Api/admin/SchoolSetting";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 

@@ -10,9 +10,9 @@ import {
   Connect_Subject,
   Connect_Speialite,
   Connect_Classe,
-} from "@/components/Api/SchoolSetting";
-import { Connect_Teaching } from "@/components/Api/Enseignement";
-import { Connect_Teachers } from "@/components/Api/Connect";
+} from "@/components/Api/admin/SchoolSetting";
+import { Connect_Teaching } from "@/components/Api/admin/Enseignement";
+import { Connect_Teachers } from "@/components/Api/admin/UsersCRUD";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 

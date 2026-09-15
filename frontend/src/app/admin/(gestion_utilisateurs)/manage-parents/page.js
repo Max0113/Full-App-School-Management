@@ -19,7 +19,7 @@ function page() {
           <h1 className="text-3xl font-bold py-1 mb-0">
             Controller Parents 👨👩
           </h1>
-          <p className="font-light text-white/20">
+          <p className="font-light dark:text-white/20 text-black/40">
             tu peux update et create , delete tout parents{" "}
           </p>
         </div>

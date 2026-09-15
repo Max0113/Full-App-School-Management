@@ -17,14 +17,3 @@ export function getApiErrorMessage(
   return error?.response?.data?.message || fallback;
 }
 
-export function setAuthCookie(token) {
-  document.cookie = `auth_token=${encodeURIComponent(token)}; path=/; samesite=lax`;
-}
-
-export function clearAuthCookie() {
-  document.cookie = "auth_token=; path=/; max-age=0; samesite=lax";
-}
-
-export function hasAuthCookie() {
-  return document.cookie.split(";").some((c) => c.trim().startsWith("auth_token="));
-}

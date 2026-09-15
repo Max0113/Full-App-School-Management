@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Connect_Rooms } from "@/components/Api/Enseignement";
+import { Connect_Rooms } from "@/components/Api/admin/Enseignement";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 import { IoMdAddCircleOutline } from "react-icons/io";

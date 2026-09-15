@@ -12,7 +12,7 @@ import { FiEdit } from "react-icons/fi";
 import {
   Connect_Level,
   Connect_SchoolYear,
-} from "@/components/Api/SchoolSetting";
+} from "@/components/Api/admin/SchoolSetting";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import { EditDialog } from "./(forms)/EditDialog";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";

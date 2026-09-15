@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { Connect_Sessions } from "@/components/Api/Enseignement";
+import { Connect_Sessions } from "@/components/Api/admin/Enseignement";
 
 export function DeleteDialog({
   data,

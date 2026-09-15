@@ -11,7 +11,7 @@ import {
   Connect_Level,
   Connect_Speialite,
   Connect_SchoolYear,
-} from "@/components/Api/SchoolSetting";
+} from "@/components/Api/admin/SchoolSetting";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 

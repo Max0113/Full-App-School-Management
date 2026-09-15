@@ -34,7 +34,7 @@ class Classe extends Model
 
     public function students()
     {
-        return $this->hasMany(User::class, 'classe_id');
+        return $this->belongsToMany(User::class, 'student_classes', 'classe_id', 'student_id');
     }
 
     public function teachings()

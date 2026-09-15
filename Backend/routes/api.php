@@ -15,23 +15,32 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentParentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\TeachingSubjectClasseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+
     return $request->user();
+
 });
 
-Route::middleware(['auth:sanctum', 'ability:student'])->group(static function () {
-    //
+Route::middleware(['auth:sanctum', 'ability:student'])->prefix('student')->group(static function () {
+    // student can see his grades and absences
 });
 
-Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function () {
-    //
+Route::middleware(['auth:sanctum', 'ability:teacher'])->prefix('teacher')->group(static function () {
+
+    Route::get('/dashboard/stats', [TeacherDashboardController::class, 'stats']);
+
 });
 
-Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
+Route::middleware(['auth:sanctum', 'ability:parent'])->prefix('parent')->group(static function () {
+    // parent can see his children grades and absences
+});
+
+Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
 
     Route::get('/staticNumbers', [CountController::class, 'count']);
 
@@ -41,9 +50,9 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->group(static function () {
     Route::get('sessions/classe/{class_id}', [ClassSessionController::class, 'byClasse']);
 
     // --- Account ---
-
+    
     Route::apiResources([
-        'students' => StudentController::class,
+        '/students' => StudentController::class,
     ]);
 
     Route::apiResources([

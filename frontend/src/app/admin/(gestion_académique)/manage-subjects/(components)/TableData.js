@@ -9,7 +9,7 @@ import CreateTable from "@/components/Table/CreateTable";
 import {
   Connect_Subject,
   Connect_Speialite,
-} from "@/components/Api/SchoolSetting";
+} from "@/components/Api/admin/SchoolSetting";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 

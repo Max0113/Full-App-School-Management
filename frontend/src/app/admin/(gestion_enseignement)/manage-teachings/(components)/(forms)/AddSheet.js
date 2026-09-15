@@ -22,12 +22,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Subject } from "@/components/Api/SchoolSetting";
+import { Connect_Subject } from "@/components/Api/admin/SchoolSetting";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Connect_Teaching } from "@/components/Api/Enseignement";
+import { Connect_Teaching } from "@/components/Api/admin/Enseignement";
 
 const schema = z.object({
   teacher_id: z.int().min(1, "Chose a teacher"),

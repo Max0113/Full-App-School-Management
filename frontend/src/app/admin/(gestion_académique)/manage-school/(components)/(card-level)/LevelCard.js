@@ -9,7 +9,7 @@ import { RiRadioButtonLine } from "react-icons/ri";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { Connect_Level } from "@/components/Api/SchoolSetting";
+import { Connect_Level } from "@/components/Api/admin/SchoolSetting";
 import { DeleteDialog } from "./(forms)/DeleteDialog";
 import { EditDialog } from "./(forms)/EditDialog";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";

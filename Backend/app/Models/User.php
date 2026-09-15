@@ -29,7 +29,6 @@ class User extends Authenticatable
         'address',
         'phone',
         'student_parent_id',
-        'classe_id',
     ];
 
     /**
@@ -56,7 +55,19 @@ class User extends Authenticatable
 
     public function classe()
     {
-        return $this->belongsTo(Classe::class, 'classe_id');
+        return $this->hasOneThrough(
+            Classe::class,
+            StudentClasse::class,
+            'student_id',
+            'id',
+            'id',
+            'classe_id',
+        );
+    }
+
+    public function studentClasses()
+    {
+        return $this->hasMany(StudentClasse::class, 'student_id');
     }
 
     public function grades()

@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Connect_Grades, Connect_Lookups } from "@/components/Api/SchoolLife";
+import { Connect_Grades, Connect_Lookups } from "@/components/Api/admin/SchoolLife";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
 

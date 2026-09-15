@@ -32,9 +32,12 @@ class CountController extends Controller
      */
     public function stats()
     {
-        $studentsPerClass = DB::table('users')
-            ->join('classes', 'users.classe_id', '=', 'classes.id')
-            ->select('classes.name as classe_name', DB::raw('count(users.id) as total'))
+        $studentsPerClass = DB::table('student_classes')
+            ->join('classes', 'student_classes.classe_id', '=', 'classes.id')
+            ->join('users', 'student_classes.student_id', '=', 'users.id')
+            ->select('classes.name as classe_name', DB::raw('count(distinct users.id) as total'))
+            ->whereNull('student_classes.deleted_at')
+            ->whereNull('classes.deleted_at')
             ->whereNull('users.deleted_at')
             ->groupBy('classes.id', 'classes.name')
             ->orderByDesc('total')
@@ -60,9 +63,21 @@ class CountController extends Controller
             ->count();
 
         $recentStudents = DB::table('users')
-            ->leftJoin('classes', 'users.classe_id', '=', 'classes.id')
+            ->leftJoinSub(
+                DB::table('student_classes')
+                    ->select('student_id', DB::raw('MAX(id) as id'))
+                    ->whereNull('deleted_at')
+                    ->groupBy('student_id'),
+                'latest_membership',
+                'latest_membership.student_id',
+                '=',
+                'users.id'
+            )
+            ->leftJoin('student_classes', 'student_classes.id', '=', 'latest_membership.id')
+            ->leftJoin('classes', 'classes.id', '=', 'student_classes.classe_id')
             ->select('users.id', 'users.firstname', 'users.lastname', 'users.created_at', 'classes.name as classe_name')
             ->whereNull('users.deleted_at')
+            ->whereNull('student_classes.deleted_at')
             ->orderByDesc('users.created_at')
             ->limit(5)
             ->get();
