@@ -16,6 +16,7 @@ use App\Http\Controllers\StudentParentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherDashboardController;
+use App\Http\Controllers\TeacherFeaturesController;
 use App\Http\Controllers\TeachingSubjectClasseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,9 @@ Route::middleware(['auth:sanctum', 'ability:student'])->prefix('student')->group
 Route::middleware(['auth:sanctum', 'ability:teacher'])->prefix('teacher')->group(static function () {
 
     Route::get('/dashboard/stats', [TeacherDashboardController::class, 'stats']);
+
+    Route::get('/my-classes', [ClasseController::class, 'classes']);
+    Route::get('/my-students', [ClasseController::class, 'students']);
 
 });
 
