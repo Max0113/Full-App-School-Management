@@ -119,7 +119,7 @@ class ClasseController extends Controller
             ->orderBy('users.lastname')
             ->orderBy('users.firstname');
 
-        if ($classeId = (int) $request->query('classe_id')) {
+        if ($classeId = (int) request()->query('classe_id')) {
             $query->where('student_classes.classe_id', '=', $classeId);
         }
         if ($search = trim((string) $request->query('search', ''))) {
@@ -134,6 +134,7 @@ class ClasseController extends Controller
         return response()->json([
             'status' => 200,
             'data' => $students,
+            'classe_id' => $classeId,
         ]);
     }
 

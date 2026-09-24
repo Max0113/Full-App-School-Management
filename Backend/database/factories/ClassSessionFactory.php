@@ -17,6 +17,15 @@ class ClassSessionFactory extends Factory
         $start = fake()->dateTimeBetween('+1 days', '+1 month');
 
         return [
+            'day' => fake()->randomElement([
+                'Lundi',
+                'Mardi',
+                'Mercredi',
+                'Jeudi',
+                'Vendredi',
+                'Samedi',
+                'Dimanche',
+            ]),
             'start_time' => $start,
             'end_time' => (clone $start)->modify('+2 hours'),
             'teaching_subject_classe_id' => TeachingSubjectClasse::factory(),

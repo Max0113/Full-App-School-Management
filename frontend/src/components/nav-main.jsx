@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Collapsible,
@@ -28,17 +28,12 @@ function NavMainItem({ item }) {
   const isParentActive =
     item.items?.some((subItem) => isLinkActive(subItem.url)) ?? false;
 
-  // Controlled open state, seeded from the initial active check
+  // The active section stays expanded without synchronizing state in an effect.
   const [open, setOpen] = useState(isParentActive);
-
-  // Keep it in sync if the route changes after mount
-  useEffect(() => {
-    if (isParentActive) setOpen(true);
-  }, [isParentActive]);
 
   return (
     <Collapsible
-      open={open}
+      open={isParentActive || open}
       onOpenChange={setOpen}
       className="group/collapsible"
       render={<SidebarMenuItem />}

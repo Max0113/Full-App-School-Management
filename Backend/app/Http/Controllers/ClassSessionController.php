@@ -27,6 +27,7 @@ class ClassSessionController extends Controller
                 'classes.name as classe_name',
                 'classes.id as classe_id',
                 'subjects.name as subject_name',
+                'teachers.id as teacher_id',
                 'teachers.firstname as teacher_firstname',
                 'teachers.lastname as teacher_lastname',
                 'rooms.name as room_name'
@@ -58,6 +59,19 @@ class ClassSessionController extends Controller
     {
         $results = $this->baseQuery()
             ->where('classes.id', $class_id)
+            ->orderBy('class_sessions.start_time')
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $results,
+        ]);
+    }
+
+    public function byTeacher($teacher_id)
+    {
+        $results = $this->baseQuery()
+            ->where('teachers.id', $teacher_id)
             ->orderBy('class_sessions.start_time')
             ->get();
 

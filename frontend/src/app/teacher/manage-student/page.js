@@ -1,5 +1,5 @@
 "use client";
-import React , { useState , useEffect , useCallback  }from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -21,18 +21,23 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { Connect_General } from "@/components/Api/teacher/Enseignement";
+import { Button } from "@/components/ui/button";
+import { IoSearch } from "react-icons/io5";
+import { getApiErrorMessage, isUnauthorized } from "@/lib/api";
+import { toast } from "sonner";
+
 
 const schema = z.object({
   class_id: z.coerce.number().int().min(1, "Choisis une classe"),
 });
 
-function page() {
-    const route = useRouter();
+function Page() {
     const [classes, setClasses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [refresh, setRefresh] = useState(0);
+    const [selectedClassId, setSelectedClassId] = useState("");
 
     const {
       handleSubmit,
@@ -46,12 +51,43 @@ function page() {
 
     const classId = watch("class_id");
 
+    useEffect(() => {
+      let active = true;
+      const load = async () => {
+        setIsLoading(true);
+        try {
+          const response = await Connect_General.getClasseSelect();
+          if (active) {
+            setClasses(response.data?.data ?? []);
+          }
+        } catch (error) {
+          if (isUnauthorized(error)) {
+            window.location.assign("/login");
+            return;
+          }
+          toast.error("Impossible de charger les classes", {
+            description: getApiErrorMessage(error),
+          });
+        } finally {
+          if (active) {
+            setIsLoading(false);
+          }
+        }
+      };
+
+      load();
+
+      return () => {
+        active = false;
+      };
+    }, []);
+
     const onSearch = useCallback(
       (data) => {
-        const cls = classes.find((c) => String(c.id) === String(data.class_id));
+        setSelectedClassId(String(data.class_id));
         setRefresh((r) => r + 1);
       },
-      [classes]
+      []
     );
 
   return (
@@ -88,10 +124,24 @@ function page() {
           </Select>
           <FieldError message={errors.class_id?.message} />
         </Field>
+        <Button
+          form="search-form"
+          type="submit"
+          disabled={isLoading || submitting}
+        >
+          <IoSearch className="h-4 w-4" />
+          Rechercher les élèves
+        </Button>
       </form>
-      <TableData />
+      {selectedClassId ? (
+        <TableData refresh={refresh} classeId={selectedClassId} />
+      ) : (
+        <div className="flex h-96 flex-col items-center justify-center text-muted-foreground">
+          Choisis une classe pour voir ses élèves.
+        </div>
+      )}
     </main>
   );
 }
 
-export default page;
+export default Page;

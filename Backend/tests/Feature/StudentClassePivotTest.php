@@ -36,7 +36,7 @@ it('stores a student into the student_classes pivot and reads it back', function
     $parent = StudentParent::factory()->create();
 
     $stored = test()->withHeaders(['Authorization' => 'Bearer '.studentAdminToken(), 'Accept' => 'application/json'])
-        ->postJson('/api/students', studentRequest([
+        ->postJson('/api/admin/students', studentRequest([
             'student_parent_id' => $parent->id,
             'classe_id' => $classeA->id,
         ]));
@@ -50,11 +50,11 @@ it('stores a student into the student_classes pivot and reads it back', function
         ->and($pivot->school_year_id)->toBe($schoolYear->id);
 
     $listed = test()->withHeaders(['Authorization' => 'Bearer '.studentAdminToken(), 'Accept' => 'application/json'])
-        ->getJson('/api/students?classe_id='.$classeB->id);
+        ->getJson('/api/admin/students?classe_id='.$classeB->id);
     expect($listed->json('data'))->toBeArray();
 
     $shown = test()->withHeaders(['Authorization' => 'Bearer '.studentAdminToken(), 'Accept' => 'application/json'])
-        ->getJson("/api/students/{$id}");
+        ->getJson("/api/admin/students/{$id}");
     $shown->assertStatus(200)
         ->assertJsonPath('data.classe_id', $classeA->id)
         ->assertJsonPath('data.classe_name', $classeA->name);
@@ -74,7 +74,7 @@ it('moves a student to another class on update via the pivot', function () {
     ]);
 
     $updated = test()->withHeaders(['Authorization' => 'Bearer '.studentAdminToken(), 'Accept' => 'application/json'])
-        ->patchJson("/api/students/{$student->id}", studentRequest([
+        ->patchJson("/api/admin/students/{$student->id}", studentRequest([
             'firstname' => 'Updated',
             'student_parent_id' => $parent->id,
             'classe_id' => $newClasse->id,
@@ -98,7 +98,7 @@ it('soft-deletes a student while keeping the pivot row', function () {
     ]);
 
     test()->withHeaders(['Authorization' => 'Bearer '.studentAdminToken(), 'Accept' => 'application/json'])
-        ->deleteJson("/api/students/{$student->id}")
+        ->deleteJson("/api/admin/students/{$student->id}")
         ->assertStatus(204);
 
     expect(User::find($student->id))->toBeNull()

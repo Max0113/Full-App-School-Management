@@ -18,6 +18,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\TeacherFeaturesController;
 use App\Http\Controllers\TeachingSubjectClasseController;
+use App\Http\Controllers\GetClasseByTeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,10 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->prefix('teacher')->group
 
     Route::get('/my-classes', [ClasseController::class, 'classes']);
     Route::get('/my-students', [ClasseController::class, 'students']);
+
+    Route::get('/teacher-classes', [GetClasseByTeacherController::class, 'index']);
+    
+    Route::get('/sessions/classe/{teacher_id}', [ClassSessionController::class, 'byTeacher']);
 
 });
 

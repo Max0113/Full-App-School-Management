@@ -1,13 +1,14 @@
 import "./globals.css";
-import { Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { AuthProvider } from "@/components/Context/AuthContext";
 import { ThemeProvider } from "@/components/Context/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+const manrope = localFont({
+  src: "../../public/fonts/Manrope-VariableFont_wght.ttf",
   display: "swap",
+  variable: "--font-manrope",
+  weight: "200 800",
 });
 
 export const metadata = {
@@ -17,7 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={manrope.className} suppressHydrationWarning>
+    <html lang="en" className={manrope.variable} suppressHydrationWarning>
       <body className="overflow-x-hidden bg-black/2">
         <AuthProvider>
           <ThemeProvider

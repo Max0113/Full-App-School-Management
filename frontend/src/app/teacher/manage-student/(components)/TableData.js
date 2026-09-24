@@ -7,34 +7,42 @@ import { Connect_MyInfo } from "@/components/Api/teacher/Enseignement";
 import { isUnauthorized, getApiErrorMessage } from "@/lib/api";
 import { toast } from "sonner";
 
-/*
-levels,
-specialites,
-school_years,
-*/
+const PER_PAGE = 15;
 
-export function TableData() {
+export function TableData({ refresh, classeId }) {
   const [data, Setdata] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [total, setTotal] = useState(null);
   const route = useRouter();
-  const [refresh, setrefresh] = useState(false);
 
   const columns = getColumns();
 
   useEffect(() => {
     let active = true;
     const load = async () => {
+      setIsLoading(true);
       try {
-        const res = await Connect_MyInfo.getMyStudents();
+        const res = await Connect_MyInfo.getMyStudents({
+          page,
+          per_page: PER_PAGE,
+          ...(classeId ? { classe_id: classeId } : {}),
+        });
         if (!active) return;
-        Setdata(res.data.data.data);
+        const students = res.data?.data;
+        const meta = res.data?.meta ?? students ?? {};
+        Setdata(students?.data ?? []);
+        setPage(meta.current_page ?? page);
+        setLastPage(meta.last_page ?? page);
+        setTotal(meta.total ?? null);
       } catch (error) {
         if (!active) return;
         if (isUnauthorized(error)) {
           route.push("/login");
           return;
         }
-        toast.error("Impossible de charger les classes", {
+        toast.error("Impossible de charger les élèves", {
           description: getApiErrorMessage(error),
         });
       } finally {
@@ -45,13 +53,25 @@ export function TableData() {
     return () => {
       active = false;
     };
-  }, [refresh, route]);
+  }, [classeId, page, refresh, route]);
+
+  const serverPagination = {
+    page,
+    lastPage,
+    total,
+    onPageChange: (nextPage) => {
+      if (nextPage === page || nextPage < 1 || nextPage > lastPage) return;
+      setPage(nextPage);
+    },
+  };
 
   return (
     <>
       <CreateTable
         data={data}
         columns={columns}
+        isLoading={isLoading}
+        serverPagination={serverPagination}
       />
     </>
   );

@@ -12,3 +12,4 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->group(static function ()
 Route::middleware(['auth:sanctum', 'ability:parent'])->group(static function () {
     // parent can see his children grades and absences
 });
+aaBB@@00-younes01131

@@ -77,7 +77,10 @@ class AbsenceController extends Controller
                     'class_session_id' => $validated['class_session_id'],
                     'user_id' => $userId,
                 ],
-                ['justified' => false]
+                [
+                    'date' => now()->toDateString(),
+                    'justified' => false,
+                ]
             );
             $created++;
         }

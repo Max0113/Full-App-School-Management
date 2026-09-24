@@ -62,14 +62,8 @@ export function AppSidebar({ ...props }) {
       },
       {
         title: "My Sessions",
-        url: "/teacher/sessions",
+        url: "/teacher/manage-sessions",
         icon: <MdOutlineCalendarMonth />,
-        items: null,
-      },
-      {
-        title: "Attendance",
-        url: "/teacher/attendance",
-        icon: <FaCheckDouble />,
         items: null,
       },
       {

@@ -15,6 +15,7 @@ class AbsenceFactory extends Factory
     public function definition(): array
     {
         return [
+            'date' => fake()->date(),
             'class_session_id' => ClassSession::factory(),
             'user_id' => User::factory(),
             'justified' => false,
