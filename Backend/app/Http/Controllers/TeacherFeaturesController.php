@@ -599,6 +599,106 @@ class TeacherFeaturesController extends Controller
     }
 
     /**
+     * Add one grade for a student enrolled in one of my exam classes.
+     */
+    public function storeGrade(Request $request)
+    {
+        $teacherId = (int) auth()->id();
+        $validated = $request->validate([
+            'exam_id' => 'required|integer|exists:exams,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'note' => 'required|numeric|between:0,20',
+            'appreciation' => 'nullable|string|max:255',
+        ]);
+
+        $exam = DB::table('exams')
+            ->join('teaching_subject_classes', 'exams.teaching_subject_classe_id', '=', 'teaching_subject_classes.id')
+            ->select('exams.id', 'teaching_subject_classes.classe_id')
+            ->where('exams.id', (int) $validated['exam_id'])
+            ->where('teaching_subject_classes.teacher_id', $teacherId)
+            ->whereNull('exams.deleted_at')
+            ->whereNull('teaching_subject_classes.deleted_at')
+            ->first();
+
+        if (! $exam) {
+            return response()->json(['status' => 403, 'message' => "Vous ne pouvez pas noter cet examen."], 403);
+        }
+
+        $isStudentInClass = DB::table('student_classes')
+            ->where('classe_id', $exam->classe_id)
+            ->where('student_id', (int) $validated['user_id'])
+            ->whereNull('deleted_at')
+            ->exists();
+
+        if (! $isStudentInClass) {
+            return response()->json(['status' => 422, 'message' => "Cet élève n'appartient pas à la classe de l'examen."], 422);
+        }
+
+        $grade = Grade::updateOrCreate(
+            ['exam_id' => (int) $validated['exam_id'], 'user_id' => (int) $validated['user_id']],
+            ['note' => $validated['note'], 'appreciation' => $validated['appreciation'] ?? '']
+        );
+
+        return response()->json(['status' => 201, 'data' => $grade], 201);
+    }
+
+    /** Update a grade belonging to one of my exams. */
+    public function updateGrade(Request $request, $gradeId)
+    {
+        $teacherId = (int) auth()->id();
+        $grade = DB::table('grades')
+            ->join('exams', 'grades.exam_id', '=', 'exams.id')
+            ->join('teaching_subject_classes', 'exams.teaching_subject_classe_id', '=', 'teaching_subject_classes.id')
+            ->select('grades.id')
+            ->where('grades.id', (int) $gradeId)
+            ->where('teaching_subject_classes.teacher_id', $teacherId)
+            ->whereNull('grades.deleted_at')
+            ->whereNull('exams.deleted_at')
+            ->whereNull('teaching_subject_classes.deleted_at')
+            ->first();
+
+        if (! $grade) {
+            return response()->json(['status' => 404, 'message' => 'Note introuvable ou non autorisée.'], 404);
+        }
+
+        $validated = $request->validate([
+            'note' => 'sometimes|required|numeric|between:0,20',
+            'appreciation' => 'nullable|string|max:255',
+        ]);
+
+        if (array_key_exists('appreciation', $validated)) {
+            $validated['appreciation'] = $validated['appreciation'] ?? '';
+        }
+
+        DB::table('grades')->where('id', (int) $gradeId)->update(array_merge($validated, ['updated_at' => now()]));
+
+        return response()->json(['status' => 200, 'data' => Grade::findOrFail((int) $gradeId)]);
+    }
+
+    /** Delete a grade belonging to one of my exams. */
+    public function destroyGrade($gradeId)
+    {
+        $teacherId = (int) auth()->id();
+        $ownsGrade = DB::table('grades')
+            ->join('exams', 'grades.exam_id', '=', 'exams.id')
+            ->join('teaching_subject_classes', 'exams.teaching_subject_classe_id', '=', 'teaching_subject_classes.id')
+            ->where('grades.id', (int) $gradeId)
+            ->where('teaching_subject_classes.teacher_id', $teacherId)
+            ->whereNull('grades.deleted_at')
+            ->whereNull('exams.deleted_at')
+            ->whereNull('teaching_subject_classes.deleted_at')
+            ->exists();
+
+        if (! $ownsGrade) {
+            return response()->json(['status' => 404, 'message' => 'Note introuvable ou non autorisée.'], 404);
+        }
+
+        Grade::findOrFail((int) $gradeId)->delete();
+
+        return response()->noContent();
+    }
+
+    /**
      * Parents of my students, via student_parents -> users.student_parent_id.
      */
     public function parents(Request $request)

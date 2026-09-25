@@ -11,8 +11,7 @@ import { FaCheckDouble } from "react-icons/fa6";
 import { BiColumns } from "react-icons/bi";
 import { BiFontColor } from "react-icons/bi";
 import { PiUserBold } from "react-icons/pi";
-
-
+import { LifeBuoyIcon, SendIcon } from "lucide-react";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth } = useAuth();
@@ -37,7 +36,10 @@ export function AppSidebar({ ...props }) {
 
   const data = {
     user: {
-      name: isLoading ? "" : `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim() || "Unknown",
+      name: isLoading
+        ? ""
+        : `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim() ||
+          "Unknown",
       email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },
@@ -68,13 +70,13 @@ export function AppSidebar({ ...props }) {
       },
       {
         title: "My Exams",
-        url: "/teacher/exams",
+        url: "/teacher/manage-exams",
         icon: <BiColumns />,
         items: null,
       },
       {
         title: "Grades",
-        url: "/teacher/grades",
+        url: "/teacher/manage-grades",
         icon: <BiFontColor />,
         items: null,
       },
@@ -85,7 +87,10 @@ export function AppSidebar({ ...props }) {
         items: null,
       },
     ],
-    navSecondary: [],
+    navSecondary: [
+      { title: "Settings", url: "#", icon: <LifeBuoyIcon /> },
+      { title: "Support", url: "#", icon: <SendIcon /> },
+    ],
   };
 
   return <SidebarCom data={data} />;

@@ -50,10 +50,10 @@ const DEFAULT_COLOR = {
 function timeToMinutes(time) {
   if (!time) return 0;
 
-  const timePart = String(time).includes(" ") ? String(time).split(" ").pop() : String(time);
-  const [hours = 0, minutes = 0] = timePart
-    .split(":")
-    .map(Number);
+  const timePart = String(time).includes(" ")
+    ? String(time).split(" ").pop()
+    : String(time);
+  const [hours = 0, minutes = 0] = timePart.split(":").map(Number);
 
   return hours * 60 + minutes;
 }
@@ -64,10 +64,7 @@ function formatTime(time) {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
 
-  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(
-    2,
-    "0"
-  )}`;
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
 }
 
 // =====================================================
@@ -76,13 +73,13 @@ function formatTime(time) {
 
 function getDayIndex(jour) {
   const DAY_LABELS = {
-    "Lundi": 0,
-    "Mardi": 1,
-    "Mercredi": 2,
-    "Jeudi": 3,
-    "Vendredi": 4,
-    "Samedi": 5,
-    "Dimanche": 6
+    Lundi: 0,
+    Mardi: 1,
+    Mercredi: 2,
+    Jeudi: 3,
+    Vendredi: 4,
+    Samedi: 5,
+    Dimanche: 6,
   };
   return DAY_LABELS[jour] ?? -1;
 }
@@ -113,41 +110,32 @@ export default function ClassScheduleTable({
   // Total rows:
   // 7:00 -> 19:00 = 12 hours
   // 12 * 2 = 24 half-hour rows
-  const totalRows =
-    ((END_HOUR - START_HOUR) * 60) / MINUTES_PER_ROW;
+  const totalRows = ((END_HOUR - START_HOUR) * 60) / MINUTES_PER_ROW;
 
   // =====================================================
   // TIME ROWS
   // =====================================================
 
-  const timeRows = Array.from(
-    { length: totalRows },
-    (_, index) => {
-      const minutes =
-        START_HOUR * 60 +
-        index * MINUTES_PER_ROW;
+  const timeRows = Array.from({ length: totalRows }, (_, index) => {
+    const minutes = START_HOUR * 60 + index * MINUTES_PER_ROW;
 
-      return minutes;
-    }
-  );
+    return minutes;
+  });
 
   return (
     <div className="w-full bg-background font-sans text-foreground">
-
       {/* =================================================
           CALENDAR
       ================================================= */}
       <div className="w-full overflow-x-auto rounded-xl border border-sidebar-border shadow-sm">
         <div className="min-w-[900px]">
-
           {/* =================================================
               HEADER
           ================================================= */}
           <div
             className="grid"
             style={{
-              gridTemplateColumns:
-                "80px repeat(7, minmax(0, 1fr))",
+              gridTemplateColumns: "80px repeat(7, minmax(0, 1fr))",
             }}
           >
             {/* Time header */}
@@ -156,8 +144,8 @@ export default function ClassScheduleTable({
             {DAY_LABELS.map((day) => (
               <div
                 key={day}
-                  className="flex h-11 items-center justify-center border-b border-l border-border bg-muted/60"
-                >
+                className="flex h-11 items-center justify-center border-b border-l border-border bg-muted/60"
+              >
                 <span className="text-[13px] font-bold text-foreground">
                   {day}
                 </span>
@@ -171,13 +159,11 @@ export default function ClassScheduleTable({
           <div
             className="relative grid"
             style={{
-              gridTemplateColumns:
-                "80px repeat(7, minmax(0, 1fr))",
+              gridTemplateColumns: "80px repeat(7, minmax(0, 1fr))",
 
               gridTemplateRows: `repeat(${totalRows}, ${ROW_HEIGHT}px)`,
             }}
           >
-
             {/* =================================================
                 BACKGROUND
             ================================================= */}
@@ -187,7 +173,6 @@ export default function ClassScheduleTable({
 
               return (
                 <React.Fragment key={minutes}>
-
                   {/* TIME LABEL */}
                   <div
                     className="border-b border-border bg-muted/40 pr-3 text-right"
@@ -233,13 +218,9 @@ export default function ClassScheduleTable({
                 return null;
               }
 
-              const startMinutes = timeToMinutes(
-                session.start_time
-              );
+              const startMinutes = timeToMinutes(session.start_time);
 
-              const endMinutes = timeToMinutes(
-                session.end_time
-              );
+              const endMinutes = timeToMinutes(session.end_time);
 
               if (endMinutes <= startMinutes) {
                 return null;
@@ -249,8 +230,7 @@ export default function ClassScheduleTable({
               // START POSITION
               // =================================================
 
-              const calendarStartMinutes =
-                START_HOUR * 60;
+              const calendarStartMinutes = START_HOUR * 60;
 
               /*
                * Example:
@@ -267,17 +247,14 @@ export default function ClassScheduleTable({
 
               const startRow =
                 Math.floor(
-                  (startMinutes -
-                    calendarStartMinutes) /
-                    MINUTES_PER_ROW
+                  (startMinutes - calendarStartMinutes) / MINUTES_PER_ROW,
                 ) + 1;
 
               // =================================================
               // DURATION
               // =================================================
 
-              const durationMinutes =
-                endMinutes - startMinutes;
+              const durationMinutes = endMinutes - startMinutes;
 
               /*
                * 10:30 -> 12:00
@@ -288,23 +265,15 @@ export default function ClassScheduleTable({
 
               const rowSpan = Math.max(
                 1,
-                Math.ceil(
-                  durationMinutes /
-                    MINUTES_PER_ROW
-                )
+                Math.ceil(durationMinutes / MINUTES_PER_ROW),
               );
 
               // Don't display outside calendar
-              if (
-                startRow < 1 ||
-                startRow > totalRows
-              ) {
+              if (startRow < 1 || startRow > totalRows) {
                 return null;
               }
 
-              const colors = getSubjectColor(
-                session.subject_name
-              );
+              const colors = getSubjectColor(session.subject_name);
 
               return (
                 <div
@@ -325,18 +294,15 @@ export default function ClassScheduleTable({
                       color: colors.text,
                     }}
                   >
-
                     {/* SUBJECT */}
                     <div className="truncate text-xs font-bold">
                       {session.subject_name || "Cours"}
                     </div>
 
                     {/* CLASS */}
-                    {(selectedClasse?.name ||
-                      session.classe_name) && (
+                    {(selectedClasse?.name || session.classe_name) && (
                       <div className="truncate text-[11px] opacity-80">
-                        {selectedClasse?.name ||
-                          session.classe_name}
+                        {selectedClasse?.name || session.classe_name}
                       </div>
                     )}
 
@@ -353,7 +319,6 @@ export default function ClassScheduleTable({
                         {session.room_name}
                       </div>
                     )}
-
                   </button>
                 </div>
               );

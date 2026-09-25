@@ -5,6 +5,8 @@ import { GoHomeFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { SidebarCom } from "@/components/app-sidebar";
 import { PiStudentBold } from "react-icons/pi";
+import { CalendarDays, ClipboardList, GraduationCap, Info } from "lucide-react";
+import { LifeBuoyIcon, SendIcon } from "lucide-react";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth } = useAuth();
@@ -29,7 +31,10 @@ export function AppSidebar({ ...props }) {
 
   const data = {
     user: {
-      name: isLoading ? "" : `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim() || "Unknown",
+      name: isLoading
+        ? ""
+        : `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim() ||
+          "Unknown",
       email: isLoading ? "" : (user?.email ?? ""),
       avatar: "/avatars/shadcn.jpg",
     },
@@ -41,13 +46,40 @@ export function AppSidebar({ ...props }) {
         items: null,
       },
       {
-        title: "My Children",
-        url: "#",
+        title: "Notes des enfants",
+        url: "/parent/grades",
         icon: <PiStudentBold />,
         items: null,
       },
+      {
+        title: "Calendrier & séances",
+        url: "/parent/sessions",
+        icon: <CalendarDays />,
+        items: null,
+      },
+      {
+        title: "Examens",
+        url: "/parent/exams",
+        icon: <ClipboardList />,
+        items: null,
+      },
+      {
+        title: "Enseignants",
+        url: "/parent/teachers",
+        icon: <GraduationCap />,
+        items: null,
+      },
+      {
+        title: "Informations école",
+        url: "/parent/school-info",
+        icon: <Info />,
+        items: null,
+      },
     ],
-    navSecondary: [],
+    navSecondary: [
+      { title: "Settings", url: "#", icon: <LifeBuoyIcon /> },
+      { title: "Support", url: "#", icon: <SendIcon /> },
+    ],
   };
 
   return <SidebarCom data={data} />;

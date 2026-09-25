@@ -19,6 +19,7 @@ use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\TeacherFeaturesController;
 use App\Http\Controllers\TeachingSubjectClasseController;
 use App\Http\Controllers\GetClasseByTeacherController;
+use App\Http\Controllers\ParentFeaturesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,10 +44,29 @@ Route::middleware(['auth:sanctum', 'ability:teacher'])->prefix('teacher')->group
     
     Route::get('/sessions/classe/{teacher_id}', [ClassSessionController::class, 'byTeacher']);
 
+    Route::get('/exams', [TeacherFeaturesController::class, 'exams']);
+    Route::post('/exams', [TeacherFeaturesController::class, 'storeExam']);
+    Route::patch('/exams/{examId}', [TeacherFeaturesController::class, 'updateExam']);
+    Route::delete('/exams/{examId}', [TeacherFeaturesController::class, 'destroyExam']);
+    Route::get('/exams/{examId}/students', [TeacherFeaturesController::class, 'examStudents']);
+
+    Route::get('/grades', [TeacherFeaturesController::class, 'grades']);
+    Route::post('/grades', [TeacherFeaturesController::class, 'storeGrade']);
+    Route::patch('/grades/{gradeId}', [TeacherFeaturesController::class, 'updateGrade']);
+    Route::delete('/grades/{gradeId}', [TeacherFeaturesController::class, 'destroyGrade']);
+
+    Route::get('/parents', [TeacherFeaturesController::class, 'parents']);
+
 });
 
 Route::middleware(['auth:sanctum', 'ability:parent'])->prefix('parent')->group(static function () {
-    // parent can see his children grades and absences
+    Route::get('/dashboard', [ParentFeaturesController::class, 'dashboard']);
+    Route::get('/children', [ParentFeaturesController::class, 'children']);
+    Route::get('/grades', [ParentFeaturesController::class, 'grades']);
+    Route::get('/sessions', [ParentFeaturesController::class, 'sessions']);
+    Route::get('/exams', [ParentFeaturesController::class, 'exams']);
+    Route::get('/teachers', [ParentFeaturesController::class, 'teachers']);
+    Route::get('/school-info', [ParentFeaturesController::class, 'schoolInfo']);
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
