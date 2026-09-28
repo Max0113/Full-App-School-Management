@@ -26,57 +26,56 @@ const schema = z.object({
 
 function Page() {
   const route = useRouter();
-      const [classes, setClasses] = useState([]);
-      const [isLoading, setIsLoading] = useState(false);
-      const [submitting, setSubmitting] = useState(false);
-      const [refresh, setRefresh] = useState(0);
-    
-      const {
-        handleSubmit,
-        setValue,
-        watch,
-        formState: { errors },
-      } = useForm({
-        resolver: zodResolver(schema),
-        defaultValues: { class_id: "" },
-      });
-    
-      const classId = watch("class_id");
-    
-      useEffect(() => {
-        let active = true;
-        const load = async () => {
-          setSubmitting(true);
-          try {
-            const res = await Connect_Lookups.getClasses();
-            if (!active) return;
-            setClasses(res.data?.data ?? []);
-          } catch (error) {
-            if (!active) return;
-            if (isUnauthorized(error)) {
-              route.push("/login");
-              return;
-            }
-            toast.error("Impossible de charger les classes", {
-              description: getApiErrorMessage(error),
-            });
-          } finally {
-            if (active) setSubmitting(false);
-          }
-        };
-        load();
-        return () => {
-          active = false;
-        };
-      }, [route]);
-    
-      const onSearch = useCallback(
-        (data) => {
-          const cls = classes.find((c) => String(c.id) === String(data.class_id));
-          setRefresh((r) => r + 1);
-        },
-        [classes]
-      );
+  const [classes, setClasses] = useState([]);
+  const [selectedClass, setSelectedClass] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { class_id: "" },
+  });
+
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      setSubmitting(true);
+      try {
+        const res = await Connect_Lookups.getClasses();
+        if (!active) return;
+        setClasses(res.data?.data ?? []);
+      } catch (error) {
+        if (!active) return;
+        if (isUnauthorized(error)) {
+          route.push("/login");
+          return;
+        }
+        toast.error("Impossible de charger les classes", {
+          description: getApiErrorMessage(error),
+        });
+      } finally {
+        if (active) setSubmitting(false);
+      }
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [route]);
+
+  const onSearch = useCallback(
+    (data) => {
+      const cls = classes.find((c) => String(c.id) === String(data.class_id));
+      setRefresh((r) => r + 1);
+    },
+    [classes],
+  );
 
   return (
     <main className="px-10 py-5">
@@ -87,7 +86,6 @@ function Page() {
         </p>
       </div>
 
-
       <form
         id="search-form"
         onSubmit={handleSubmit(onSearch)}
@@ -95,12 +93,7 @@ function Page() {
       >
         <Field className="w-60">
           <Label htmlFor="class_id">Select Classe</Label>
-          <Select
-            value={classId || ""}
-            onValueChange={(val) =>
-              setValue("class_id", val, { shouldValidate: true })
-            }
-          >
+          <Select value={selectedClass || ""} onValueChange={setSelectedClass}>
             <SelectTrigger id="class_id" className="py-4 px-4">
               <SelectValue placeholder="Select Classe" />
             </SelectTrigger>
@@ -125,15 +118,17 @@ function Page() {
         </Button>
       </form>
 
-      {classId ?  (
+      {selectedClass ? (
         <TableData
-          key={classId}
-          classeId={classId}
+          key={selectedClass}
+          classeId={selectedClass}
           refresh={refresh}
         />
       ) : (
         <div className="flex flex-col items-center justify-center h-96">
-          <Label className="text-md text-white/50">Choisis une classe pour voir ses séances</Label>
+          <Label className="text-md text-white/50">
+            Choisis une classe pour voir ses séances
+          </Label>
         </div>
       )}
     </main>

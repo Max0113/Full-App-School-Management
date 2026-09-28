@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Parent;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -103,6 +104,44 @@ class ParentFeaturesController extends Controller
         return response()->json(['status' => 200, 'data' => $query->orderByDesc('exams.exam_date')->get()]);
     }
 
+    /** Absences of the authenticated parent's children. */
+    public function absences(Request $request)
+    {
+        $query = DB::table('absences')
+            ->join('users', 'absences.user_id', '=', 'users.id')
+            ->join('class_sessions', 'absences.class_session_id', '=', 'class_sessions.id')
+            ->join('teaching_subject_classes', 'class_sessions.teaching_subject_classe_id', '=', 'teaching_subject_classes.id')
+            ->join('subjects', 'teaching_subject_classes.subject_id', '=', 'subjects.id')
+            ->join('classes', 'teaching_subject_classes.classe_id', '=', 'classes.id')
+            ->where('users.student_parent_id', $this->parentId())
+            ->whereNull('absences.deleted_at')
+            ->whereNull('users.deleted_at')
+            ->whereNull('class_sessions.deleted_at')
+            ->whereNull('teaching_subject_classes.deleted_at')
+            ->whereNull('subjects.deleted_at')
+            ->whereNull('classes.deleted_at')
+            ->select(
+                'absences.id',
+                'absences.date',
+                'absences.justified',
+                'class_sessions.day',
+                'class_sessions.start_time',
+                'class_sessions.end_time',
+                'subjects.name as subject_name',
+                'classes.name as classe_name',
+                'users.id as student_id',
+                'users.firstname as student_firstname',
+                'users.lastname as student_lastname'
+            )
+            ->orderByDesc('absences.date');
+
+        if ($childId = (int) $request->query('child_id')) {
+            $query->where('users.id', $childId);
+        }
+
+        return response()->json(['status' => 200, 'data' => $query->get()]);
+    }
+
     public function teachers()
     {
         $teachers = DB::table('users')
@@ -119,9 +158,9 @@ class ParentFeaturesController extends Controller
 
     public function schoolInfo()
     {
-        $year = DB::table('school_years')->whereNull('deleted_at')->orderByDesc('id')->first(['name']);
+        $year = DB::table('school_years')->whereNull('deleted_at')->orderBy('id')->first(['name']);
         $admins = DB::table('admins')->whereNull('deleted_at')->orderBy('lastname')->get(['firstname', 'lastname', 'email', 'phone', 'address']);
-        return response()->json(['status' => 200, 'data' => ['school_name' => config('app.name', 'Établissement scolaire'), 'school_year' => $year?->name, 'administration' => $admins]]);
+        return response()->json(['status' => 200, 'data' => ['school_name' => 'Établissement scolaire', 'school_year' => $year?->name, 'administration' => $admins]]);
     }
 
     private function examQuery(int $parentId)

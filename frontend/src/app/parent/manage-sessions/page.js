@@ -3,13 +3,6 @@
 import { useEffect, useState } from "react";
 import { RoleGuard } from "@/components/RoleGuard";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -95,10 +88,10 @@ function Page() {
             onValueChange={setSelectedChild}
             disabled={isLoading && !children.length}
           >
-            <SelectTrigger>
+            <SelectTrigger className="min-w-[250px]">
               <SelectValue placeholder="Sélectionner un enfant" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="min-w-[250px]">
               {children.map((item) => (
                 <SelectItem key={item.id} value={String(item.id)}>
                   {item.firstname} {item.lastname}

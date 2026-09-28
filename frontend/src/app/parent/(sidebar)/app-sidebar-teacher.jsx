@@ -5,7 +5,7 @@ import { GoHomeFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { SidebarCom } from "@/components/app-sidebar";
 import { PiStudentBold } from "react-icons/pi";
-import { CalendarDays, ClipboardList, GraduationCap, Info } from "lucide-react";
+import { CalendarDays, ClipboardList, ClipboardX, GraduationCap, Info } from "lucide-react";
 import { LifeBuoyIcon, SendIcon } from "lucide-react";
 
 export function AppSidebar({ ...props }) {
@@ -61,6 +61,12 @@ export function AppSidebar({ ...props }) {
         title: "Examens",
         url: "/parent/manage-exams",
         icon: <ClipboardList />,
+        items: null,
+      },
+      {
+        title: "Absences",
+        url: "/parent/manage-absences",
+        icon: <ClipboardX />,
         items: null,
       },
       {

@@ -8,25 +8,26 @@ import { getColumns } from "./columns";
 import { getApiErrorMessage, isUnauthorized } from "@/lib/api";
 import { toast } from "sonner";
 
-export function TableData({ selectedChild, setSelectedChild }) {
+export function TableData({ selectedChild }) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
   useEffect(() => {
     if (!selectedChild) {
+      setData([]);
+      setIsLoading(false);
       return;
     }
     let active = true;
-    Connect_Parent.exams(selectedChild)
+    setIsLoading(true);
+    Connect_Parent.absences(selectedChild)
       .then((response) => {
         if (active) setData(response.data?.data ?? []);
       })
       .catch((error) => {
         if (isUnauthorized(error)) router.push("/login");
-        else
-          toast.error("Impossible de charger les examens", {
-            description: getApiErrorMessage(error),
-          });
+        else toast.error("Impossible de charger les absences", { description: getApiErrorMessage(error) });
       })
       .finally(() => {
         if (active) setIsLoading(false);
@@ -35,7 +36,6 @@ export function TableData({ selectedChild, setSelectedChild }) {
       active = false;
     };
   }, [router, selectedChild]);
-  return (
-    <CreateTable data={data} columns={getColumns()} isLoading={isLoading} />
-  );
+
+  return <CreateTable data={data} columns={getColumns()} isLoading={isLoading} />;
 }

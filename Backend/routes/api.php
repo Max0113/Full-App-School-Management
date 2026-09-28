@@ -19,7 +19,8 @@ use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\TeacherFeaturesController;
 use App\Http\Controllers\TeachingSubjectClasseController;
 use App\Http\Controllers\GetClasseByTeacherController;
-use App\Http\Controllers\ParentFeaturesController;
+use App\Http\Controllers\Parent\ParentFeaturesController;
+use App\Http\Controllers\Student\StudentFeaturesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +31,13 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum', 'ability:student'])->prefix('student')->group(static function () {
-    // student can see his grades and absences
+    Route::get('/dashboard', [StudentFeaturesController::class, 'dashboard']);
+    Route::get('/grades', [StudentFeaturesController::class, 'grades']);
+    Route::get('/sessions', [StudentFeaturesController::class, 'sessions']);
+    Route::get('/exams', [StudentFeaturesController::class, 'exams']);
+    Route::get('/absences', [StudentFeaturesController::class, 'absences']);
+    Route::get('/teachers', [StudentFeaturesController::class, 'teachers']);
+    Route::get('/school-info', [StudentFeaturesController::class, 'schoolInfo']);
 });
 
 Route::middleware(['auth:sanctum', 'ability:teacher'])->prefix('teacher')->group(static function () {
@@ -65,6 +72,7 @@ Route::middleware(['auth:sanctum', 'ability:parent'])->prefix('parent')->group(s
     Route::get('/grades', [ParentFeaturesController::class, 'grades']);
     Route::get('/sessions', [ParentFeaturesController::class, 'sessions']);
     Route::get('/exams', [ParentFeaturesController::class, 'exams']);
+    Route::get('/absences', [ParentFeaturesController::class, 'absences']);
     Route::get('/teachers', [ParentFeaturesController::class, 'teachers']);
     Route::get('/school-info', [ParentFeaturesController::class, 'schoolInfo']);
 });

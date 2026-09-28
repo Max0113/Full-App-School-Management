@@ -4,7 +4,7 @@ import { useAuth } from "@/components/Context/AuthContext";
 import { GoHomeFill } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { SidebarCom } from "@/components/app-sidebar";
-import { BiColumns } from "react-icons/bi";
+import { BookOpenCheck, CalendarDays, ClipboardList, ClipboardX, GraduationCap, Info } from "lucide-react";
 
 export function AppSidebar({ ...props }) {
   const { user, checkAuth } = useAuth();
@@ -41,11 +41,16 @@ export function AppSidebar({ ...props }) {
         items: null,
       },
       {
-        title: "Exams & Notes",
-        url: "#",
-        icon: <BiColumns />,
+        title: "Mes Notes",
+        url: "/student/manage-grades",
+        icon: <BookOpenCheck />,
         items: null,
       },
+      { title: "Mes Séances", url: "/student/manage-sessions", icon: <CalendarDays />, items: null },
+      { title: "Mes Examens", url: "/student/manage-exams", icon: <ClipboardList />, items: null },
+      { title: "Mes Absences", url: "/student/manage-absences", icon: <ClipboardX />, items: null },
+      { title: "Enseignants", url: "/student/manage-teachers", icon: <GraduationCap />, items: null },
+      { title: "Informations école", url: "/student/manage-school-info", icon: <Info />, items: null },
     ],
     navSecondary: [],
   };
